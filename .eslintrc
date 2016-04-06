@@ -1,0 +1,25 @@
+{
+    "env": {
+        "browser": true,
+        "amd": true,
+        "es6": true,
+        "mocha": true
+    },
+    "parser": "babel-eslint",
+    /*"rules": {
+        "strict": 1,
+        "comma-dangle": [1, "always-multiline"],
+        "quotes": [1, "single"],
+        "no-underscore-dangle": 0
+    },*/
+      "globals": {
+      "expect": true
+    },
+    "plugins": [
+      "react"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended"
+    ]
+}

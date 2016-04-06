@@ -1,0 +1,69 @@
+.combo-select {
+    position: relative;
+}
+
+.combo-select .combo-select-head {
+    position: relative;
+    width: 100%;
+    border: 2px solid #d1d3d4;
+    border-radius: 8px;
+    padding-left: 19px;
+    height: 42px;
+    font-size: 15px;
+    font-weight: 400;
+    color: #5a5a5a;
+    background-color: #fff;
+    text-align: left;
+    outline: none;
+    line-height: 42px;
+    box-sizing: border-box;
+}
+
+.combo-select div.combo-select-head {
+    cursor: pointer;
+}
+
+.combo-select .combo-select-head i {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-transform: translate(0,0);
+    transform: translate(0,0);
+    border: 0;
+    position: absolute;
+    right: 18px;
+    top: 12px;
+    color: #40b4e5;
+}
+
+.combo-select .combo-select-body {
+    position: absolute;
+    border: 1px solid #d1d3d4;
+    top: 41px;
+    border-radius: 8px;
+    width: 100%;
+    background-color: #fff;
+    color: #5a5a5a;
+    font-size: 15px;
+    font-weight: 400;
+    padding: 5px 0;
+}
+
+.combo-select .combo-select-body .combo-select-item {
+    position: relative;
+    width: 100%;
+    padding-left: 19px;
+    height: 42px;
+    text-align: left;
+    outline: none;
+    line-height: 42px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.combo-select .combo-select-body .combo-select-item:hover {
+    background: #f7f7f7;
+}
