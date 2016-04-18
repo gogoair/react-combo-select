@@ -1,6 +1,6 @@
 {
   "name": "react-combo-select",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Selectbox that can be used as a single select, multiselect, search, autocomplete",
   "main": "./lib/ComboSelect.jsx",
   "scripts": {

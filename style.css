@@ -41,6 +41,7 @@
 
 .combo-select .combo-select-body {
     position: absolute;
+    z-index: 1;
     border: 1px solid #d1d3d4;
     top: 41px;
     border-radius: 8px;
@@ -64,6 +65,14 @@
     cursor: pointer;
 }
 
-.combo-select .combo-select-body .combo-select-item:hover {
+.combo-select .combo-select-body .combo-select-item i {
+    padding-right: 10px;
+}
+
+.combo-select .combo-select-body .combo-select-item.selected i {
+    color: #40b4e5;
+}
+
+.combo-select .combo-select-body .combo-select-item.active {
     background: #f7f7f7;
 }
