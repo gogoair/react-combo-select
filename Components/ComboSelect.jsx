@@ -180,6 +180,7 @@ export default class ComboSelect extends Component {
 
             this.setState({value: item, selected: [this.state.focus]}, () => {
                 this.toggleMenu();
+                this.props.onChange(this.state.value);
             });
 
         } else {
@@ -188,6 +189,8 @@ export default class ComboSelect extends Component {
 
                 this.setState({
                     value: [item], selected: [this.state.focus]
+                }, () => {
+                    this.props.onChange(this.state.value);
                 });
 
             } else {
@@ -214,6 +217,8 @@ export default class ComboSelect extends Component {
                 this.setState({
                     value: values,
                     selected: selected
+                }, () => {
+                    this.props.onChange(this.state.value);
                 });
             }
         }
@@ -328,8 +333,10 @@ export default class ComboSelect extends Component {
         let head = this._generateHead();
         let body = this._generateBody();
 
+        var { data, type, value, onChange, ...other } = this.props;
+
         return (
-            <div ref="comboSelect" className="combo-select">
+            <div {...other} ref="comboSelect" className="combo-select">
                 {head}
                 {this.state.open ?
                     body
@@ -343,5 +350,6 @@ ComboSelect.propTypes = {
     value: React.PropTypes.string,
     type: React.PropTypes.string,
     icon: React.PropTypes.string,
-    data: React.PropTypes.array
+    data: React.PropTypes.array,
+    onChange: React.PropTypes.func
 };

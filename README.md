@@ -1,14 +1,34 @@
 # react-combo-select
 React dropdown for select and multiselect 
 
-Text of the select combo is being set in as a value props.
-- Default is "-Select-"
+## Usability
+Import react combo select
+```javascript
+import ComboSelect from 'react-combo-select';
+```
+and include css files with styles and font awesome (you may include this in different way)
+```javascript
+require('../node_modules/react-combo-select/style.css');
+require('../node_modules/font-awesome/css/font-awesome.min.css');
+```
 
-We have 4 types of behaviours
-- select (default)
-- multiselect
-- autocomplete
-- dropdown
+props for:
+value -> this is what you have selected
+type -> select or multiselect, self explanatory
+onChange -> callback function, which will return value that you have picked
 
-Icon for select combo can be set as a icon props.
-- Default is "fa fa-chevron-circle-down" from font awesome 4.5.x
+```javascript    
+fakeFunction(value) {
+    console.log(value);
+}
+```
+
+```javascript  
+<ComboSelect value="-Select me-" type="multiselect" data={standardArray} onChange={this.fakeFunction}/>
+```
+
+## TODO:
+
+There are still some things that need to be added:
+- Autocomplete (with on and off)
+- Actual input within, so that it can be used as required in html forms

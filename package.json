@@ -1,11 +1,11 @@
 {
   "name": "react-combo-select",
-  "version": "0.3.0",
+  "version": "0.3.2",
   "description": "Selectbox that can be used as a single select, multiselect, search, autocomplete",
   "main": "./lib/ComboSelect.jsx",
   "scripts": {
     "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js  --hot --progress --colors",
-    "prepublish": "mkdir lib && ./node_modules/.bin/babel Components/ComboSelect.jsx --out-file lib/ComboSelect.jsx",
+    "prepublish": "mkdir lib && ./node_modules/.bin/babel Components/ComboSelect.jsx --out-file lib/ComboSelect.jsx && ./node_modules/.bin/babel Components/ComboSelectItem.jsx --out-file lib/ComboSelectItem.jsx",
     "test": "mocha -r mock-local-storage --compilers js:babel-core/register --require ./test/test.jsx \"test/**/*@(.js|.jsx)\"",
     "postpublish": "rm -rf ./lib"
   },
