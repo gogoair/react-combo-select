@@ -23,6 +23,10 @@
     cursor: pointer;
 }
 
+.combo-select .search-holder {
+    padding: 2px 19px;
+}
+
 .combo-select .combo-select-head i {
     display: inline-block;
     font: normal normal normal 14px/1 FontAwesome;
@@ -39,9 +43,26 @@
     color: #40b4e5;
 }
 
+.combo-select .search-holder .search-input {
+    height: 32px;
+    width: 100%;
+    text-indent: 10px;
+    border: 2px solid #d1d3d4;
+    box-shadow: none;
+    left: 5%;
+    z-index: -1;
+    outline: none;
+    font-size: 15px;
+    padding: 0;
+    margin: 0;
+}
+
+.combo-select .search-holder .search-input.active {
+    z-index: 1;
+}
+
 .combo-select .combo-select-body {
     position: absolute;
-    z-index: 1;
     border: 1px solid #d1d3d4;
     top: 41px;
     border-radius: 8px;
@@ -51,6 +72,7 @@
     font-size: 15px;
     font-weight: 400;
     padding: 5px 0;
+    overflow-x: hidden;
 }
 
 .combo-select .combo-select-body .combo-select-item {

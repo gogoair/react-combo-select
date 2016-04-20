@@ -14,7 +14,9 @@ export default class ComboSelect extends Component {
             focus: -1,
             selected: -1,
             originalMargin: document.body.style.margin,
-            originalmarginRight: document.body.style.marginRight
+            originalmarginRight: document.body.style.marginRight,
+            data: this.props.data,
+            search: this.props.search ? this.props.search : 'off'
         }
     }
 
@@ -36,6 +38,11 @@ export default class ComboSelect extends Component {
         window.removeEventListener('click', this.globalMouseClick);
     }
 
+    /**
+     * Generate head (values)
+     * @returns {XML|*}
+     * @private
+     */
     _generateHead() {
 
         let head;
@@ -46,24 +53,25 @@ export default class ComboSelect extends Component {
                 (value = value.slice(), value = value.join(", "));
         }
 
-        if (this.state.type == 'select' || this.state.type == 'multiselect' || this.state.type == 'dropdown') {
-            head = (<div onClick={() => this.toggleMenu()}>
-                <div className="combo-select-head">{value ? value : '-Select me-'}<i className={this.state.icon}></i>
-                </div>
-            </div>)
-        } else {
-            head = (<input type="text" className="combo-select-head" defaultValue={value ? value : '-Select me-'}/>)
-        }
+        head = (<div onClick={() => this.toggleMenu()}>
+            <div className="combo-select-head">{value ? value : '-Select me-'}<i className={this.state.icon}></i>
+            </div>
+        </div>);
 
         return head;
     }
 
+    /**
+     * Generate body (menu)
+     * @returns {XML}
+     * @private
+     */
     _generateBody() {
-        let body = '';
         let style = this.calculateMetric();
+        let body = '';
 
-        if (Array.isArray(this.props.data)) {
-            body = this.props.data.map(function (item, i) {
+        if (Array.isArray(this.state.data)) {
+            body = this.state.data.map(function (item, i) {
 
                 let focused = false;
                 (this.state.focus == i) ? focused = true : '';
@@ -86,11 +94,31 @@ export default class ComboSelect extends Component {
             }.bind(this));
         }
 
+        let search = this.state.search == 'on' || this.state.search == 'smart' && (!style || style.height != 'auto' || (this.refs.comboSelect.getElementsByClassName('search-input') && this.refs.comboSelect.getElementsByClassName('search-input')[0] && this.refs.comboSelect.getElementsByClassName('search-input')[0].value && this.refs.comboSelect.getElementsByClassName('search-input')[0].value.length > 0)) ?
+            (<div className="search-holder">
+                <input type="text"
+                       className={"search-input " + (this.state.open && this.state.search ? 'active' : '')}
+                       onChange={() => this.filterBySearch()}/></div>) : '';
+
         return (
             <div style={style} className="combo-select-body">
-                {body}
+                {search}
+                {body && body.length > 0 ? body : (<div className="combo-select-item">There is no eligible items</div>)}
             </div>
         );
+    }
+
+    filterBySearch() {
+        var filter = this.refs.comboSelect.getElementsByClassName('search-input')[0].value;
+        var data = [];
+
+        for (var i in this.props.data) {
+            if (this.props.data[i].toLowerCase().indexOf(filter.toLowerCase()) > -1) {
+                data.push(this.props.data[i])
+            }
+        }
+
+        this.setState({data: data});
     }
 
     /**
@@ -98,6 +126,7 @@ export default class ComboSelect extends Component {
      * TODO: now it hides scroll and move screen on right to avoid movement, disable it on screens without scroll
      */
     toggleMenu() {
+        var comboSelect = this.refs.comboSelect;
 
         if (!this.state.open) {
             document.body.style.overflow = 'hidden';
@@ -108,7 +137,16 @@ export default class ComboSelect extends Component {
             document.body.style.marginRight = this.state.originalmarginRight;
         }
 
-        this.setState({open: !this.state.open});
+        this.setState({open: !this.state.open}, () => {
+
+            if (this.state.open && comboSelect.getElementsByClassName('search-input') && comboSelect.getElementsByClassName('search-input').length > 0) {
+                comboSelect.getElementsByClassName('search-input')[0].focus();
+            } else {
+                this.setState({
+                    data: this.props.data
+                });
+            }
+        });
     }
 
     /**
@@ -131,9 +169,11 @@ export default class ComboSelect extends Component {
             let comboSelect = this.refs.comboSelect;
             let viewportOffset = comboSelect.getBoundingClientRect();
             let top = viewportOffset.top;
+            //TODO: elementHeight is accurate only if height of an element is same as height of header
             let elementHeight = comboSelect.clientHeight;
             let windowHeight = window.innerHeight;
             let bottom = windowHeight - (top + elementHeight);
+            let overflow = true;
 
             let direction, height;
 
@@ -145,7 +185,12 @@ export default class ComboSelect extends Component {
                 height = top - 15;
             }
 
-            return this.openMenu(direction, height);
+            if (elementHeight * this.state.data.length < height) {
+                height = 'auto';
+                overflow = false;
+            }
+
+            return this.openMenu(direction, height, overflow);
         }
     }
 
@@ -153,14 +198,15 @@ export default class ComboSelect extends Component {
      * It creates styles for opening menu
      * @param direction
      * @param height
+     * @param overflow
      * @returns {{}}
      */
-    openMenu(direction, height) {
+    openMenu(direction, height, overflow) {
 
         let style = {};
 
         style.height = height;
-        style.overflow = 'scroll';
+        style.overflowY = overflow ? 'scroll' : 'visible';
 
         if (direction == 'top') {
             style.top = -(height + 10);
@@ -333,7 +379,7 @@ export default class ComboSelect extends Component {
         let head = this._generateHead();
         let body = this._generateBody();
 
-        var { data, type, value, onChange, ...other } = this.props;
+        var {data, type, value, onChange, search, ...other } = this.props;
 
         return (
             <div {...other} ref="comboSelect" className="combo-select">
@@ -348,8 +394,9 @@ export default class ComboSelect extends Component {
 
 ComboSelect.propTypes = {
     value: React.PropTypes.string,
+    search: React.PropTypes.string,
     type: React.PropTypes.string,
     icon: React.PropTypes.string,
-    data: React.PropTypes.array,
+    data: React.PropTypes.array.isRequired,
     onChange: React.PropTypes.func
 };
