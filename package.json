@@ -1,8 +1,8 @@
 {
   "name": "react-combo-select",
-  "version": "0.3.3",
-  "keywords": "react, select, multiselect, search",
-  "description": "Selectbox that can be used as a single select, multiselect, search",
+  "version": "0.4.0",
+  "keywords": "react, select, singleselect, multiselect, search, react-component",
+  "description": "React select component that can be used as a single select, multiselect, search",
   "main": "./lib/ComboSelect.jsx",
   "scripts": {
     "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js  --hot --progress --colors",

@@ -7,16 +7,21 @@ export default class ComboSelect extends Component {
         super(props);
 
         this.state = {
-            value: props.value ? props.value : '-Select me-',
+            text: props.text ? props.text : '-Select me-',
             open: false,
-            type: props.type ? props.type : 'select',
+            type: props.type && (props.type == 'select' || props.type == 'multiselect') ? props.type : 'select',
             icon: props.icon ? props.icon : 'fa fa-chevron-circle-down',
             focus: -1,
             selected: -1,
             originalMargin: document.body.style.margin,
             originalmarginRight: document.body.style.marginRight,
             data: this.props.data,
-            search: this.props.search ? this.props.search : 'off'
+            selectedData: [],
+            search: this.props.search ? this.props.search : 'off',
+            map: this.props.map && this.props.map.text && this.props.map.value ? this.props.map : {
+                value: 'value',
+                text: 'text'
+            }
         }
     }
 
@@ -39,22 +44,22 @@ export default class ComboSelect extends Component {
     }
 
     /**
-     * Generate head (values)
+     * Generate head (texts)
      * @returns {XML|*}
      * @private
      */
     _generateHead() {
 
         let head;
-        let value = this.state.value;
+        let text = this.state.text;
 
-        if (typeof value == 'object') {
-            value.length > 3 ? value = value.length + ' selected' :
-                (value = value.slice(), value = value.join(", "));
+        if (typeof text == 'object') {
+            text.length > 3 ? text = text.length + ' selected' :
+                (text = text.slice(), text = text.join(", "));
         }
 
         head = (<div onClick={() => this.toggleMenu()}>
-            <div className="combo-select-head">{value ? value : '-Select me-'}<i className={this.state.icon}></i>
+            <div className="combo-select-head">{text ? text : '-Select me-'}<i className={this.state.icon}></i>
             </div>
         </div>);
 
@@ -66,7 +71,7 @@ export default class ComboSelect extends Component {
      * @returns {XML}
      * @private
      */
-    _generateBody() {
+    _generateBody(dataType) {
         let style = this.calculateMetric();
         let body = '';
 
@@ -86,6 +91,8 @@ export default class ComboSelect extends Component {
                     <div key={i}>
                         <ComboSelectItem item={item} selected={selected} index={i} focused={focused}
                                          type={this.state.type}
+                                         dataType={dataType}
+                                         map={this.state.map}
                                          selectItem={this.selectItem.bind(this)}
                                          focusItem={this.focusItem.bind(this)}
                         />
@@ -222,49 +229,73 @@ export default class ComboSelect extends Component {
      */
     selectItem(item) {
 
+        let text, value;
+        let dataType = this.checkDataType();
+
+        if (dataType == 'object') {
+
+            text = item[this.state.map.text];
+
+            if (typeof this.state.map.value == 'boolean') {
+                value = item
+            } else {
+                value = item[this.state.map.value];
+            }
+
+        } else {
+            text = item;
+            value = item;
+        }
+
         if (this.state.type == 'select') {
 
-            this.setState({value: item, selected: [this.state.focus]}, () => {
+            this.setState({text: text, selected: [this.state.focus]}, () => {
                 this.toggleMenu();
-                this.props.onChange(this.state.value);
+                this.props.onChange(value);
             });
 
         } else {
 
-            if (typeof this.state.value == 'string') {
+            if (typeof this.state.text == 'string') {
 
                 this.setState({
-                    value: [item], selected: [this.state.focus]
+                    text: [text],
+                    selected: [this.state.focus],
+                    selectedData: [value]
                 }, () => {
-                    this.props.onChange(this.state.value);
+                    this.props.onChange(value);
                 });
 
             } else {
 
                 let splice;
 
-                this.state.value.map(function (value, i) {
-                    if (value == item) {
+                this.state.text.map(function (textItem, i) {
+                    if (text == textItem) {
                         splice = i;
                     }
                 });
 
-                let values = this.state.value.slice();
+                let texts = this.state.text.slice();
                 let selected = this.state.selected.slice();
+                let selectedData = this.state.selectedData.slice();
 
                 if (splice || splice == 0) {
-                    values.splice(splice, 1);
+                    texts.splice(splice, 1);
                     selected.splice(splice, 1);
+                    selectedData.splice(splice, 1);
                 } else {
-                    values.push(item);
+                    texts.push(text);
                     selected.push(this.state.focus);
+                    selectedData.push(value);
                 }
 
                 this.setState({
-                    value: values,
-                    selected: selected
+                    text: texts,
+                    selected: selected,
+                    selectedData: selectedData
                 }, () => {
-                    this.props.onChange(this.state.value);
+                    this.props.onChange(selectedData);
                 });
             }
         }
@@ -375,11 +406,17 @@ export default class ComboSelect extends Component {
         }
     }
 
-    render() {
-        let head = this._generateHead();
-        let body = this._generateBody();
+    checkDataType() {
+        return this.props.data && this.props.data[0] ? typeof this.props.data[0] : 'string';
+    }
 
-        var {data, type, value, onChange, search, ...other } = this.props;
+    render() {
+        let dataType = this.checkDataType();
+
+        let head = this._generateHead();
+        let body = this._generateBody(dataType);
+
+        var {data, type, text, onChange, search, ...other } = this.props;
 
         return (
             <div {...other} ref="comboSelect" className="combo-select">
@@ -393,10 +430,11 @@ export default class ComboSelect extends Component {
 }
 
 ComboSelect.propTypes = {
-    value: React.PropTypes.string,
+    text: React.PropTypes.string,
     search: React.PropTypes.string,
     type: React.PropTypes.string,
     icon: React.PropTypes.string,
     data: React.PropTypes.array.isRequired,
-    onChange: React.PropTypes.func
+    onChange: React.PropTypes.func,
+    map: React.PropTypes.object
 };

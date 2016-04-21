@@ -24,18 +24,20 @@ export default class ComboSelectItem extends Component {
                 onClick={() => this.props.selectItem(this.props.item)}
                 onMouseEnter={() => this.props.focusItem(this.props.index)}>
                 {input}
-                {this.props.item}
+                {this.props.dataType == 'object' ? this.props.item[this.props.map.text] : this.props.item}
             </div>
         );
     }
 }
 
 ComboSelectItem.propTypes = {
-    item: React.PropTypes.string,
+    item: React.PropTypes.object,
     index: React.PropTypes.number,
+    map: React.PropTypes.object,
     focused: React.PropTypes.bool,
     selected: React.PropTypes.bool,
     type: React.PropTypes.string,
+    dataType: React.PropTypes.string,
     selectItem: React.PropTypes.func,
     focusItem: React.PropTypes.func
 };
