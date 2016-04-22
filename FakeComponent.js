@@ -4,7 +4,7 @@ import ComboSelect from './Components/ComboSelect.jsx';
 export default class FakeComponent extends Component {
 
     fakeFunction(value) {
-        //console.log(value);
+        console.log(value);
     }
 
     render() {
@@ -23,19 +23,30 @@ export default class FakeComponent extends Component {
                 <br/>
                 <br/>
                 <br/>
-                <div style={{position: 'relative'}}>
-                    {<ComboSelect text="-Select me-" type="select" data={standardArray}
-                     onChange={this.fakeFunction} icon="fa fa-chevron-circle-down" search="smart"
-                     map={{text: 'win', value: true}}/>}
-                    {/*<ComboSelect text="-Select me-" type="multiselect" data={standardArray}
-                                  onChange={this.fakeFunction} icon="fa fa-chevron-circle-down" search="smart"
-                                  map={{text: 'win', value: true}}/>*/}
-                </div>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
+                <form action="">
+                    <input type="text" required/>
+                    <br/>
+                    <br/>
+                    <div style={{position: 'relative'}}>
+                        {/*<ComboSelect text="-Select me-" type="select" data={standardArray}
+                                      onChange={this.fakeFunction} icon="fa fa-chevron-circle-down" search="smart"
+                                      map={{text: 'win', value: true}}/>*/}
+                        {<ComboSelect text="-Select me-" type="multiselect" data={standardArray}
+                         onChange={this.fakeFunction} icon="fa fa-chevron-circle-down" search="smart"
+                         map={{text: 'win', value: true}}/>}
+                    </div>
+                    <br/>
+                    <input type="text" required/>
+                    <br/>
+                    <br/>
+                    <input type="text" required/>
+                    <br/>
+                    <br/>
+                    <input type="text" required/>
+                    <br/>
+                    <br/>
+                    <input type="submit"/>
+                </form>
                 <br/>
                 <br/>
                 <br/>

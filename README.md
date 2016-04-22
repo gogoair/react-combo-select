@@ -80,7 +80,7 @@ let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D", "JA219J", "JA302J",
 ```
 
 ### map
-If you want to display data from objects, use map! You need to define object with key objects text and value. Text will be the one you display as a text, and value is returning in a onChange function as a paramater. If you want to return whole object, put value=true (boolean). Default is ```javascript map={text: 'text', value: 'value'}```, which means you will have collection of objects, and on select value will be returned and text will be shown in select.
+If you want to display data from objects, use map! You need to define object with key objects text and value. Text will be the one you display as a text, and value is returning in a onChange function as a paramater. If you want to return whole object, put value=true (boolean). Default is ```map={text: 'text', value: 'value'}```, which means you will have collection of objects, and on select value will be returned and text will be shown in select.
 
 ```javascript
 
@@ -103,7 +103,7 @@ fakeFunctionObject(value) {
     console.log(value) // this will display {text: "air-JA007D", win: "win-JA007D", value: "JA007D"} and key object with text will be shown in tn select.
 }
 
-<ComboSelect data={arrayWithObjects} map={text: 'text', value: true'} onChange={this.fakeFunctionObject}/>
+<ComboSelect data={arrayWithObjects} map={text: 'text', value: true} onChange={this.fakeFunctionObject}/>
 ```
 
 
@@ -113,22 +113,22 @@ fakeFunctionObject(value) {
 - Connect git repo
 - Connect with npm, write scripts for prepublish and postpublish
 - Create "test" tests lol
-- Create UI for head, props ```javascript value``` v0.4 -> CHANGED to ```javascript text```
-- Create UI for menu, props ```javascript data```
+- Create UI for head, props ```value``` v0.4 -> CHANGED to ```text```
+- Create UI for menu, props ```data```
 - If you click somewhere else, close all open select's but one that you click (if you clicked one) - THIS WASN'T EASY, curses for react evens are propagating after javascript ones!!
 - Disable scroll outside of select if menu is open - THIS WASNT EASY EITHER, but came to most elegant solution EVAR!! Long live css
 - Direction of menu opening - prefers bottom then top, but will open on top if there are a lot more space there
 - Control using arrows and some keys like space and enter
 - Scrolling while using arrows within menu
-- Select single items, props ```javascript type="select"```, default, if you put wrong one, it will still use select
-- Select multiple items, props ```javascript type="multiselect"```
-- Create return value, props ```javascript onChange="this.functionThatYouUse()"```
-- Create support for search, props ```javascript search```
+- Select single items, props ```type="select"```, default, if you put wrong one, it will still use select
+- Select multiple items, props ```type="multiselect"```
+- Create return value, props ```onChange="this.functionThatYouUse()"```
+- Create support for search, props ```search```
 - Optimize "intelligence" on opening menu and scroll, you can now use smart search which will open search only if there are more items that are opened in the screen
-- Make it work with collection of objects, which can be mapped, props ```javascript map```
+- Make it work with collection of objects, which can be mapped, props ```map```
+- Actual select within, so that it can be used as required in html forms, you can use tab also :) but there are no styles for "focued" yes
 
 ## TODO: until 7. May 2016, warm welcome for version 1.0.0
-- Actual select within, so that it can be used as required in html forms
 - Sorting, alphabetical and numeric
 - MOAR Testing
 

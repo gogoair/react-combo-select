@@ -31,6 +31,11 @@ export default class ComboSelect extends Component {
             this.globalKeyDown(event);
         });
 
+        // Event for real select within select, this is needed for "required" attribute since it cannot be attached to the non-form elements
+        this.refs.comboSelect.getElementsByClassName('combo-select-required-select')[0].addEventListener('keydown', (event) => {
+            this.requiredSelectKeydown(event);
+        });
+
         window.addEventListener('click', (event) => {
             this.globalMouseClick(event);
         });
@@ -58,9 +63,21 @@ export default class ComboSelect extends Component {
                 (text = text.slice(), text = text.join(", "));
         }
 
+
+        let map = this.state.map && this.state.map.text ? this.state.map.text : false;
+
+        let options = this.state.data.map(function (item, i) {
+
+            return typeof item == 'object' ? <option key={i} value={item[map]}>{item[map]}</option> : <option value={item}>{item}</option>
+        });
+
         head = (<div onClick={() => this.toggleMenu()}>
             <div className="combo-select-head">{text ? text : '-Select me-'}<i className={this.state.icon}></i>
             </div>
+            <select className="combo-select-required-select" name="" id="" required>
+                <option value=""></option>
+                {options}
+            </select>
         </div>);
 
         return head;
@@ -115,6 +132,9 @@ export default class ComboSelect extends Component {
         );
     }
 
+    /**
+     * Filter data to match searched term
+     */
     filterBySearch() {
         var filter = this.refs.comboSelect.getElementsByClassName('search-input')[0].value;
         var data = [];
@@ -126,6 +146,23 @@ export default class ComboSelect extends Component {
         }
 
         this.setState({data: data});
+    }
+
+    /**
+     * On any keydown, but tab, that is pressed on inner required select disable it and open custom select
+     * @param event
+     */
+    requiredSelectKeydown(event) {
+
+        if (event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 32) {
+            event.preventDefault();
+
+            this.setState({
+                open: true
+            });
+
+            this.refs.comboSelect.getElementsByClassName('combo-select-required-select')[0].blur();
+        }
     }
 
     /**
@@ -145,6 +182,8 @@ export default class ComboSelect extends Component {
         }
 
         this.setState({open: !this.state.open}, () => {
+
+            comboSelect.getElementsByClassName('combo-select-required-select')[0].focus();
 
             if (this.state.open && comboSelect.getElementsByClassName('search-input') && comboSelect.getElementsByClassName('search-input').length > 0) {
                 comboSelect.getElementsByClassName('search-input')[0].focus();
@@ -228,76 +267,80 @@ export default class ComboSelect extends Component {
      * @param item
      */
     selectItem(item) {
-
         let text, value;
         let dataType = this.checkDataType();
 
-        if (dataType == 'object') {
+        if (item){
 
-            text = item[this.state.map.text];
+            if (dataType == 'object') {
 
-            if (typeof this.state.map.value == 'boolean') {
-                value = item
+                text = item[this.state.map.text];
+
+                if (typeof this.state.map.value == 'boolean') {
+                    value = item
+                } else {
+                    value = item[this.state.map.value];
+                }
+
             } else {
-                value = item[this.state.map.value];
+                text = item;
+                value = item;
             }
 
-        } else {
-            text = item;
-            value = item;
-        }
+            if (this.state.type == 'select') {
 
-        if (this.state.type == 'select') {
-
-            this.setState({text: text, selected: [this.state.focus]}, () => {
-                this.toggleMenu();
-                this.props.onChange(value);
-            });
-
-        } else {
-
-            if (typeof this.state.text == 'string') {
-
-                this.setState({
-                    text: [text],
-                    selected: [this.state.focus],
-                    selectedData: [value]
-                }, () => {
+                this.setState({text: text, selected: [this.state.focus]}, () => {
+                    this.toggleMenu();
                     this.props.onChange(value);
                 });
 
             } else {
 
-                let splice;
+                if (typeof this.state.text == 'string') {
 
-                this.state.text.map(function (textItem, i) {
-                    if (text == textItem) {
-                        splice = i;
-                    }
-                });
+                    this.setState({
+                        text: [text],
+                        selected: [this.state.focus],
+                        selectedData: [value]
+                    }, () => {
+                        this.props.onChange(value);
+                    });
 
-                let texts = this.state.text.slice();
-                let selected = this.state.selected.slice();
-                let selectedData = this.state.selectedData.slice();
-
-                if (splice || splice == 0) {
-                    texts.splice(splice, 1);
-                    selected.splice(splice, 1);
-                    selectedData.splice(splice, 1);
                 } else {
-                    texts.push(text);
-                    selected.push(this.state.focus);
-                    selectedData.push(value);
-                }
 
-                this.setState({
-                    text: texts,
-                    selected: selected,
-                    selectedData: selectedData
-                }, () => {
-                    this.props.onChange(selectedData);
-                });
+                    let splice;
+
+                    this.state.text.map(function (textItem, i) {
+                        if (text == textItem) {
+                            splice = i;
+                        }
+                    });
+
+                    let texts = this.state.text.slice();
+                    let selected = this.state.selected.slice();
+                    let selectedData = this.state.selectedData.slice();
+
+                    if (splice || splice == 0) {
+                        texts.splice(splice, 1);
+                        selected.splice(splice, 1);
+                        selectedData.splice(splice, 1);
+                    } else {
+                        texts.push(text);
+                        selected.push(this.state.focus);
+                        selectedData.push(value);
+                    }
+
+                    this.setState({
+                        text: texts,
+                        selected: selected,
+                        selectedData: selectedData
+                    }, () => {
+                        this.props.onChange(selectedData);
+                    });
+                }
             }
+
+            this.refs.comboSelect.getElementsByClassName('combo-select-required-select')[0].value = text;
         }
     }
 
@@ -366,7 +409,7 @@ export default class ComboSelect extends Component {
                     // Up
                     event.preventDefault();
                     this.setState({
-                        focus: this.state.focus == 0 ? this.props.data.length - 1 : this.state.focus - 1
+                        focus: this.state.focus < 1 ? this.state.data.length - 1 : this.state.focus - 1
                     }, () => {
                         this.controlScrolling();
                     });
@@ -401,6 +444,12 @@ export default class ComboSelect extends Component {
                 case 9:
                     // Tab
                     event.preventDefault();
+                    break;
+                case 27:
+                    // Escape
+                    event.preventDefault();
+                    this.setState({open: false});
+                    this.refs.comboSelect.getElementsByClassName('combo-select-required-select')[0].focus();
                     break;
             }
         }

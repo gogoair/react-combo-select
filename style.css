@@ -98,3 +98,11 @@
 .combo-select .combo-select-body .combo-select-item.active {
     background: #f7f7f7;
 }
+
+.combo-select .combo-select-required-select {
+    position: absolute;
+    top: 4px;
+    left: 30px;
+    z-index: -1;
+    width: 1px;
+}
