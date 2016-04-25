@@ -15,9 +15,9 @@ export default class ComboSelect extends Component {
             selected: -1,
             originalMargin: document.body.style.margin,
             originalmarginRight: document.body.style.marginRight,
-            data: this.props.data,
+            data: this.sortData(this.props.data),
             selectedData: [],
-            search: this.props.search ? this.props.search : 'off',
+            search: this.props.search && (this.props.search == 'on' || this.props.search == 'smart' || this.props.search == 'off') ? this.props.search : 'off',
             map: this.props.map && this.props.map.text && this.props.map.value ? this.props.map : {
                 value: 'value',
                 text: 'text'
@@ -67,14 +67,17 @@ export default class ComboSelect extends Component {
         let map = this.state.map && this.state.map.text ? this.state.map.text : false;
 
         let options = this.state.data.map(function (item, i) {
-
-            return typeof item == 'object' ? <option key={i} value={item[map]}>{item[map]}</option> : <option value={item}>{item}</option>
+            return typeof item == 'object' ? <option key={i} value={item[map]}>{item[map]}</option> :
+                <option key={i} value={item}>{item}</option>
         });
+
+
+        var {data, type, onChange, search, ...other } = this.props;
 
         head = (<div onClick={() => this.toggleMenu()}>
             <div className="combo-select-head">{text ? text : '-Select me-'}<i className={this.state.icon}></i>
             </div>
-            <select className="combo-select-required-select" name="" id="" required>
+            <select {...other} className="combo-select-required-select" name="" id="">
                 <option value=""></option>
                 {options}
             </select>
@@ -93,6 +96,7 @@ export default class ComboSelect extends Component {
         let body = '';
 
         if (Array.isArray(this.state.data)) {
+
             body = this.state.data.map(function (item, i) {
 
                 let focused = false;
@@ -130,6 +134,24 @@ export default class ComboSelect extends Component {
                 {body && body.length > 0 ? body : (<div className="combo-select-item">There is no eligible items</div>)}
             </div>
         );
+    }
+
+    sortData(data) {
+
+        let sortedData = data;
+        let sort = this.props.sort && (this.props.sort == 'string' || this.props.sort == 'number') ? this.props.sort : false;
+
+        if (sort == this.checkDataType()) {
+
+            if (sort == 'string') {
+                sortedData = data.sort();
+            } else if (sort == 'number') {
+                sortedData = data.sort( function(a,b) { return a - b; } )
+            }
+        }
+
+        // set state for data
+        return sortedData;
     }
 
     /**
@@ -270,7 +292,7 @@ export default class ComboSelect extends Component {
         let text, value;
         let dataType = this.checkDataType();
 
-        if (item){
+        if (item) {
 
             if (dataType == 'object') {
 
@@ -364,11 +386,16 @@ export default class ComboSelect extends Component {
             }
         }
 
-        if (hideMenu) {
+        if (hideMenu && target.className != 'combo-select-item active' && target.className != 'combo-select-item active selected') {
             this.setState({open: false});
         }
     }
 
+    /**
+     * Check if there is an parent element
+     * @param target
+     * @returns {boolean}
+     */
     checkParentElement(target) {
         if (target.parentElement != null) {
             return true;
@@ -455,6 +482,10 @@ export default class ComboSelect extends Component {
         }
     }
 
+    /**
+     * Check data type
+     * @returns {string}
+     */
     checkDataType() {
         return this.props.data && this.props.data[0] ? typeof this.props.data[0] : 'string';
     }
@@ -465,7 +496,7 @@ export default class ComboSelect extends Component {
         let head = this._generateHead();
         let body = this._generateBody(dataType);
 
-        var {data, type, text, onChange, search, ...other } = this.props;
+        var {data, type, text, onChange, search, map, ...other } = this.props;
 
         return (
             <div {...other} ref="comboSelect" className="combo-select">
@@ -485,5 +516,6 @@ ComboSelect.propTypes = {
     icon: React.PropTypes.string,
     data: React.PropTypes.array.isRequired,
     onChange: React.PropTypes.func,
-    map: React.PropTypes.object
+    map: React.PropTypes.object,
+    sort: React.PropTypes.string
 };

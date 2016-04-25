@@ -20,6 +20,7 @@ export default class ComboSelectItem extends Component {
 
         return (
             <div
+                key={Math.floor(Math.random() * 1000001111)}
                 className={'combo-select-item' + ((this.props.focused) ? ' active' : '') + ((this.props.selected) ? ' selected' : '')}
                 onClick={() => this.props.selectItem(this.props.item)}
                 onMouseEnter={() => this.props.focusItem(this.props.index)}>
@@ -31,7 +32,7 @@ export default class ComboSelectItem extends Component {
 }
 
 ComboSelectItem.propTypes = {
-    item: React.PropTypes.object,
+    item: React.PropTypes.any,
     index: React.PropTypes.number,
     map: React.PropTypes.object,
     focused: React.PropTypes.bool,

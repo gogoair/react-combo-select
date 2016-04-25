@@ -126,10 +126,12 @@ fakeFunctionObject(value) {
 - Create support for search, props ```search```
 - Optimize "intelligence" on opening menu and scroll, you can now use smart search which will open search only if there are more items that are opened in the screen
 - Make it work with collection of objects, which can be mapped, props ```map```
-- Actual select within, so that it can be used as required in html forms, you can use tab also :) but there are no styles for "focued" yes
+- Actual select within, so that it can be used as required in html forms, you can use tab also :) but there are no styles for "focused" yes
+- Got some issue with classes on multiple selector, this should be fixed, but we need to take a look at it
 
 ## TODO: until 7. May 2016, warm welcome for version 1.0.0
 - Sorting, alphabetical and numeric
+- Commands clear all and check all
 - MOAR Testing
 
 ## TODO: Happy future
