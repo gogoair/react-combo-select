@@ -136,6 +136,11 @@ export default class ComboSelect extends Component {
         );
     }
 
+    /**
+     * Sort data alphabetically or numerically
+     * @param data
+     * @returns {*}
+     */
     sortData(data) {
 
         let sortedData = data;
@@ -163,16 +168,28 @@ export default class ComboSelect extends Component {
      * Filter data to match searched term
      */
     filterBySearch() {
-        var filter = this.refs.comboSelect.getElementsByClassName('search-input')[0].value;
-        var data = [];
+        let filter = this.refs.comboSelect.getElementsByClassName('search-input')[0].value;
+        let data = [];
+        let selected = [];
 
-        for (var i in this.props.data) {
+        for (let i in this.props.data) {
             if (this.props.data[i].toLowerCase().indexOf(filter.toLowerCase()) > -1) {
                 data.push(this.props.data[i])
             }
         }
 
-        this.setState({data: data});
+        for (let j in data) {
+            for (let k in this.state.selectedData) {
+                if (data[j] == this.state.selectedData[k]) {
+                    selected.push(j);
+                }
+            }
+        }
+
+        this.setState({
+            data: data,
+            selected: selected
+        });
     }
 
     /**

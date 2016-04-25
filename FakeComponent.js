@@ -9,8 +9,8 @@ export default class FakeComponent extends Component {
 
     render() {
         //var standardArray = ["DDD", "CCC", "BBB", "AAA"];
-        var standardArray = [3, 1, 11, 111, 21, 32, 14, 32, 442];
-        //var standardArray = ["JA007D", "JA008D", "JA009D", "JA010D", "JA219J", "JA302J", "JA306J", "JA308J", "JA309J", "JA311J", "JA313J", "JA314J", "JA316J", "JA318J", "JA319J", "JA322J", "JA324J", "JA325J", "JA326J"];
+        //var standardArray = [3, 1, 11, 111, 21, 32, 14, 32, 442];
+        var standardArray = ["JA007D", "JA008D", "JA009D", "JA010D", "JA219J", "JA302J", "JA306J", "JA308J", "JA309J", "JA311J", "JA313J", "JA314J", "JA316J", "JA318J", "JA319J", "JA322J", "JA324J", "JA325J", "JA326J"];
         //var standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"];
         //var standardArray = [];
         //var standardArray = [
@@ -34,7 +34,7 @@ export default class FakeComponent extends Component {
                          map={{text: 'win', value: true}}/>*/}
                         {<ComboSelect text="-Select me-" type="multiselect" data={standardArray}
                                       onChange={this.fakeFunction} icon="fa fa-chevron-circle-down" search="smart"
-                                      map={{text: 'win', value: true}} required sort="number"/>}
+                                      map={{text: 'win', value: true}} required sort="string"/>}
                     </div>
                     <br/>
                     <input type="text" required/>
