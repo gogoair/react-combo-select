@@ -139,18 +139,23 @@ export default class ComboSelect extends Component {
     sortData(data) {
 
         let sortedData = data;
-        let sort = this.props.sort && (this.props.sort == 'string' || this.props.sort == 'number') ? this.props.sort : false;
+        let sort = this.props.sort ? this.props.sort : 'string';
 
         if (sort == this.checkDataType()) {
 
             if (sort == 'string') {
+
                 sortedData = data.sort();
+
             } else if (sort == 'number') {
-                sortedData = data.sort( function(a,b) { return a - b; } )
+
+                sortedData = data.sort(function (a, b) {
+                    return a - b;
+                })
+
             }
         }
 
-        // set state for data
         return sortedData;
     }
 

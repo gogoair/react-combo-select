@@ -72,6 +72,7 @@ let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"]];
 
 ### search 
 Search through data, will show only data that contain string from search bar. On, off (default), smart (search will be shown only if there is more items then can be shown in window)
+
 ```javascript
 
 let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D", "JA219J", "JA302J", "JA306J", "JA308J", "JA309J", "JA311J", "JA313J", "JA314J", "JA316J", "JA318J", "JA319J", "JA322J", "JA324J", "JA325J", "JA326J"];
@@ -106,6 +107,26 @@ fakeFunctionObject(value) {
 <ComboSelect data={arrayWithObjects} map={text: 'text', value: true} onChange={this.fakeFunctionObject}/>
 ```
 
+### sort
+You can sort data, numbers, or don't sort at all. By the default, it will sort strings, but only if the parameters in value are strings
+
+```javascript
+
+// Proper sorting 
+let nummericArray = [3, 1, 11, 111, 21, 32, 14, 32, 442];
+<ComboSelect text="-Select me-" type="multiselect" data={nummericArray} sort="number"/>
+let standardArray = ["DDD", "CCC", "BBB", "AAA"];
+<ComboSelect text="-Select me-" type="multiselect" data={standardArray} sort="string"/>
+
+// Nothing will happen
+let standardArray = ["DDD", "CCC", "BBB", "AAA"];
+<ComboSelect text="-Select me-" type="multiselect" data={standardArray} sort="off"/>
+let standardArray = ["DDD", "CCC", "BBB", "AAA"];
+<ComboSelect text="-Select me-" type="multiselect" data={standardArray} sort="number"/>
+let nummericArray = [3, 1, 11, 111, 21, 32, 14, 32, 442];
+<ComboSelect text="-Select me-" type="multiselect" data={nummericArray} sort="string"/>
+```
+
 
 ## DONE
 - Create build using babel, webpack, eslint
@@ -128,9 +149,9 @@ fakeFunctionObject(value) {
 - Make it work with collection of objects, which can be mapped, props ```map```
 - Actual select within, so that it can be used as required in html forms, you can use tab also :) but there are no styles for "focused" yes
 - Got some issue with classes on multiple selector, this should be fixed, but we need to take a look at it
+- Sorting, alphabetical and numeric ```sort```
 
 ## TODO: until 7. May 2016, warm welcome for version 1.0.0
-- Sorting, alphabetical and numeric
 - Commands clear all and check all
 - MOAR Testing
 
