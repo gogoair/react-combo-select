@@ -153,8 +153,8 @@ let nummericArray = [3, 1, 11, 111, 21, 32, 14, 32, 442];
 
 ## TODO: until 7. May 2016, warm welcome for version 1.0.0
 - Commands clear all and check all
+- Custom icons in search instead of just font-awesome (this is currently needed for project), remove icons for single select
 - MOAR Testing
 
 ## TODO: Happy future
 - Display images, videos, icons, links
-- Custom icons in search instead of just font-awesome (this is currently needed for project)
