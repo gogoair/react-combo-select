@@ -14,13 +14,6 @@ require('../node_modules/font-awesome/css/font-awesome.min.css');
 
 ## props/options
 
-### text
-Text will be displayed as somehintg you have selected or set as a start value, default for this is "-Select me-"
-
-```javascript  
-<ComboSelect text="-Select me-" data="['Pick me!', 'NO! Pick me']"/>
-```
-
 ### data
 Actual data you want to show, this is an array of either object, strings or numbers. Array or array won't work
 
@@ -28,6 +21,15 @@ Actual data you want to show, this is an array of either object, strings or numb
 let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"];
 
 <ComboSelect data="standardArray"/>
+```
+
+### text
+Text will be displayed as somehintg you have selected or set as a start value, default for this is "-Select me-"
+
+```javascript
+let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"];
+
+<ComboSelect text="-Select me-" data="standardArray"/>
 ```
 
 ```javascript

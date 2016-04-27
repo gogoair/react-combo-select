@@ -5,9 +5,9 @@
   "description": "React select component that can be used as a single select, multiselect, search",
   "main": "./lib/ComboSelect.jsx",
   "scripts": {
-    "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js  --hot --progress --colors",
-    "prepublish": "mkdir lib && ./node_modules/.bin/babel Components/ComboSelect.jsx --out-file lib/ComboSelect.jsx && ./node_modules/.bin/babel Components/ComboSelectItem.jsx --out-file lib/ComboSelectItem.jsx",
+    "start": "./node_modules/.bin/webpack-dev-server --config webpack.config.js  --hot --progress --colors --port 8081",
     "test": "mocha -r mock-local-storage --compilers js:babel-core/register --require ./test/test.jsx \"test/**/*@(.js|.jsx)\"",
+    "prepublish": "mkdir lib && ./node_modules/.bin/babel Components/ComboSelect.jsx --out-file lib/ComboSelect.jsx && ./node_modules/.bin/babel Components/ComboSelectItem.jsx --out-file lib/ComboSelectItem.jsx",
     "postpublish": "rm -rf ./lib"
   },
   "repository": {

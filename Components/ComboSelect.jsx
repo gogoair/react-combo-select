@@ -8,22 +8,25 @@ export default class ComboSelect extends Component {
     constructor(props) {
         super(props);
 
+        this.focus = -1;
+
         this.state = {
             text: props.text ? props.text : '-Select me-',
             open: false,
             type: props.type && (props.type == 'select' || props.type == 'multiselect') ? props.type : 'select',
             icon: props.icon ? props.icon : 'fa fa-chevron-circle-down',
-            focus: -1,
             selected: -1,
-            originalMargin: document.body.style.margin,
-            originalmarginRight: document.body.style.marginRight,
+            originalPosition: document.body.style.position,
+            originalOverflowY: document.body.style.overflowY,
+            originalWidth: document.body.style.width,
             data: this.sortData(this.props.data),
             selectedData: [],
             search: this.props.search && (this.props.search == 'on' || this.props.search == 'smart' || this.props.search == 'off') ? this.props.search : 'off',
             map: this.props.map && this.props.map.text && this.props.map.value && this.props.map.value.length > 0 ? this.props.map : {
                 value: 'value',
                 text: 'text'
-            }
+            },
+            value: this.props.value ? this.props.value : undefined
         }
     }
 
@@ -102,7 +105,7 @@ export default class ComboSelect extends Component {
             body = this.state.data.map(function (item, i) {
 
                 let focused = false;
-                (this.state.focus == i) ? focused = true : '';
+                (this.focus == i) ? focused = true : '';
 
                 let selected = false;
                 typeof this.state.selected == 'object' ?
@@ -126,7 +129,7 @@ export default class ComboSelect extends Component {
 
         let search = this.ifSearch(style) ?
             (<input type="text" style={style ? style.search : {}}
-                    className={"search-input " + (this.state.open && this.state.search ? 'active' : '')}
+                    className="search-input"
                     onChange={() => this.filterBySearch()}/>) : '';
 
         let controls = this.props && this.state.type == 'multiselect' ? (
@@ -270,13 +273,18 @@ export default class ComboSelect extends Component {
     toggleMenu() {
         var comboSelect = this.refs.comboSelect;
 
+        // position: fixed;
+        // overflow-y: scroll;
+        // width: 100%;
+
         if (!this.state.open) {
-            document.body.style.overflow = 'hidden';
-            document.body.style.marginRight = '23px';
+            document.body.style.overflowY = 'scroll';
+            document.body.style.position = 'fixed';
+            document.body.style.width = '100%';
         } else {
-            document.body.style.overflow = '';
-            document.body.style.margin = this.state.originalMargin;
-            document.body.style.marginRight = this.state.originalmarginRight;
+            document.body.style.overflowY = this.state.originalOverflowY;
+            document.body.style.position = this.state.originalPosition;
+            document.body.style.width = this.state.originalWidth;
         }
 
         this.setState({open: !this.state.open}, () => {
@@ -298,7 +306,7 @@ export default class ComboSelect extends Component {
      * @param focus
      */
     focusItem(focus) {
-        this.setState({focus: focus});
+        this.focus = focus;
     }
 
     /**
@@ -443,7 +451,7 @@ export default class ComboSelect extends Component {
 
             } else if (this.state.type == 'select') {
 
-                this.setState({text: text, selected: [this.state.focus]}, () => {
+                this.setState({text: text, selected: [this.focus]}, () => {
                     this.toggleMenu();
                     this.props.onChange(value);
                 });
@@ -454,7 +462,7 @@ export default class ComboSelect extends Component {
 
                     this.setState({
                         text: [text],
-                        selected: [this.state.focus],
+                        selected: [this.focus],
                         selectedData: [value]
                     }, () => {
                         this.props.onChange(value);
@@ -480,7 +488,7 @@ export default class ComboSelect extends Component {
                         selectedData.splice(splice, 1);
                     } else {
                         texts.push(text);
-                        selected.push(this.state.focus);
+                        selected.push(this.focus);
                         selectedData.push(value);
                     }
 
@@ -519,7 +527,7 @@ export default class ComboSelect extends Component {
             }
         }
 
-        if (hideMenu && target.className != 'combo-select-item active' && target.className != 'combo-select-item active selected') {
+        if (hideMenu && target.className != 'combo-select-item' && target.className != 'combo-select-item selected') {
             this.setState({open: false});
         }
     }
@@ -549,9 +557,9 @@ export default class ComboSelect extends Component {
         paddingBottom = paddingBottom > -1 ? paddingBottom : 0;
 
         let windowHeight = this.refs.comboSelect.getElementsByClassName('combo-select-body')[0].clientHeight - paddingTop - paddingBottom;
-        let focus = this.state.focus;
-        let elementHeight = this.refs.comboSelect.getElementsByClassName('combo-select-item')[this.state.focus].clientHeight;
-        let elementOffsetTop = this.refs.comboSelect.getElementsByClassName('combo-select-item')[this.state.focus].offsetTop - paddingTop;
+        let focus = this.focus;
+        let elementHeight = this.refs.comboSelect.getElementsByClassName('combo-select-item')[this.focus].clientHeight;
+        let elementOffsetTop = this.refs.comboSelect.getElementsByClassName('combo-select-item')[this.focus].offsetTop - paddingTop;
         let elementCountPerWindow = Math.floor(windowHeight / elementHeight);
         let scrollTop = this.refs.comboSelect.getElementsByClassName(specialClass)[0].scrollTop;
 
@@ -562,6 +570,10 @@ export default class ComboSelect extends Component {
         } else if (focus == 0) {
             this.refs.comboSelect.getElementsByClassName(specialClass)[0].scrollTop = 0;
         }
+
+        if(this.focus - 1 > -1){this.refs.comboSelect.getElementsByClassName('combo-select-item')[this.focus - 1].style.backgroundColor = ''};
+        this.refs.comboSelect.getElementsByClassName('combo-select-item')[this.focus].style.backgroundColor = '#f7f7f7';
+        if(this.state.data && this.focus + 1 < this.state.data.length){this.refs.comboSelect.getElementsByClassName('combo-select-item')[this.focus + 1].style.backgroundColor = ''};
     }
 
     /**
@@ -575,20 +587,14 @@ export default class ComboSelect extends Component {
                 case 38:
                     // Up
                     event.preventDefault();
-                    this.setState({
-                        focus: this.state.focus < 1 ? this.state.data.length - 1 : this.state.focus - 1
-                    }, () => {
-                        this.controlScrolling();
-                    });
+                    this.focus = this.focus < 1 ? this.state.data.length - 1 : this.focus - 1;
+                    this.controlScrolling();
                     break;
                 case 40:
                     // Down
                     event.preventDefault();
-                    this.setState({
-                        focus: this.state.focus == this.props.data.length - 1 ? this.state.focus = 0 : this.state.focus + 1
-                    }, () => {
-                        this.controlScrolling();
-                    });
+                    this.focus = this.focus == this.props.data.length - 1 ? this.focus = 0 : this.focus + 1;
+                    this.controlScrolling();
                     break;
                 case 37:
                     // Left
@@ -601,12 +607,12 @@ export default class ComboSelect extends Component {
                 case 32:
                     // Space
                     event.preventDefault();
-                    this.selectItem(this.props.data[this.state.focus]);
+                    this.selectItem(this.props.data[this.focus]);
                     break;
                 case 13:
                     // Enter
                     event.preventDefault();
-                    this.selectItem(this.props.data[this.state.focus]);
+                    this.selectItem(this.props.data[this.focus]);
                     break;
                 case 9:
                     // Tab
@@ -639,7 +645,7 @@ export default class ComboSelect extends Component {
         return (
             <div ref="comboSelect" className="combo-select">
                 {head}
-                {this.state.open ?
+                {this.state.open && !this.props.disabled ?
                     body
                     : ''}
             </div>
@@ -649,7 +655,7 @@ export default class ComboSelect extends Component {
 
 ComboSelect
     .propTypes = {
-    text: React.PropTypes.string,
+    text: React.PropTypes.any,
     search: React.PropTypes.string,
     type: React.PropTypes.string,
     icon: React.PropTypes.string,
@@ -657,5 +663,7 @@ ComboSelect
     onChange: React.PropTypes.func,
     map: React.PropTypes.object,
     sort: React.PropTypes.string,
-    controls: React.PropTypes.bool
+    controls: React.PropTypes.bool,
+    value: React.PropTypes.any,
+    disabled: React.PropTypes.bool
 };
