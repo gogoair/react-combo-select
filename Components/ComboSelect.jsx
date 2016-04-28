@@ -25,8 +25,7 @@ export default class ComboSelect extends Component {
             map: this.props.map && this.props.map.text && this.props.map.value && this.props.map.value.length > 0 ? this.props.map : {
                 value: 'value',
                 text: 'text'
-            },
-            value: this.props.value ? this.props.value : undefined
+            }
         }
     }
 
@@ -56,7 +55,6 @@ export default class ComboSelect extends Component {
     componentWillReceiveProps(newProps) {
         this.setState({
             text: newProps.text ? newProps.text : this.state.text,
-            value: newProps.value ? newProps.value : this.state.value,
             data: this.sortData(newProps.data)
         });
     }
@@ -235,7 +233,6 @@ export default class ComboSelect extends Component {
         let data = [];
         let selected = [];
 
-
         for (let i in this.props.data) {
 
             if (this.props.data[i].toString().toLowerCase().indexOf(filter.toLowerCase()) > -1) {
@@ -245,12 +242,23 @@ export default class ComboSelect extends Component {
         }
 
         for (let j in data) {
-            for (let k in this.state.selectedData) {
-                if (data[j] == this.state.selectedData[k]) {
+            if (this.state.type == 'multiselect') {
+
+                for (let k in this.state.selectedData) {
+                    if (data[j] == this.state.selectedData[k]) {
+                        selected.push(j);
+                    }
+                }
+
+            } else {
+
+                if (data[j] == this.state.selectedData) {
                     selected.push(j);
                 }
+
             }
         }
+
 
         this.setState({
             data: data,
@@ -433,29 +441,28 @@ export default class ComboSelect extends Component {
                 value = item;
             }
 
-            // TODO: put supprort for type string and type number, also, select all
             if (selectAll) {
                 let texts = [];
-                let values = [];
+                let value = [];
                 let countArray = [];
 
                 for (let i in this.state.data) {
                     texts.push(this.state.data[i][this.state.map.text]);
-                    values.push(this.state.data[i][this.state.map.value]);
+                    value.push(this.state.data[i][this.state.map.value]);
                     countArray.push(i);
                 }
 
                 this.setState({
                     text: texts,
                     selected: countArray,
-                    selectedData: values
+                    selectedData: value
                 }, () => {
-                    this.props.onChange ? this.props.onChange(values) : '';
+                    this.props.onChange ? this.props.onChange(value) : '';
                 });
 
             } else if (this.state.type == 'select') {
 
-                this.setState({text: text, selected: [this.focus]}, () => {
+                this.setState({text: text, selected: [this.focus], selectedData: value}, () => {
                     this.toggleMenu();
                     this.props.onChange ? this.props.onChange(value) : '';
                 });
