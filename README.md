@@ -20,7 +20,7 @@ Actual data you want to show, this is an array of either object, strings or numb
 ```javascript
 let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"];
 
-<ComboSelect data="standardArray"/>
+<ComboSelect data={standardArray}/>
 ```
 
 ### text
@@ -29,7 +29,7 @@ Text will be displayed as somehintg you have selected or set as a start value, d
 ```javascript
 let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"];
 
-<ComboSelect text="-Select me-" data="standardArray"/>
+<ComboSelect text="-Select me-" data={standardArray}/>
 ```
 
 ```javascript
@@ -40,7 +40,7 @@ let arrayWithObjects = [
             {text: "air-JA107D", win: "win-JA107D", value: "JA010D"}
         ];
 
-<ComboSelect data="arrayWithObjects"/>
+<ComboSelect data={arrayWithObjects}/>
 ```
 
 ### type 
@@ -50,13 +50,13 @@ Select or multiselect, self explanatory
 let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D", "JA219J", "JA302J", "JA306J", "JA308J", "JA309J", "JA311J", "JA313J", "JA314J", "JA316J", "JA318J", "JA319J", "JA322J", "JA324J", "JA325J", "JA326J"];
 
 // Pick one
-<ComboSelect data="standardArray" type="select"/>
+<ComboSelect data={standardArray} type="select"/>
 
 // Or just
-<ComboSelect data="standardArray"/>
+<ComboSelect data={standardArray}/>
 
 // Pick multiple
-<ComboSelect data="standardArray" type="multiselect"/>
+<ComboSelect data={standardArray} type="multiselect"/>
 ```
 
 ### onChange 
@@ -152,6 +152,7 @@ let nummericArray = [3, 1, 11, 111, 21, 32, 14, 32, 442];
 - Actual select within, so that it can be used as required in html forms, you can use tab also :) but there are no styles for "focused" yes
 - Got some issue with classes on multiple selector, this should be fixed, but we need to take a look at it
 - Sorting, alphabetical and numeric ```sort```
+- Fixing bugs for required onChange function, screen moving upon menu opening, speed and performance (1000 items)
 
 ## TODO: until 7. May 2016, warm welcome for version 1.0.0
 - Commands clear all and check all
