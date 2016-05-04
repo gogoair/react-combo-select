@@ -42,12 +42,6 @@ export default class FakeComponent extends Component {
                     <br/>
                     <br/>
                     <br/>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
                     {this.state.text}
                     <br/>
                     <div style={{position: 'relative'}}>
@@ -69,6 +63,12 @@ export default class FakeComponent extends Component {
                     <br/>
                     <input type="submit"/>
                 </form>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
                 <br/>
                 <br/>
                 <br/>

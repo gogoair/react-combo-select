@@ -46,12 +46,17 @@ export default class ComboSelect extends Component {
             this.globalMouseClick(event);
         });
 
+        window.addEventListener('wheel', (event) => {
+            this.globalWheel(event);
+        });
+
         this.refs.comboSelect.getElementsByClassName(specialClass).scrollTop = 0;
     }
 
     componentWillUnmount() {
         window.removeEventListener('keydown', this.globalKeyDown);
         window.removeEventListener('click', this.globalMouseClick);
+        window.removeEventListener('wheel', this.addEventListener);
         this.refs.comboSelect.getElementsByClassName('combo-select-required-select')[0].removeEventListener('keydown', this.requiredSelectKeydown)
     }
 
@@ -61,6 +66,98 @@ export default class ComboSelect extends Component {
             value: newProps.value,
             data: this.sortData(newProps.data)
         });
+    }
+
+    /**
+     * Global wheel event
+     * @param event
+     */
+    globalWheel(event) {
+
+        if (this.state.open) {
+
+            var target = event.target;
+            // Safety fuse
+            let i = 0;
+            var outside = true;
+
+            let data = this.state.data.length;
+            let elementHeight = this.refs.comboSelect.getElementsByClassName('combo-select-item')[0].clientHeight;
+            let menuHeight = document.getElementsByClassName('combo-select-body-scroll')[0].clientHeight;
+
+            let potentialScrollBottom = this.refs.comboSelect.getElementsByClassName(specialClass)[0].scrollTop + menuHeight + event.deltaY;
+            let maximumScroll = data * elementHeight;
+
+            if (potentialScrollBottom <= maximumScroll && this.refs.comboSelect.getElementsByClassName(specialClass)[0].scrollTop + event.deltaY > 0) {
+
+                while (this.checkParentElement(target) && i < 10) {
+                    target = target.parentElement;
+                    i++;
+
+                    if (target.innerHTML == this.refs.comboSelect.getElementsByClassName('combo-select-body-scroll')[0].innerHTML) {
+                        outside = false;
+                    }
+                }
+
+                if (outside) {
+                    event.stopPropagation();
+                    event.preventDefault();
+                }
+
+            } else if (this.refs.comboSelect.getElementsByClassName(specialClass)[0].scrollTop + event.deltaY <= 0) {
+
+                this.refs.comboSelect.getElementsByClassName('combo-select-body-scroll')[0].scrollTop = 0;
+                event.stopPropagation();
+                event.preventDefault();
+
+            } else {
+
+                this.refs.comboSelect.getElementsByClassName('combo-select-body-scroll')[0].scrollTop = 9999999;
+                event.stopPropagation();
+                event.preventDefault();
+
+            }
+
+
+        }
+    }
+
+    /**
+     * Global mouse event, here is also serves to control opening/closing menu and picking item on select/multiselect
+     * @param event
+     */
+    globalMouseClick(event) {
+
+        var target = event.target;
+
+        // Safety fuse
+        let i = 0;
+        let hideMenu = true;
+
+        while (this.checkParentElement(target) && i < 10) {
+            target = target.parentElement;
+            i++;
+            if (target.innerHTML == this.refs.comboSelect.innerHTML) {
+                hideMenu = false;
+            }
+        }
+
+        if (hideMenu && target.className != 'combo-select-item' && target.className != 'combo-select-item selected' && this.state.open) {
+            this.toggleMenu();
+        }
+    }
+
+    /**
+     * Check if there is an parent element
+     * @param target
+     * @returns {boolean}
+     */
+    checkParentElement(target) {
+        if (target.parentElement != null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -294,20 +391,20 @@ export default class ComboSelect extends Component {
     toggleMenu() {
         var comboSelect = this.refs.comboSelect;
 
-        if (!this.state.open) {
-            this.scroll = document.body.scrollTop;
-
-            document.body.style.overflowY = 'scroll';
-            document.body.style.top = '-' + document.body.scrollTop.toString() + 'px';
-            document.body.style.position = 'fixed';
-            document.body.style.width = '100%';
-        } else {
-            document.body.style.overflowY = this.state.originalOverflowY;
-            document.body.style.position = this.state.originalPosition;
-            document.body.style.width = this.state.originalWidth;
-            document.body.style.top = this.state.originalTop;
-            document.body.scrollTop = this.scroll;
-        }
+        //if (!this.state.open) {
+        //    this.scroll = document.body.scrollTop;
+        //
+        //    document.body.style.overflowY = 'scroll';
+        //    document.body.style.top = '-' + document.body.scrollTop.toString() + 'px';
+        //    document.body.style.position = 'fixed';
+        //    document.body.style.width = '100%';
+        //} else {
+        //    document.body.style.overflowY = this.state.originalOverflowY;
+        //    document.body.style.position = this.state.originalPosition;
+        //    document.body.style.width = this.state.originalWidth;
+        //    document.body.style.top = this.state.originalTop;
+        //    document.body.scrollTop = this.scroll;
+        //}
 
         this.setState({open: !this.state.open}, () => {
 
@@ -524,44 +621,6 @@ export default class ComboSelect extends Component {
             }
 
             this.refs.comboSelect.getElementsByClassName('combo-select-required-select')[0].value = text;
-        }
-    }
-
-    /**
-     * Global mouse event, here is also serves to control opening/closing menu and picking item on select/multiselect
-     * @param event
-     */
-    globalMouseClick(event) {
-
-        var target = event.target;
-
-        // Safety fuse
-        let i = 0;
-        let hideMenu = true;
-
-        while (this.checkParentElement(target) && i < 10) {
-            target = target.parentElement;
-            i++;
-            if (target.innerHTML == this.refs.comboSelect.innerHTML) {
-                hideMenu = false;
-            }
-        }
-
-        if (hideMenu && target.className != 'combo-select-item' && target.className != 'combo-select-item selected' && this.state.open) {
-            this.toggleMenu();
-        }
-    }
-
-    /**
-     * Check if there is an parent element
-     * @param target
-     * @returns {boolean}
-     */
-    checkParentElement(target) {
-        if (target.parentElement != null) {
-            return true;
-        } else {
-            return false;
         }
     }
 
