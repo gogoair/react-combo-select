@@ -9,6 +9,7 @@ export default class ComboSelect extends Component {
         super(props);
 
         this.focus = -1;
+        this.scroll = 0;
 
         this.state = {
             text: props.text ? props.text : '-Select me-',
@@ -19,8 +20,9 @@ export default class ComboSelect extends Component {
             originalPosition: document.body.style.position,
             originalOverflowY: document.body.style.overflowY,
             originalWidth: document.body.style.width,
+            originalTop: document.body.style.top,
             data: this.sortData(this.props.data),
-            selectedData: [],
+            value: [],
             search: this.props.search && (this.props.search == 'on' || this.props.search == 'smart' || this.props.search == 'off') ? this.props.search : 'off',
             map: this.props.map && this.props.map.text && this.props.map.value && this.props.map.value.length > 0 ? this.props.map : {
                 value: 'value',
@@ -50,11 +52,13 @@ export default class ComboSelect extends Component {
     componentWillUnmount() {
         window.removeEventListener('keydown', this.globalKeyDown);
         window.removeEventListener('click', this.globalMouseClick);
+        this.refs.comboSelect.getElementsByClassName('combo-select-required-select')[0].removeEventListener('keydown', this.requiredSelectKeydown)
     }
 
     componentWillReceiveProps(newProps) {
         this.setState({
-            text: newProps.text ? newProps.text : this.state.text,
+            text: newProps.text,
+            value: newProps.value,
             data: this.sortData(newProps.data)
         });
     }
@@ -174,9 +178,9 @@ export default class ComboSelect extends Component {
 
         for (let i in data) {
             let isIn = false;
-            for (let j in this.state.selectedData) {
+            for (let j in this.state.value) {
 
-                if ((dataType == 'object' ? this.state.data[i][this.state.map.value] : this.state.data[i]) == this.state.selectedData[j]) {
+                if ((dataType == 'object' ? this.state.data[i][this.state.map.value] : this.state.data[i]) == this.state.value[j]) {
                     isIn = true;
                 }
 
@@ -244,15 +248,15 @@ export default class ComboSelect extends Component {
         for (let j in data) {
             if (this.state.type == 'multiselect') {
 
-                for (let k in this.state.selectedData) {
-                    if (data[j] == this.state.selectedData[k]) {
+                for (let k in this.state.value) {
+                    if (data[j] == this.state.value[k]) {
                         selected.push(j);
                     }
                 }
 
             } else {
 
-                if (data[j] == this.state.selectedData) {
+                if (data[j] == this.state.value) {
                     selected.push(j);
                 }
 
@@ -291,13 +295,18 @@ export default class ComboSelect extends Component {
         var comboSelect = this.refs.comboSelect;
 
         if (!this.state.open) {
+            this.scroll = document.body.scrollTop;
+
             document.body.style.overflowY = 'scroll';
+            document.body.style.top = '-' + document.body.scrollTop.toString() + 'px';
             document.body.style.position = 'fixed';
             document.body.style.width = '100%';
         } else {
             document.body.style.overflowY = this.state.originalOverflowY;
             document.body.style.position = this.state.originalPosition;
             document.body.style.width = this.state.originalWidth;
+            document.body.style.top = this.state.originalTop;
+            document.body.scrollTop = this.scroll;
         }
 
         this.setState({open: !this.state.open}, () => {
@@ -415,7 +424,7 @@ export default class ComboSelect extends Component {
         let dataType = this.checkDataType();
         let selectAll = false;
 
-        //console.log(this.state.selectedData);
+        //console.log(this.state.value);
         //console.log(this.state.selected);
         //console.log(this.state.text);
 
@@ -455,14 +464,14 @@ export default class ComboSelect extends Component {
                 this.setState({
                     text: texts,
                     selected: countArray,
-                    selectedData: value
+                    value: value
                 }, () => {
                     this.props.onChange ? this.props.onChange(value) : '';
                 });
 
             } else if (this.state.type == 'select') {
 
-                this.setState({text: text, selected: [this.focus], selectedData: value}, () => {
+                this.setState({text: text, selected: [this.focus], value: value}, () => {
                     this.toggleMenu();
                     this.props.onChange ? this.props.onChange(value) : '';
                 });
@@ -474,7 +483,7 @@ export default class ComboSelect extends Component {
                     this.setState({
                         text: [text],
                         selected: [this.focus],
-                        selectedData: [value]
+                        value: [value]
                     }, () => {
                         this.props.onChange ? this.props.onChange(value) : '';
                     });
@@ -491,24 +500,24 @@ export default class ComboSelect extends Component {
 
                     let texts = this.state.text.slice();
                     let selected = this.state.selected.slice();
-                    let selectedData = this.state.selectedData.slice();
+                    let value = this.state.value.slice();
 
                     if (splice || splice == 0) {
                         texts.splice(splice, 1);
                         selected.splice(splice, 1);
-                        selectedData.splice(splice, 1);
+                        value.splice(splice, 1);
                     } else {
                         texts.push(text);
                         selected.push(this.focus);
-                        selectedData.push(value);
+                        value.push(value);
                     }
 
                     this.setState({
                         text: texts,
                         selected: selected,
-                        selectedData: selectedData
+                        value: value
                     }, () => {
-                        this.props.onChange ? this.props.onChange(selectedData) : '';
+                        this.props.onChange ? this.props.onChange(value) : '';
                     });
 
                 }
@@ -538,8 +547,8 @@ export default class ComboSelect extends Component {
             }
         }
 
-        if (hideMenu && target.className != 'combo-select-item' && target.className != 'combo-select-item selected') {
-            this.setState({open: false});
+        if (hideMenu && target.className != 'combo-select-item' && target.className != 'combo-select-item selected' && this.state.open) {
+            this.toggleMenu();
         }
     }
 

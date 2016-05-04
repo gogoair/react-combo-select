@@ -12,7 +12,7 @@ export default class FakeComponent extends Component {
     }
 
     fakeFunction(value) {
-        //console.log(value);
+        console.log(value);
     }
 
     render() {
@@ -53,13 +53,7 @@ export default class FakeComponent extends Component {
                     <div style={{position: 'relative'}}>
                         {<ComboSelect text={this.state.text} type="select" data={standardArray}
                                       icon="fa fa-chevron-circle-down" search="smart"
-                                      disabled={false}/>}
-                        {/*<ComboSelect text="-Select me-" type="select" data={standardArray}
-                         onChange={this.fakeFunction} icon="fa fa-chevron-circle-down" search="smart"
-                         disabled={false}/>*/}
-                        {/*<ComboSelect text="-Select me-" type="multiselect" data={standardArray}
-                         onChange={this.fakeFunction} icon="fa fa-chevron-circle-down" search="smart"
-                         map={{text: 'win', value: true}} required sort="number"/>*/}
+                                      disabled={false} onChange={this.fakeFunction}/>}
                     </div>
                     <br/>
                     <input type="text" value={this.state.text} required readOnly/>
