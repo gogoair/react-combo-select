@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ComboSelectItem from './ComboSelectItem.jsx';
 
+// TODO: move to this.specialClass
 let specialClass = 'combo-select-body-scroll';
 
 export default class ComboSelect extends Component {
@@ -10,10 +11,16 @@ export default class ComboSelect extends Component {
 
         this.focus = -1;
         this.scroll = 0;
+        this.defaultText = props.text ? props.text : '-Select me-';
+
+        this.globalKeyDown = this.globalKeyDown.bind(this);
+        this.globalMouseClick = this.globalMouseClick.bind(this);
+        this.globalWheel = this.globalWheel.bind(this);
+        this.requiredSelectKeydown = this.requiredSelectKeydown.bind(this);
 
         this.state = {
             text: props.text ? props.text : '-Select me-',
-            open: false,
+            open: props.open ? props.open : false,
             type: props.type && (props.type == 'select' || props.type == 'multiselect') ? props.type : 'select',
             icon: props.icon ? props.icon : 'fa fa-chevron-circle-down',
             selected: -1,
@@ -24,7 +31,7 @@ export default class ComboSelect extends Component {
             data: this.sortData(this.props.data),
             value: [],
             search: this.props.search && (this.props.search == 'on' || this.props.search == 'smart' || this.props.search == 'off') ? this.props.search : 'off',
-            map: this.props.map && this.props.map.text && this.props.map.value && this.props.map.value.length > 0 ? this.props.map : {
+            map: this.props.map && this.props.map.text && this.props.map.value && this.props.map.text.length > 0 ? this.props.map : {
                 value: 'value',
                 text: 'text'
             }
@@ -33,30 +40,26 @@ export default class ComboSelect extends Component {
 
     componentDidMount() {
 
-        window.addEventListener('keydown', (event) => {
-            this.globalKeyDown(event);
-        });
-
+        /**
+         * Binding events
+         */
+        window.addEventListener('keydown', this.globalKeyDown);
+        window.addEventListener('click', this.globalMouseClick);
+        window.addEventListener('wheel', this.globalWheel);
         // Event for real select within select, this is needed for "required" attribute since it cannot be attached to the non-form elements
-        this.refs.comboSelect.getElementsByClassName('combo-select-required-select')[0].addEventListener('keydown', (event) => {
-            this.requiredSelectKeydown(event);
-        });
+        this.refs.comboSelect.getElementsByClassName('combo-select-required-select')[0].addEventListener('keydown', this.requiredSelectKeydown);
 
-        window.addEventListener('click', (event) => {
-            this.globalMouseClick(event);
-        });
-
-        window.addEventListener('wheel', (event) => {
-            this.globalWheel(event);
-        });
-
+        /**
+         * Inner scroll, scroll to top
+         * @type {number}
+         */
         this.refs.comboSelect.getElementsByClassName(specialClass).scrollTop = 0;
     }
 
     componentWillUnmount() {
         window.removeEventListener('keydown', this.globalKeyDown);
         window.removeEventListener('click', this.globalMouseClick);
-        window.removeEventListener('wheel', this.addEventListener);
+        window.removeEventListener('wheel', this.globalWheel);
         this.refs.comboSelect.getElementsByClassName('combo-select-required-select')[0].removeEventListener('keydown', this.requiredSelectKeydown)
     }
 
@@ -128,22 +131,25 @@ export default class ComboSelect extends Component {
      */
     globalMouseClick(event) {
 
-        var target = event.target;
+        if (event) {
 
-        // Safety fuse
-        let i = 0;
-        let hideMenu = true;
+            var target = event.target;
 
-        while (this.checkParentElement(target) && i < 10) {
-            target = target.parentElement;
-            i++;
-            if (target.innerHTML == this.refs.comboSelect.innerHTML) {
-                hideMenu = false;
+            // Safety fuse
+            let i = 0;
+            let hideMenu = true;
+
+            while (this.checkParentElement(target) && i < 10) {
+                target = target.parentElement;
+                i++;
+                if (target.innerHTML == this.refs.comboSelect.innerHTML) {
+                    hideMenu = false;
+                }
             }
-        }
 
-        if (hideMenu && target.className != 'combo-select-item' && target.className != 'combo-select-item selected' && this.state.open) {
-            this.toggleMenu();
+            if (hideMenu && target.className != 'combo-select-item' && target.className != 'combo-select-item selected' && this.state.open) {
+                this.toggleMenu();
+            }
         }
     }
 
@@ -184,10 +190,10 @@ export default class ComboSelect extends Component {
         });
 
 
-        var {data, type, onChange, search, value, ...other } = this.props;
+        var {data, type, onChange, search, value, onToggle, ...other } = this.props;
 
         head = (<div onClick={() => this.toggleMenu()}>
-            <div className="combo-select-head">{text ? text : '-Select me-'}<i className={this.state.icon}></i>
+            <div className="combo-select-head">{text ? text : this.defaultText}<i className={this.state.icon}></i>
             </div>
             <select className="combo-select-required-select">
                 <option value=""></option>
@@ -240,7 +246,8 @@ export default class ComboSelect extends Component {
                     onChange={() => this.filterBySearch()}/>)
             : '';
 
-        let controls = this.props && this.state.type == 'multiselect' ? (
+        // Currently off
+        let controls = this.props && this.state.type == 'multiselect' && false ? (
             <div style={style ? style.controls : {}} className="combo-select-controls">
                 <a href="#" onClick={(event) => this.selectAll(event)}>yay</a>
                 <a href="#" onClick={(event) => this.selectAll(event)}>nay</a>
@@ -376,35 +383,20 @@ export default class ComboSelect extends Component {
         if (event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 32) {
             event.preventDefault();
 
-            this.setState({
-                open: true
-            });
-
-            this.refs.comboSelect.getElementsByClassName('combo-select-required-select')[0].blur();
+            this.toggleMenu();
         }
     }
 
     /**
      * Open/close menu, with overflow hidden
-     * TODO: now it hides scroll and move screen on right to avoid movement, disable it on screens without scroll
      */
     toggleMenu() {
         var comboSelect = this.refs.comboSelect;
 
-        //if (!this.state.open) {
-        //    this.scroll = document.body.scrollTop;
-        //
-        //    document.body.style.overflowY = 'scroll';
-        //    document.body.style.top = '-' + document.body.scrollTop.toString() + 'px';
-        //    document.body.style.position = 'fixed';
-        //    document.body.style.width = '100%';
-        //} else {
-        //    document.body.style.overflowY = this.state.originalOverflowY;
-        //    document.body.style.position = this.state.originalPosition;
-        //    document.body.style.width = this.state.originalWidth;
-        //    document.body.style.top = this.state.originalTop;
-        //    document.body.scrollTop = this.scroll;
-        //}
+        // Send event to outside event
+        if (this.props.onToggle) {
+            this.props.onToggle();
+        }
 
         this.setState({open: !this.state.open}, () => {
 
@@ -530,6 +522,7 @@ export default class ComboSelect extends Component {
             if (dataType == 'object') {
 
                 if (item.length > 0) {
+
                     text = [];
                     value = [];
                     for (let i in item) {
@@ -537,9 +530,17 @@ export default class ComboSelect extends Component {
                         value.push(item[i][this.state.map.value]);
                     }
                     selectAll = true;
+
                 } else {
+
                     text = item[this.state.map.text];
-                    value = item[this.state.map.value];
+
+                    if (this.state.map.value === true) {
+                        value = item;
+                    } else {
+                        value = item[this.state.map.value];
+                    }
+
                 }
 
             } else {
@@ -582,7 +583,7 @@ export default class ComboSelect extends Component {
                         selected: [this.focus],
                         value: [value]
                     }, () => {
-                        this.props.onChange ? this.props.onChange(value) : '';
+                        this.props.onChange ? this.props.onChange([value]) : '';
                     });
 
                 } else {
@@ -597,24 +598,24 @@ export default class ComboSelect extends Component {
 
                     let texts = this.state.text.slice();
                     let selected = this.state.selected.slice();
-                    let value = this.state.value.slice();
+                    let values = this.state.value.slice();
 
                     if (splice || splice == 0) {
                         texts.splice(splice, 1);
                         selected.splice(splice, 1);
-                        value.splice(splice, 1);
+                        values.splice(splice, 1);
                     } else {
                         texts.push(text);
                         selected.push(this.focus);
-                        value.push(value);
+                        values.push(value);
                     }
 
                     this.setState({
                         text: texts,
                         selected: selected,
-                        value: value
+                        value: values
                     }, () => {
-                        this.props.onChange ? this.props.onChange(value) : '';
+                        this.props.onChange ? this.props.onChange(values) : '';
                     });
 
                 }
@@ -653,12 +654,12 @@ export default class ComboSelect extends Component {
         if (this.focus - 1 > -1) {
             this.refs.comboSelect.getElementsByClassName('combo-select-item')[this.focus - 1].style.backgroundColor = ''
         }
-        ;
+
         this.refs.comboSelect.getElementsByClassName('combo-select-item')[this.focus].style.backgroundColor = '#f7f7f7';
+
         if (this.state.data && this.focus + 1 < this.state.data.length) {
             this.refs.comboSelect.getElementsByClassName('combo-select-item')[this.focus + 1].style.backgroundColor = ''
         }
-        ;
     }
 
     /**
@@ -706,8 +707,7 @@ export default class ComboSelect extends Component {
                 case 27:
                     // Escape
                     event.preventDefault();
-                    this.setState({open: false});
-                    this.refs.comboSelect.getElementsByClassName('combo-select-required-select')[0].focus();
+                    this.toggleMenu();
                     break;
             }
         }
@@ -748,5 +748,7 @@ ComboSelect
     sort: React.PropTypes.string,
     controls: React.PropTypes.bool,
     value: React.PropTypes.any,
-    disabled: React.PropTypes.bool
+    disabled: React.PropTypes.bool,
+    onToggle: React.PropTypes.func,
+    open: React.PropTypes.bool
 };
