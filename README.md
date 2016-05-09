@@ -60,7 +60,7 @@ let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D", "JA219J", "JA302J",
 ```
 
 ### onChange 
-Return function, which will return value that you have picked. It can work with returning just values you have selected, or whole objects if can you need to pass them around
+Returns function, which will return value that you have picked. It can work with returning just values you have selected, or whole objects if can you need to pass them around
 
 ```javascript    
 fakeFunction(value) {
@@ -70,6 +70,19 @@ fakeFunction(value) {
 let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"]];
 
 <ComboSelect text="-Select me-" type="multiselect" data={standardArray} onChange={this.fakeFunction}/>
+```
+
+### onToggle 
+Function that emit event for opening and closing menu. Returns boolean, true for open, false for close
+
+```javascript    
+fakeToggle(open) {
+    console.log(open);
+}
+
+let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"]];
+
+<ComboSelect text="-Select me-" type="multiselect" data={standardArray} fakeToggle={this.fakeFunction}/>
 ```
 
 ### search 
@@ -153,11 +166,13 @@ let nummericArray = [3, 1, 11, 111, 21, 32, 14, 32, 442];
 - Got some issue with classes on multiple selector, this should be fixed, but we need to take a look at it
 - Sorting, alphabetical and numeric ```sort```
 - Fixing bugs for required onChange function, screen moving upon menu opening, speed and performance (1000 items)
+- Event for opening/closing menu ```onToggle="this.functionThatYouUse()"```
 
-## TODO: until 7. May 2016, warm welcome for version 1.0.0
+## TODO
 - Commands clear all and check all
 - Custom icons in search instead of just font-awesome (this is currently needed for project), remove icons for single select
 - MOAR Testing
-
-## TODO: Happy future
 - Display images, videos, icons, links
+
+## UPDATE
+I've spent a lot of time fixing bugs with opening/closing menu, inner scrolling and another issues with events that were not needed for project at beginning, but the moment I started implementing into project, I needed a lot of new features. Therefore version 1.0.0 will have to wait until we do more testing in production and we finish all the features that we have planed. 

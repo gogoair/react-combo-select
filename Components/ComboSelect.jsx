@@ -24,12 +24,8 @@ export default class ComboSelect extends Component {
             type: props.type && (props.type == 'select' || props.type == 'multiselect') ? props.type : 'select',
             icon: props.icon ? props.icon : 'fa fa-chevron-circle-down',
             selected: -1,
-            originalPosition: document.body.style.position,
-            originalOverflowY: document.body.style.overflowY,
-            originalWidth: document.body.style.width,
-            originalTop: document.body.style.top,
             data: this.sortData(this.props.data),
-            value: [],
+            value: props.value ? props.value : [],
             search: this.props.search && (this.props.search == 'on' || this.props.search == 'smart' || this.props.search == 'off') ? this.props.search : 'off',
             map: this.props.map && this.props.map.text && this.props.map.value && this.props.map.text.length > 0 ? this.props.map : {
                 value: 'value',
@@ -86,7 +82,7 @@ export default class ComboSelect extends Component {
 
             let data = this.state.data.length;
             let elementHeight = this.refs.comboSelect.getElementsByClassName('combo-select-item')[0].clientHeight;
-            let menuHeight = document.getElementsByClassName('combo-select-body-scroll')[0].clientHeight;
+            let menuHeight = this.refs.comboSelect.getElementsByClassName('combo-select-body-scroll')[0].clientHeight;
 
             let potentialScrollBottom = this.refs.comboSelect.getElementsByClassName(specialClass)[0].scrollTop + menuHeight + event.deltaY;
             let maximumScroll = data * elementHeight;
@@ -181,11 +177,11 @@ export default class ComboSelect extends Component {
                 (text = text.slice(), text = text.join(", "));
         }
 
-
-        let map = this.state.map && this.state.map.text ? this.state.map.text : false;
+        let objectMapText = this.state.map && this.state.map.text ? this.state.map.text : false;
 
         let options = this.state.data.map(function (item, i) {
-            return typeof item == 'object' ? <option key={i} value={item[map]}>{item[map]}</option> :
+            return typeof item == 'object' ?
+                <option key={i} value={item[objectMapText]}>{item[objectMapText]}</option> :
                 <option key={i} value={item}>{item}</option>
         });
 
@@ -220,15 +216,9 @@ export default class ComboSelect extends Component {
                 let focused = false;
                 (this.focus == i) ? focused = true : '';
 
-                let selected = false;
-                typeof this.state.selected == 'object' ?
-                    this.state.selected.map(function (item) {
-                        (item == i) ? selected = true : '';
-                    }) : '';
-
                 return (
                     <div key={i}>
-                        <ComboSelectItem item={item} selected={selected} index={i} focused={focused}
+                        <ComboSelectItem item={item} selected={this.findSelected(item)} index={i} focused={focused}
                                          type={this.state.type}
                                          dataType={dataType}
                                          map={this.state.map}
@@ -266,6 +256,50 @@ export default class ComboSelect extends Component {
                 {controls}
             </div>
         );
+    }
+
+    /**
+     * Check if item is selected
+     * @param item
+     * @returns {boolean}
+     */
+    findSelected(item) {
+
+        let selected = false;
+        let objectMapValue = this.state.map && this.state.map.value ? this.state.map.value : false;
+        let value = this.state.value;
+
+        if (objectMapValue && typeof objectMapValue == 'string') {
+
+            item = item[objectMapValue];
+
+        } else if (objectMapValue && this.state.type == 'select') {
+
+            item = JSON.stringify(item);
+            value = JSON.stringify(this.state.value);
+
+        }
+
+        console.log(value);
+        console.log(item);
+
+        if (typeof value == 'object') {
+
+            for (let i in value) {
+                if (item == value[i]) {
+                    selected = true
+                }
+            }
+
+        } else {
+
+            if (item == value) {
+                selected = true
+            }
+
+        }
+
+        return selected;
     }
 
     /**
@@ -339,38 +373,32 @@ export default class ComboSelect extends Component {
     filterBySearch() {
         let filter = this.refs.comboSelect.getElementsByClassName('search-input')[0].value;
         let data = [];
-        let selected = [];
+        let objectMapText = this.state.map && this.state.map.text ? this.state.map.text : false;
 
-        for (let i in this.props.data) {
+        if (objectMapText) {
 
-            if (this.props.data[i].toString().toLowerCase().indexOf(filter.toLowerCase()) > -1) {
-                data.push(this.props.data[i]);
-            }
+            for (let i in this.props.data) {
 
-        }
-
-        for (let j in data) {
-            if (this.state.type == 'multiselect') {
-
-                for (let k in this.state.value) {
-                    if (data[j] == this.state.value[k]) {
-                        selected.push(j);
-                    }
-                }
-
-            } else {
-
-                if (data[j] == this.state.value) {
-                    selected.push(j);
+                if (this.props.data[i][objectMapText].toString().toLowerCase().indexOf(filter.toLowerCase()) > -1) {
+                    data.push(this.props.data[i]);
                 }
 
             }
-        }
 
+        } else {
+
+            for (let i in this.props.data) {
+
+                if (this.props.data[i].toString().toLowerCase().indexOf(filter.toLowerCase()) > -1) {
+                    data.push(this.props.data[i]);
+                }
+
+            }
+
+        }
 
         this.setState({
-            data: data,
-            selected: selected
+            data: data
         });
     }
 
@@ -393,12 +421,12 @@ export default class ComboSelect extends Component {
     toggleMenu() {
         var comboSelect = this.refs.comboSelect;
 
-        // Send event to outside event
-        if (this.props.onToggle) {
-            this.props.onToggle();
-        }
-
         this.setState({open: !this.state.open}, () => {
+
+            // Send event to outside event
+            if (this.props.onToggle) {
+                this.props.onToggle(this.state.open);
+            }
 
             if (this.state.open && comboSelect.getElementsByClassName('search-input') && comboSelect.getElementsByClassName('search-input').length > 0) {
                 comboSelect.getElementsByClassName('search-input')[0].focus();
@@ -514,7 +542,6 @@ export default class ComboSelect extends Component {
         let selectAll = false;
 
         //console.log(this.state.value);
-        //console.log(this.state.selected);
         //console.log(this.state.text);
 
         if (item) {
@@ -551,17 +578,14 @@ export default class ComboSelect extends Component {
             if (selectAll) {
                 let texts = [];
                 let value = [];
-                let countArray = [];
 
                 for (let i in this.state.data) {
                     texts.push(this.state.data[i][this.state.map.text]);
                     value.push(this.state.data[i][this.state.map.value]);
-                    countArray.push(i);
                 }
 
                 this.setState({
                     text: texts,
-                    selected: countArray,
                     value: value
                 }, () => {
                     this.props.onChange ? this.props.onChange(value) : '';
@@ -569,7 +593,7 @@ export default class ComboSelect extends Component {
 
             } else if (this.state.type == 'select') {
 
-                this.setState({text: text, selected: [this.focus], value: value}, () => {
+                this.setState({text: text, value: value}, () => {
                     this.toggleMenu();
                     this.props.onChange ? this.props.onChange(value) : '';
                 });
@@ -580,7 +604,6 @@ export default class ComboSelect extends Component {
 
                     this.setState({
                         text: [text],
-                        selected: [this.focus],
                         value: [value]
                     }, () => {
                         this.props.onChange ? this.props.onChange([value]) : '';
@@ -597,22 +620,18 @@ export default class ComboSelect extends Component {
                     });
 
                     let texts = this.state.text.slice();
-                    let selected = this.state.selected.slice();
                     let values = this.state.value.slice();
 
                     if (splice || splice == 0) {
                         texts.splice(splice, 1);
-                        selected.splice(splice, 1);
                         values.splice(splice, 1);
                     } else {
                         texts.push(text);
-                        selected.push(this.focus);
                         values.push(value);
                     }
 
                     this.setState({
                         text: texts,
-                        selected: selected,
                         value: values
                     }, () => {
                         this.props.onChange ? this.props.onChange(values) : '';
