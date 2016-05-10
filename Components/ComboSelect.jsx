@@ -269,7 +269,7 @@ export default class ComboSelect extends Component {
         let objectMapValue = this.state.map && this.state.map.value ? this.state.map.value : false;
         let value = this.state.value;
 
-        if (objectMapValue && typeof objectMapValue == 'string') {
+        if (objectMapValue && typeof objectMapValue == 'string' && typeof item == 'object') {
 
             item = item[objectMapValue];
 
@@ -280,6 +280,7 @@ export default class ComboSelect extends Component {
 
         }
 
+        console.log(objectMapValue);
         console.log(value);
         console.log(item);
 
