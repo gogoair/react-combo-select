@@ -143,7 +143,7 @@ export default class ComboSelect extends Component {
                 }
             }
 
-            if (hideMenu && target.className != 'combo-select-item' && target.className != 'combo-select-item selected' && this.state.open) {
+            if (hideMenu && target.className != 'combo-select-item' && target.className != 'combo-select-item selected' && target.className != 'combo-select-item active' && target.className != 'combo-select-item active selected' && this.state.open && this.props.type == 'multiselect') {
                 this.toggleMenu();
             }
         }
@@ -279,10 +279,6 @@ export default class ComboSelect extends Component {
             value = JSON.stringify(this.state.value);
 
         }
-
-        console.log(objectMapValue);
-        console.log(value);
-        console.log(item);
 
         if (typeof value == 'object') {
 
