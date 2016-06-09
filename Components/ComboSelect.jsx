@@ -143,7 +143,7 @@ export default class ComboSelect extends Component {
                 }
             }
 
-            if (hideMenu && target.className != 'combo-select-item' && target.className != 'combo-select-item selected' && target.className != 'combo-select-item active' && target.className != 'combo-select-item active selected' && this.state.open && this.props.type == 'multiselect') {
+            if (hideMenu && target.className != 'combo-select-item' && target.className != 'combo-select-item selected' && target.className != 'combo-select-item active' && target.className != 'combo-select-item active selected' && this.state.open) {
                 this.toggleMenu();
             }
         }
@@ -188,14 +188,27 @@ export default class ComboSelect extends Component {
 
         var {data, type, onChange, search, value, onToggle, ...other } = this.props;
 
-        head = (<div onClick={() => this.toggleMenu()}>
-            <div className="combo-select-head">{text ? text : this.defaultText}<i className={this.state.icon}></i>
-            </div>
-            <select className="combo-select-required-select">
-                <option value=""></option>
-                {options}
-            </select>
-        </div>);
+        if (this.props.value) {
+
+            head = (<div onClick={() => this.toggleMenu()}>
+                <div className="combo-select-head">{text ? text : this.defaultText}<i className={this.state.icon}></i>
+                </div>
+                <select {...other} className="combo-select-required-select">
+                    {options}
+                </select>
+            </div>);
+        } else {
+
+
+            head = (<div onClick={() => this.toggleMenu()}>
+                <div className="combo-select-head">{text ? text : this.defaultText}<i className={this.state.icon}></i>
+                </div>
+                <select {...other} className="combo-select-required-select">
+                    <option value=""></option>
+                    {options}
+                </select>
+            </div>);
+        }
 
         return head;
     }
@@ -372,7 +385,7 @@ export default class ComboSelect extends Component {
         let data = [];
         let objectMapText = this.state.map && this.state.map.text ? this.state.map.text : false;
 
-        if (objectMapText) {
+        if (objectMapText && this.props.data && typeof this.props.data[0] == 'object') {
 
             for (let i in this.props.data) {
 
@@ -422,7 +435,7 @@ export default class ComboSelect extends Component {
 
             // Send event to outside event
             if (this.props.onToggle) {
-                this.props.onToggle(this.state.open);
+                this.props.onToggle(this.state.open, this.state.value);
             }
 
             if (this.state.open && comboSelect.getElementsByClassName('search-input') && comboSelect.getElementsByClassName('search-input').length > 0) {

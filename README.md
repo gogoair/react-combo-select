@@ -67,20 +67,20 @@ fakeFunction(value) {
     console.log(value);
 }
 
-let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"]];
+let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"];
 
 <ComboSelect text="-Select me-" type="multiselect" data={standardArray} onChange={this.fakeFunction}/>
 ```
 
 ### onToggle 
-Function that emit event for opening and closing menu. Returns boolean, true for open, false for close
+Function that emit event for opening and closing menu. Returns boolean, true for open, false for close and value which is all selected values
 
 ```javascript    
-fakeToggle(open) {
-    console.log(open);
+fakeToggle(open, value) {
+    console.log(open, value);
 }
 
-let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"]];
+let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"];
 
 <ComboSelect text="-Select me-" type="multiselect" data={standardArray} fakeToggle={this.fakeFunction}/>
 ```
