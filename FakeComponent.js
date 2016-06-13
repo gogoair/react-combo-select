@@ -23,7 +23,7 @@ export default class FakeComponent extends Component {
         //var standardArray = ["DDD", "CCC", "BBB", "AAA"];
         //var standardArray = [3, 1, 11, 111, 21, 33, 14, 32, 442];
         //var standardArray = ["JA007D", "JA008D", "JA009D", "JA010D", "JA219J", "JA302J", "JA306J", "JA308J", "JA309J", "JA311J", "JA313J", "JA314J", "JA316J", "JA318J", "JA319J", "JA322J", "JA324J", "JA325J", "JA326J"];
-        var standardArray = ["737-800", "767-300", "777-200", "777-300", "ERJ 170-100"];
+        //var standardArray = ["737-800", "767-300", "777-200", "777-300", "ERJ 170-100"];
         //var standardArray = [];
         // var standardArray = [
         //     {text: "air-JA007D", win: "win-JA007D", value: "JA007D"},
@@ -31,6 +31,15 @@ export default class FakeComponent extends Component {
         //     {text: "air-JA009D", win: "win-JA009D", value: "JA009D"},
         //     {text: "air-JA107D", win: "win-JA107D", value: "JA010D"}
         // ];
+         var standardArray = [
+             {text: 111, win: "win-JA009D", value: 111},
+             {text: 3, win: "win-JA007D", value: 3},
+             {text: 11, win: "win-JA008D", value: 11},
+             {text: 12, win: "win-JA107D", value: 12},
+             {text: 13, win: "sin-JA101D", value: 13},
+             {text: 14, win: "win-JA102D", value: 14},
+             {text: 15, win: "win-JA103D", value: 15}
+         ];
 
         //var standardArray = [
         //    {value: 'EFFECTIVE_DATE', text: 'Day'},
@@ -42,24 +51,14 @@ export default class FakeComponent extends Component {
 
         return (
             <div>
-                <br/>
-                <br/>
-                <br/>
                 <form action="">
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
-                    {this.state.text}
-                    <br/>
                     <div style={{position: 'relative'}}>
-                        {<ComboSelect text='JA007D' type="select" data={standardArray}
+                        {/*<ComboSelect type="select" data={standardArray} sort='number'
                                       icon="fa fa-chevron-circle-down" search="smart" value={standardArray[0]}
-                                      disabled={false} onChange={this.fakeFunction} map={{text: 'text', value: true}} onToggle={this.fakeToggle} required />}
+                                      disabled={false} onChange={this.fakeFunction} map={{text: 'text', value: true}} onToggle={this.fakeToggle} required />*/}
                         {<ComboSelect text={this.state.text} type="multiselect" data={standardArray}
-                                      icon="fa fa-chevron-circle-down" search="smart" value={standardArray[0]}
-                                      disabled={false} onChange={this.fakeFunction} map={{text: 'win', value: true}} onToggle={this.fakeToggle} required/>}
+                                      icon="fa fa-chevron-circle-down" search="smart" value={standardArray[0]} sort="number"
+                                      disabled={false} onChange={this.fakeFunction} map={{text: 'text', value: true}} onToggle={this.fakeToggle} required/>}
                     </div>
                     <br/>
                     <input type="text" value={this.state.text} required readOnly/>
