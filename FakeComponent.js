@@ -34,7 +34,7 @@ export default class FakeComponent extends Component {
          var standardArray = [
              {text: 111, win: "win-JA009D", value: 111},
              {text: 3, win: "win-JA007D", value: 3},
-             {text: 11, win: "win-JA008D", value: 11},
+             {text: 11, win: "win-JA0008D", value: 11},
              {text: 12, win: "win-JA107D", value: 12},
              {text: 13, win: "sin-JA101D", value: 13},
              {text: 14, win: "win-JA102D", value: 14},
@@ -57,19 +57,15 @@ export default class FakeComponent extends Component {
                                       icon="fa fa-chevron-circle-down" search="smart" value={standardArray[0]}
                                       disabled={false} onChange={this.fakeFunction} map={{text: 'text', value: true}} onToggle={this.fakeToggle} required />*/}
                         {<ComboSelect text={this.state.text} type="multiselect" data={standardArray}
-                                      icon="fa fa-chevron-circle-down" search="smart" value={standardArray[0]} sort="number"
-                                      disabled={false} onChange={this.fakeFunction} map={{text: 'text', value: true}} onToggle={this.fakeToggle} required/>}
+                                      icon="fa fa-chevron-circle-down" search="smart" value={standardArray[0]} sort="alphanum"
+                                      disabled={false} onChange={this.fakeFunction} map={{text: 'win', value: true}} onToggle={this.fakeToggle} required/>}
                     </div>
                     <br/>
-                    <input type="text" value={this.state.text} required readOnly/>
-                    <br/>
                     <br/>
                     <input type="text" required/>
                     <br/>
                     <br/>
                     <input type="text" required/>
-
-                    <button onClick={(e) => {e.preventDefault();this.setState({text: 'asd', data: ['asd', 'asdf', 'rfe']})}}>click mee</button>
                     <br/>
                     <br/>
                     <input type="submit"/>

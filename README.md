@@ -1,6 +1,15 @@
 # react-combo-select
 React dropdown for select and multiselect 
 
+## LATEST
+- Added alphanumerical sorting, combination of ordering of stings and number 
+
+```javascript
+let standardArray = ["win-JA007D", "win-JA0008D", "win-JA009D"];
+<ComboSelect text="-Select me-" type="multiselect" data={standardArray} sort="alphanum"/>
+```
+
+
 ## Usability
 This plugin require for you to have react and font-awesome, after that import react combo select
 ```javascript
@@ -123,7 +132,7 @@ fakeFunctionObject(value) {
 ```
 
 ### sort
-You can sort data, numbers, or don't sort at all. By the default, it will sort strings, but only if the parameters in value are strings
+You can sort data, numbers, alphanumercial (alphanum) or don't sort at all. By the default, it will sort strings, but only if the parameters in value are strings
 
 ```javascript
 
@@ -132,47 +141,7 @@ let nummericArray = [3, 1, 11, 111, 21, 32, 14, 32, 442];
 <ComboSelect text="-Select me-" type="multiselect" data={nummericArray} sort="number"/>
 let standardArray = ["DDD", "CCC", "BBB", "AAA"];
 <ComboSelect text="-Select me-" type="multiselect" data={standardArray} sort="string"/>
+let standardArray = ["win-JA007D", "win-JA0008D", "win-JA009D"];
+<ComboSelect text="-Select me-" type="multiselect" data={standardArray} sort="alphanum"/>
 
-// Nothing will happen
-let standardArray = ["DDD", "CCC", "BBB", "AAA"];
-<ComboSelect text="-Select me-" type="multiselect" data={standardArray} sort="off"/>
-let standardArray = ["DDD", "CCC", "BBB", "AAA"];
-<ComboSelect text="-Select me-" type="multiselect" data={standardArray} sort="number"/>
-let nummericArray = [3, 1, 11, 111, 21, 32, 14, 32, 442];
-<ComboSelect text="-Select me-" type="multiselect" data={nummericArray} sort="string"/>
 ```
-
-
-## DONE
-- Create build using babel, webpack, eslint
-- Create development environment
-- Connect git repo
-- Connect with npm, write scripts for prepublish and postpublish
-- Create "test" tests lol
-- Create UI for head, props ```value``` v0.4 -> CHANGED to ```text```
-- Create UI for menu, props ```data```
-- If you click somewhere else, close all open select's but one that you click (if you clicked one) - THIS WASN'T EASY, curses for react evens are propagating after javascript ones!!
-- Disable scroll outside of select if menu is open - THIS WASNT EASY EITHER, but came to most elegant solution EVAR!! Long live css
-- Direction of menu opening - prefers bottom then top, but will open on top if there are a lot more space there
-- Control using arrows and some keys like space and enter
-- Scrolling while using arrows within menu
-- Select single items, props ```type="select"```, default, if you put wrong one, it will still use select
-- Select multiple items, props ```type="multiselect"```
-- Create return value, props ```onChange="this.functionThatYouUse()"```
-- Create support for search, props ```search```
-- Optimize "intelligence" on opening menu and scroll, you can now use smart search which will open search only if there are more items that are opened in the screen
-- Make it work with collection of objects, which can be mapped, props ```map```
-- Actual select within, so that it can be used as required in html forms, you can use tab also :) but there are no styles for "focused" yes
-- Got some issue with classes on multiple selector, this should be fixed, but we need to take a look at it
-- Sorting, alphabetical and numeric ```sort```
-- Fixing bugs for required onChange function, screen moving upon menu opening, speed and performance (1000 items)
-- Event for opening/closing menu ```onToggle="this.functionThatYouUse()"```
-
-## TODO
-- Commands clear all and check all
-- Custom icons in search instead of just font-awesome (this is currently needed for project), remove icons for single select
-- MOAR Testing
-- Display images, videos, icons, links
-
-## UPDATE
-I've spent a lot of time fixing bugs with opening/closing menu, inner scrolling and another issues with events that were not needed for project at beginning, but the moment I started implementing into project, I needed a lot of new features. Therefore version 1.0.0 will have to wait until we do more testing in production and we finish all the features that we have planed. 

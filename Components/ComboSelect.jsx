@@ -64,7 +64,7 @@ export default class ComboSelect extends Component {
         this.setState({
             text: newProps.text,
             value: newProps.value,
-            data: this.mapAllData(this.sortData(newProps.data))
+            data: this.sortData(this.mapAllData(newProps.data))
         });
     }
 
@@ -294,27 +294,81 @@ export default class ComboSelect extends Component {
     }
 
     /**
+     * Alphanumerical sorting logic
+     * @param ar
+     * @returns {*}
+     */
+    alphanumSort(ar) {
+        for (var z = 0, t; t = ar[z]; z++) {
+            ar[z] = [];
+            var x = 0, y = -1, n = 0, i, j;
+
+            while (i = (j = t.text.toString().charAt(x++)).charCodeAt(0)) {
+                var m = (i == 46 || (i >= 48 && i <= 57));
+                if (m !== n) {
+                    ar[z][++y] = "";
+                    n = m;
+                }
+                ar[z][y] += j;
+            }
+
+            let text = ar[z];
+            ar[z] = {
+                text: text,
+                value: t.value
+            };
+        }
+
+        ar.sort(function (a, b) {
+            a = a.text;
+            b = b.text;
+            for (var x = 0, aa, bb; (aa = a[x]) && (bb = b[x]); x++) {
+                if (aa !== bb) {
+                    var c = Number(aa), d = Number(bb);
+                    if (c == aa && d == bb) {
+                        return c - d;
+                    } else return (aa > bb) ? 1 : -1;
+                }
+            }
+            return a.length - b.length;
+        });
+
+        for (let y = 0; y < ar.length; y++)
+            ar[y].text = ar[y].text.join("");
+
+        return ar;
+    }
+
+    /**
      * Sort data alphabetically or numerically
      * @param data
      * @returns {*}
      */
     sortData(data) {
 
-        let sortedData = {};
+        let sortedData = [];
 
-        let sort = this.props.sort && typeof data[0].text !== 'string' ? this.props.sort : typeof data[0].text;
+        if (data && data[0]) {
 
-        // TODO: OBJECTS
-        if (sort == 'string') {
+            let sort = this.props.sort ? this.props.sort : 'alphanum';
 
-            sortedData = data.sort(function (a, b) {
-                return (a.text > b.text) ? 1 : ((b.text > a.text) ? -1 : 0);
-            });
+            if (sort == 'string') {
 
-        } else if (sort == 'number') {
-            sortedData = data.sort(function (a, b) {
-                return a.text - b.text;
-            });
+                sortedData = data.sort(function (a, b) {
+                    return (a.text.toString() > b.text.toString()) ? 1 : ((b.text.toString() > a.text.toString()) ? -1 : 0);
+                });
+
+            } else if (sort == 'number') {
+
+                sortedData = data.sort(function (a, b) {
+                    return a.text - b.text;
+                });
+
+            } else {
+
+                sortedData = this.alphanumSort(data);
+
+            }
         }
 
         return sortedData;
@@ -324,7 +378,6 @@ export default class ComboSelect extends Component {
      * Filter data to match searched term
      */
     filterBySearch() {
-        //TODO fix this
         let filter = this.refs.comboSelect.getElementsByClassName('search-input')[0].value;
         let data = [];
         let unsortedData = this.sortData(this.mapAllData(this.props.data));
@@ -363,7 +416,7 @@ export default class ComboSelect extends Component {
 
         this.setState({open: !this.state.open}, () => {
 
-            // Send event to outside event
+            // Propagate toggle event with data with to outside event
             if (this.props.onToggle) {
                 this.props.onToggle(this.state.open, this.state.value);
             }
@@ -372,9 +425,9 @@ export default class ComboSelect extends Component {
                 comboSelect.getElementsByClassName('search-input')[0].focus();
             } else {
                 comboSelect.getElementsByClassName('combo-select-required-select')[0].focus();
-                this.setState({
-                    data: this.mapAllData(this.sortData(this.props.data))
-                });
+                //this.setState({
+                //    data: this.mapAllData(this.sortData(this.props.data))
+                //});
             }
         });
     }
@@ -624,9 +677,12 @@ export default class ComboSelect extends Component {
     mapAllData(data) {
 
         let mappedData = [];
-        data.map(function (item) {
-            mappedData.push(this.mapSingleData(item));
-        }.bind(this));
+
+        if (data) {
+            data.map(function (item) {
+                mappedData.push(this.mapSingleData(item));
+            }.bind(this));
+        }
 
         return mappedData;
     }
