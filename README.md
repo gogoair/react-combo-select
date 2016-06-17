@@ -2,6 +2,7 @@
 React dropdown for select and multiselect 
 
 ## LATEST
+- Resolving appearing of second select on iPad/Windows IE
 - Added alphanumerical sorting, combination of ordering of stings and number 
 
 ```javascript

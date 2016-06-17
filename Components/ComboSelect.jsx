@@ -145,6 +145,7 @@ export default class ComboSelect extends Component {
             }
 
             if (hideMenu && target.className != 'combo-select-item' && target.className != 'combo-select-item selected' && target.className != 'combo-select-item active' && target.className != 'combo-select-item active selected' && this.state.open) {
+                event.preventDefault();
                 this.toggleMenu();
             }
         }
@@ -194,7 +195,7 @@ export default class ComboSelect extends Component {
             head = (<div onClick={() => this.toggleMenu()}>
                 <div className="combo-select-head">{text ? text : this.defaultText}<i className={this.state.icon}></i>
                 </div>
-                <select {...other} className="combo-select-required-select">
+                <select disabled readOnly {...other} className="combo-select-required-select">
                     {options}
                 </select>
             </div>);
@@ -401,7 +402,8 @@ export default class ComboSelect extends Component {
      */
     requiredSelectKeydown(event) {
 
-        if (event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 32) {
+        // space, up, down
+        if (!this.state.open && (event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 32)) {
             event.preventDefault();
 
             this.toggleMenu();
@@ -423,12 +425,13 @@ export default class ComboSelect extends Component {
 
             if (this.state.open && comboSelect.getElementsByClassName('search-input') && comboSelect.getElementsByClassName('search-input').length > 0) {
                 comboSelect.getElementsByClassName('search-input')[0].focus();
-            } else {
-                comboSelect.getElementsByClassName('combo-select-required-select')[0].focus();
+            }
+            //else {
+                //comboSelect.getElementsByClassName('combo-select-required-select')[0].focus();
                 //this.setState({
                 //    data: this.mapAllData(this.sortData(this.props.data))
                 //});
-            }
+            //}
         });
     }
 

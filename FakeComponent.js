@@ -52,10 +52,17 @@ export default class FakeComponent extends Component {
         return (
             <div>
                 <form action="">
+                    11
                     <div style={{position: 'relative'}}>
                         {/*<ComboSelect type="select" data={standardArray} sort='number'
                                       icon="fa fa-chevron-circle-down" search="smart" value={standardArray[0]}
                                       disabled={false} onChange={this.fakeFunction} map={{text: 'text', value: true}} onToggle={this.fakeToggle} required />*/}
+                        {<ComboSelect text={this.state.text} type="multiselect" data={standardArray}
+                                      icon="fa fa-chevron-circle-down" search="smart" value={standardArray[0]} sort="alphanum"
+                                      disabled={false} onChange={this.fakeFunction} map={{text: 'win', value: true}} onToggle={this.fakeToggle} required/>}
+                        {<ComboSelect text={this.state.text} type="multiselect" data={standardArray}
+                                      icon="fa fa-chevron-circle-down" search="smart" value={standardArray[0]} sort="alphanum"
+                                      disabled={false} onChange={this.fakeFunction} map={{text: 'win', value: true}} onToggle={this.fakeToggle} required/>}
                         {<ComboSelect text={this.state.text} type="multiselect" data={standardArray}
                                       icon="fa fa-chevron-circle-down" search="smart" value={standardArray[0]} sort="alphanum"
                                       disabled={false} onChange={this.fakeFunction} map={{text: 'win', value: true}} onToggle={this.fakeToggle} required/>}
