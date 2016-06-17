@@ -7,7 +7,16 @@ export default class FakeComponent extends Component {
         super(props);
 
         this.state = {
-            text: '-Select me-'
+            text: '-Select me-',
+            data: [
+                {text: 111, win: "win-JA009D", value: 111},
+                {text: 3, win: "win-JA007D", value: 3},
+                {text: 11, win: "win-JA0008D", value: 11},
+                {text: 12, win: "win-JA107D", value: 12},
+                {text: 13, win: "sin-JA101D", value: 13},
+                {text: 14, win: "win-JA102D", value: 14},
+                {text: 15, win: "win-JA103D", value: 15}
+            ]
         }
     }
 
@@ -31,15 +40,15 @@ export default class FakeComponent extends Component {
         //     {text: "air-JA009D", win: "win-JA009D", value: "JA009D"},
         //     {text: "air-JA107D", win: "win-JA107D", value: "JA010D"}
         // ];
-         var standardArray = [
-             {text: 111, win: "win-JA009D", value: 111},
-             {text: 3, win: "win-JA007D", value: 3},
-             {text: 11, win: "win-JA0008D", value: 11},
-             {text: 12, win: "win-JA107D", value: 12},
-             {text: 13, win: "sin-JA101D", value: 13},
-             {text: 14, win: "win-JA102D", value: 14},
-             {text: 15, win: "win-JA103D", value: 15}
-         ];
+        // var standardArray = [
+        //     {text: 111, win: "win-JA009D", value: 111},
+        //     {text: 3, win: "win-JA007D", value: 3},
+        //     {text: 11, win: "win-JA0008D", value: 11},
+        //     {text: 12, win: "win-JA107D", value: 12},
+        //     {text: 13, win: "sin-JA101D", value: 13},
+        //     {text: 14, win: "win-JA102D", value: 14},
+        //     {text: 15, win: "win-JA103D", value: 15}
+        // ];
 
         //var standardArray = [
         //    {value: 'EFFECTIVE_DATE', text: 'Day'},
@@ -55,17 +64,13 @@ export default class FakeComponent extends Component {
                     11
                     <div style={{position: 'relative'}}>
                         {/*<ComboSelect type="select" data={standardArray} sort='number'
-                                      icon="fa fa-chevron-circle-down" search="smart" value={standardArray[0]}
-                                      disabled={false} onChange={this.fakeFunction} map={{text: 'text', value: true}} onToggle={this.fakeToggle} required />*/}
-                        {<ComboSelect text={this.state.text} type="multiselect" data={standardArray}
-                                      icon="fa fa-chevron-circle-down" search="smart" value={standardArray[0]} sort="alphanum"
-                                      disabled={false} onChange={this.fakeFunction} map={{text: 'win', value: true}} onToggle={this.fakeToggle} required/>}
-                        {<ComboSelect text={this.state.text} type="multiselect" data={standardArray}
-                                      icon="fa fa-chevron-circle-down" search="smart" value={standardArray[0]} sort="alphanum"
-                                      disabled={false} onChange={this.fakeFunction} map={{text: 'win', value: true}} onToggle={this.fakeToggle} required/>}
-                        {<ComboSelect text={this.state.text} type="multiselect" data={standardArray}
-                                      icon="fa fa-chevron-circle-down" search="smart" value={standardArray[0]} sort="alphanum"
-                                      disabled={false} onChange={this.fakeFunction} map={{text: 'win', value: true}} onToggle={this.fakeToggle} required/>}
+                         icon="fa fa-chevron-circle-down" search="smart" value={standardArray[0]}
+                         disabled={false} onChange={this.fakeFunction} map={{text: 'text', value: true}} onToggle={this.fakeToggle} required />*/}
+                        {<ComboSelect text={this.state.data[0].win} type="multiselect" data={this.state.data}
+                                      icon="fa fa-chevron-circle-down" search="smart" value={this.state.data[0]}
+                                      sort="alphanum"
+                                      disabled={false} onChange={this.fakeFunction} map={{text: 'win', value: true}}
+                                      onToggle={this.fakeToggle} required/>}
                     </div>
                     <br/>
                     <br/>
@@ -77,16 +82,6 @@ export default class FakeComponent extends Component {
                     <br/>
                     <input type="submit"/>
                 </form>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
                 <br/>
                 <br/>
                 <br/>
