@@ -18,17 +18,17 @@ describe('Sorting of component', () => {
     });
 
     let data = [
-        {text: 111, win: "win-JA009D", value: 111},
-        {text: 3, win: "win-JA007D", value: 3},
-        {text: 11, win: "win-JA0008D", value: 11},
-        {text: 12, win: "win-JA107D", value: 12},
-        {text: 13, win: "sin-JA101D", value: 13},
-        {text: 14, win: "win-JA102D", value: 14},
-        {text: 15, win: "win-JA103D", value: 15}
+        {text: 111, win: 'win-JA009D', value: 111},
+        {text: 3, win: 'win-JA007D', value: 3},
+        {text: 11, win: 'win-JA0008D', value: 11},
+        {text: 12, win: 'win-JA107D', value: 12},
+        {text: 13, win: 'sin-JA101D', value: 13},
+        {text: 14, win: 'win-JA102D', value: 14},
+        {text: 15, win: 'win-JA103D', value: 15}
     ];
 
     it('component sorted numbers as strings properly', () => {
-        const wrapper = mount(<ComboSelect data={data} map={{text: 'text', value: true}} sort="string"/>);
+        const wrapper = mount(<ComboSelect data={data} map={{text: 'text', value: true}} sort='string'/>);
         expect(wrapper.state().data[0].text).to.equal(11);
         expect(wrapper.state().data[1].text).to.equal(111);
         expect(wrapper.state().data[2].text).to.equal(12);
@@ -39,7 +39,7 @@ describe('Sorting of component', () => {
     });
 
     it('component sorted numbers properly', () => {
-        const wrapper = mount(<ComboSelect data={data} map={{text: 'text', value: true}} sort="number"/>);
+        const wrapper = mount(<ComboSelect data={data} map={{text: 'text', value: true}} sort='number'/>);
         expect(wrapper.state().data[0].text).to.equal(3);
         expect(wrapper.state().data[1].text).to.equal(11);
         expect(wrapper.state().data[2].text).to.equal(12);
@@ -50,7 +50,7 @@ describe('Sorting of component', () => {
     });
 
     it('component sorted strings properly', () => {
-        const wrapper = mount(<ComboSelect data={data} map={{text: 'win', value: true}} sort="string"/>);
+        const wrapper = mount(<ComboSelect data={data} map={{text: 'win', value: true}} sort='string'/>);
         expect(wrapper.state().data[0].text).to.equal('sin-JA101D');
         expect(wrapper.state().data[1].text).to.equal('win-JA0008D');
         expect(wrapper.state().data[2].text).to.equal('win-JA007D');
@@ -61,7 +61,7 @@ describe('Sorting of component', () => {
     });
 
     it('component sorted strings alphanumerically properly', () => {
-        const wrapper = mount(<ComboSelect data={data} map={{text: 'win', value: true}} sort="alphanum"/>);
+        const wrapper = mount(<ComboSelect data={data} map={{text: 'win', value: true}} sort='alphanum'/>);
         expect(wrapper.state().data[0].text).to.equal('sin-JA101D');
         expect(wrapper.state().data[1].text).to.equal('win-JA007D');
         expect(wrapper.state().data[2].text).to.equal('win-JA0008D');
@@ -110,7 +110,7 @@ describe('Sorting of component', () => {
     ];
 
     it('component sorted complex strings alphanumerically properly', () => {
-        const wrapper = mount(<ComboSelect data={complexAlphanumData} map={{text: 'text', value: true}} sort="alphanum"/>);
+        const wrapper = mount(<ComboSelect data={complexAlphanumData} map={{text: 'text', value: true}} sort='alphanum'/>);
         expect(wrapper.state().data[0].text).to.equal('10X Radonius');
         expect(wrapper.state().data[1].text).to.equal('20X Radonius');
         expect(wrapper.state().data[2].text).to.equal('20X Radonius Prime');

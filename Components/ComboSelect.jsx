@@ -1,3 +1,5 @@
+'use strict';
+
 import React, { Component } from 'react';
 import ComboSelectItem from './ComboSelectItem.jsx';
 
@@ -25,13 +27,16 @@ export default class ComboSelect extends Component {
 
         this.open = false;
 
+        let data = this.sortData(this.mapAllData(props.data));
+        let selectedItems = this.findSelectedItems(data, props.text, props.value);
+
         this.state = {
-            text: props.text ? props.text : 'Select',
+            data: data,
+            text: selectedItems.text,
+            value: selectedItems.value,
             type: props.type && (props.type == 'select' || props.type == 'multiselect') ? props.type : 'select',
             icon: props.icon ? props.icon : 'fa fa-chevron-circle-down',
             selected: -1,
-            data: this.sortData(this.mapAllData(this.props.data)),
-            value: props.value ? props.value : [],
             search: this.props.search && (this.props.search == 'on' || this.props.search == 'smart' || this.props.search == 'off') ? this.props.search : 'off'
         }
     }
@@ -62,10 +67,13 @@ export default class ComboSelect extends Component {
     }
 
     componentWillReceiveProps(newProps) {
+        let data = this.sortData(this.mapAllData(newProps.data));
+        let selectedItems = this.findSelectedItems(data, newProps.text, newProps.value);
+
         this.setState({
-            text: newProps.text,
-            value: newProps.value,
-            data: this.sortData(this.mapAllData(newProps.data))
+            data: data,
+            text: selectedItems.text,
+            value: selectedItems.value
         });
     }
 
@@ -180,21 +188,17 @@ export default class ComboSelect extends Component {
                 (text = text.slice(), text = text.join(", "));
         }
 
-        let objectMapText = this.map && this.map.text ? this.map.text : false;
-
         let options = this.state.data.map(function (item, i) {
-            return typeof item == 'object' ?
-                <option key={i} value={item[objectMapText]}>{item[objectMapText]}</option> :
-                <option key={i} value={item}>{item}</option>
+            return <option key={i} value={item.text}>{item.text}</option>
         });
-
 
         var {data, type, onChange, search, value, onToggle, ...other } = this.props;
 
-        if (this.props.value) {
+        if (this.state.value) {
 
             head = (<div onClick={() => this.toggleMenu()}>
-                <div className="combo-select-head">{text ? text : this.defaultText}<i className={this.state.icon}></i>
+                <div className="combo-select-head">
+                    {text ? text : this.defaultText}<i className={this.state.icon}></i>
                 </div>
                 <select disabled readOnly {...other} className="combo-select-required-select">
                     {options}
@@ -204,7 +208,8 @@ export default class ComboSelect extends Component {
         } else {
 
             head = (<div onClick={() => this.toggleMenu()}>
-                <div className="combo-select-head">{text ? text : this.defaultText}<i className={this.state.icon}></i>
+                <div className="combo-select-head">
+                    {text ? text : this.defaultText}<i className={this.state.icon}></i>
                 </div>
                 <select disabled readOnly {...other} className="combo-select-required-select">
                     <option value=""></option>
@@ -235,7 +240,9 @@ export default class ComboSelect extends Component {
 
                 return (
                     <div key={i}>
-                        <ComboSelectItem item={item} selected={this.findSelected(item)} index={i} focused={focused}
+                        <ComboSelectItem item={item} selected={this.findSelectedByKey(item, this.state.text, 'text')}
+                                         index={i}
+                                         focused={focused}
                                          type={this.state.type}
                                          selectItem={this.selectItem.bind(this)}
                                          focusItem={this.focusItem.bind(this)}
@@ -265,21 +272,70 @@ export default class ComboSelect extends Component {
     }
 
     /**
-     * Check if item is selected
+     * Connect text and value if component received only one of them
+     * @param data
+     * @param text
+     * @param value
+     */
+    findSelectedItems(data, text, value) {
+
+        let selectedItems = {
+            text: [],
+            value: []
+        };
+
+        data.map(function (item) {
+            if (this.findSelectedItem(item, text, value)) {
+                selectedItems.text.push(item.text);
+                selectedItems.value.push(item.value);
+            }
+        }.bind(this));
+
+        return selectedItems;
+    }
+
+    /**
+     * Find selected item comparing text or value with item
      * @param item
+     * @param text
+     * @param value
      * @returns {boolean}
      */
-    findSelected(item) {
+    findSelectedItem(item, text, value) {
+
+        let match = false;
+
+        if (text) {
+            if (this.findSelectedByKey(item, text, 'text')) {
+                match = true;
+            }
+        } else if (value) {
+            if (this.findSelectedByKey(item, value, 'value')) {
+                match = true;
+            }
+        }
+
+        return match;
+    }
+
+    /**
+     * Check if item is selected
+     * @param item
+     * @param keyData
+     * @param key
+     * @returns {boolean}
+     */
+    findSelectedByKey(item, keyData, key) {
 
         let selected;
-        if (Array.isArray(this.state.text)) {
-            for (let i in this.state.text) {
-                if (item.text == this.state.text[i]) {
+        if (Array.isArray(keyData)) {
+            for (let i in keyData) {
+                if (item[key] == keyData[i]) {
                     selected = true;
                 }
             }
         } else {
-            if (item.text == this.state.text) {
+            if (item[key] == keyData) {
                 selected = true;
             }
         }
@@ -353,7 +409,6 @@ export default class ComboSelect extends Component {
      * @returns {*}
      */
     sortData(data) {
-
         let sortedData = [];
 
         if (data && data[0]) {
