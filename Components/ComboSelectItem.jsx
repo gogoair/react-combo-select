@@ -9,7 +9,7 @@ export default class ComboSelectItem extends Component {
 
             if (this.props.selected) {
 
-                if (this.props.iconSelectActive === true) {
+                if (this.props.iconSelectActive === true || this.props.iconSelectActive === undefined || this.props.iconSelectActive === null) {
                     input = <i className="fa fa-check-circle"></i>;
                 } else if (this.props.iconSelectActive === false || this.props.iconSelectActive === 'off') {
                     input = '';
@@ -19,7 +19,7 @@ export default class ComboSelectItem extends Component {
 
             } else {
 
-                if (this.props.iconSelectInactive === true) {
+                if (this.props.iconSelectInactive === true || this.props.iconSelectActive === undefined || this.props.iconSelectActive === null) {
                     input = <i className="fa fa-circle-o"></i>;
                 } else if (this.props.iconSelectInactive === false || this.props.iconSelectInactive === 'off') {
                     input = '';
@@ -33,7 +33,7 @@ export default class ComboSelectItem extends Component {
 
             if (this.props.selected) {
 
-                if (this.props.iconSelectActive === true) {
+                if (this.props.iconSelectActive === true || this.props.iconSelectActive === undefined || this.props.iconSelectActive === null) {
                     input = <i className="fa fa-check-square"></i>;
                 } else if (this.props.iconSelectActive === false || this.props.iconSelectActive === 'off') {
                     input = '';
@@ -43,7 +43,7 @@ export default class ComboSelectItem extends Component {
 
             } else {
 
-                if (this.props.iconSelectInactive === true) {
+                if (this.props.iconSelectInactive === true || this.props.iconSelectActive === undefined || this.props.iconSelectActive === null) {
                     input = <i className="fa fa-square-o"></i>;
                 } else if (this.props.iconSelectInactive === false || this.props.iconSelectInactive === 'off') {
                     input = '';
