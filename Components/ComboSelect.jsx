@@ -14,18 +14,20 @@ export default class ComboSelect extends Component {
         this.focus = -1;
         this.scroll = 0;
         this.defaultText = props.text ? props.text : 'Select';
-
-        this.globalKeyDown = this.globalKeyDown.bind(this);
-        this.globalMouseClick = this.globalMouseClick.bind(this);
-        this.globalWheel = this.globalWheel.bind(this);
-        this.requiredSelectKeydown = this.requiredSelectKeydown.bind(this);
-
+        this.open = false;
+        this.icon = props.icon ? props.icon : 'fa fa-chevron-circle-down';
         this.map = this.props.map && this.props.map.text && this.props.map.value && this.props.map.text.length > 0 ? this.props.map : {
             value: 'value',
             text: 'text'
         };
 
-        this.open = false;
+        this.iconSelectActive = props.iconSelectActive !== false || props.iconSelectActive !== 'off' ? props.iconSelectActive : true;
+        this.iconSelectInactive = props.iconSelectInactive !== false || props.iconSelectInactive !== 'off' ? props.iconSelectInactive : true;
+
+        this.globalKeyDown = this.globalKeyDown.bind(this);
+        this.globalMouseClick = this.globalMouseClick.bind(this);
+        this.globalWheel = this.globalWheel.bind(this);
+        this.requiredSelectKeydown = this.requiredSelectKeydown.bind(this);
 
         let data = this.sortData(this.mapAllData(props.data));
         let selectedItems = this.findSelectedItems(data, props.text, props.value);
@@ -35,7 +37,6 @@ export default class ComboSelect extends Component {
             text: selectedItems.text,
             value: selectedItems.value,
             type: props.type && (props.type == 'select' || props.type == 'multiselect') ? props.type : 'select',
-            icon: props.icon ? props.icon : 'fa fa-chevron-circle-down',
             selected: -1,
             search: this.props.search && (this.props.search == 'on' || this.props.search == 'smart' || this.props.search == 'off') ? this.props.search : 'off'
         }
@@ -153,7 +154,9 @@ export default class ComboSelect extends Component {
                 }
             }
 
-            if (hideMenu && target.className != 'combo-select-item' && target.className != 'combo-select-item selected' && target.className != 'combo-select-item active' && target.className != 'combo-select-item active selected' && this.open) {
+            //if (hideMenu && target.className != 'combo-select-item' && target.className != 'combo-select-item selected' && target.className != 'combo-select-item active' && target.className != 'combo-select-item active selected' && target.className != 'combo-select-item selected no-icon' && target.className != 'combo-select-item active selected no-icon' && this.open) {
+            //console.log(target.className.indexOf('combo-select-item'));
+            if (hideMenu && target.className.indexOf('combo-select-item') < 0 && this.open) {
                 event.preventDefault();
                 this.toggleMenu();
             }
@@ -198,7 +201,7 @@ export default class ComboSelect extends Component {
 
             head = (<div onClick={() => this.toggleMenu()}>
                 <div className="combo-select-head">
-                    {text ? text : this.defaultText}<i className={this.state.icon}></i>
+                    {text ? text : this.defaultText}<i className={this.icon}></i>
                 </div>
                 <select disabled readOnly {...other} className="combo-select-required-select">
                     {options}
@@ -209,7 +212,7 @@ export default class ComboSelect extends Component {
 
             head = (<div onClick={() => this.toggleMenu()}>
                 <div className="combo-select-head">
-                    {text ? text : this.defaultText}<i className={this.state.icon}></i>
+                    {text ? text : this.defaultText}<i className={this.icon}></i>
                 </div>
                 <select disabled readOnly {...other} className="combo-select-required-select">
                     <option value=""></option>
@@ -246,6 +249,8 @@ export default class ComboSelect extends Component {
                                          type={this.state.type}
                                          selectItem={this.selectItem.bind(this)}
                                          focusItem={this.focusItem.bind(this)}
+                                         iconSelectActive={this.iconSelectActive}
+                                         iconSelectInactive={this.iconSelectInactive}
                         />
                     </div>
                 );
@@ -826,6 +831,8 @@ ComboSelect
     search: React.PropTypes.string,
     type: React.PropTypes.string,
     icon: React.PropTypes.string,
+    iconSelectInactive: React.PropTypes.any,
+    iconSelectActive: React.PropTypes.any,
     data: React.PropTypes.array.isRequired,
     onChange: React.PropTypes.func,
     map: React.PropTypes.object,

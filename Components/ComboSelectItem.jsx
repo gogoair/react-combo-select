@@ -3,13 +3,56 @@ import React, { Component } from 'react';
 export default class ComboSelectItem extends Component {
 
     _generateInput() {
-        var input;
+        let input;
+
         if (this.props.type == 'select') {
-            (this.props.selected) ? input = (<i className="fa fa-check-circle"></i>) : input = (
-                <i className="fa fa-circle-o"></i>);
+
+            if (this.props.selected) {
+
+                if (this.props.iconSelectActive === true) {
+                    input = <i className="fa fa-check-circle"></i>;
+                } else if (this.props.iconSelectActive === false || this.props.iconSelectActive === 'off') {
+                    input = '';
+                } else {
+                    input = <i className={this.props.iconSelectActive}></i>;
+                }
+
+            } else {
+
+                if (this.props.iconSelectInactive === true) {
+                    input = <i className="fa fa-circle-o"></i>;
+                } else if (this.props.iconSelectInactive === false || this.props.iconSelectInactive === 'off') {
+                    input = '';
+                } else {
+                    input = <i className={this.props.iconSelectInactive}></i>;
+                }
+
+            }
+
         } else {
-            (this.props.selected) ? input = (<i className="fa fa-check-square"></i>) : input = (
-                <i className="fa fa-square-o"></i>);
+
+            if (this.props.selected) {
+
+                if (this.props.iconSelectActive === true) {
+                    input = <i className="fa fa-check-square"></i>;
+                } else if (this.props.iconSelectActive === false || this.props.iconSelectActive === 'off') {
+                    input = '';
+                } else {
+                    input = <i className={this.props.iconSelectActive}></i>;
+                }
+
+            } else {
+
+                if (this.props.iconSelectInactive === true) {
+                    input = <i className="fa fa-square-o"></i>;
+                } else if (this.props.iconSelectInactive === false || this.props.iconSelectInactive === 'off') {
+                    input = '';
+                } else {
+                    input = <i className={this.props.iconSelectInactive}></i>;
+                }
+
+            }
+
         }
 
         return input;
@@ -21,7 +64,7 @@ export default class ComboSelectItem extends Component {
         return (
             <div
                 key={Math.floor(Math.random() * 1000001111)}
-                className={'combo-select-item' + ((this.props.focused) ? ' active' : '') + ((this.props.selected) ? ' selected' : '')}
+                className={'combo-select-item' + ((this.props.focused) ? ' active' : '') + ((this.props.selected) ? ' selected' : '') + (input == '' ? ' no-icon' : '')}
                 onClick={() => this.props.selectItem(this.props.item)}
                 onMouseEnter={() => this.props.focusItem(this.props.index)}>
                 {input}
@@ -38,5 +81,7 @@ ComboSelectItem.propTypes = {
     selected: React.PropTypes.bool,
     type: React.PropTypes.string,
     selectItem: React.PropTypes.func,
-    focusItem: React.PropTypes.func
+    focusItem: React.PropTypes.func,
+    iconSelectActive: React.PropTypes.any,
+    iconSelectInactive: React.PropTypes.any
 };

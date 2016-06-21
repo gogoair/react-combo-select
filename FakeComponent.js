@@ -21,14 +21,14 @@ export default class FakeComponent extends Component {
     }
 
     componentDidMount(){
-        setTimeout(function () {
-            this.setState({data: [
-                {text: "air-JA007D", win: "win-111", value: "JA007D"},
-                {text: "air-JA008D", win: "win-222", value: "JA008D"},
-                {text: "air-JA009D", win: "win-333", value: "JA009D"},
-                {text: "air-JA107D", win: "win-444", value: "JA010D"}
-            ]})
-        }.bind(this), 2000);
+        //setTimeout(function () {
+        //    this.setState({data: [
+        //        {text: "air-JA007D", win: "win-111", value: "JA007D"},
+        //        {text: "air-JA008D", win: "win-222", value: "JA008D"},
+        //        {text: "air-JA009D", win: "win-333", value: "JA009D"},
+        //        {text: "air-JA107D", win: "win-444", value: "JA010D"}
+        //    ]})
+        //}.bind(this), 2000);
 
     }
 
@@ -73,14 +73,13 @@ export default class FakeComponent extends Component {
         return (
             <div>
                 <form action="">
-                    11
                     <div style={{position: 'relative'}}>
-                        {/*<ComboSelect type="select" data={standardArray} sort='number'
-                         icon="fa fa-chevron-circle-down" search="smart" value={standardArray[0]}
+                        {/*<ComboSelect type="select" data={this.state.data} sort='number'
+                         icon="fa fa-chevron-circle-down" search="smart" value={this.state.data[0]}
                          disabled={false} onChange={this.fakeFunction} map={{text: 'text', value: true}} onToggle={this.fakeToggle} required />*/}
                         {<ComboSelect type="multiselect" data={this.state.data}
                                       icon="fa fa-chevron-circle-down" search="smart" value={this.state.data[1]}
-                                      sort="alphanum"
+                                      sort="alphanum" iconSelectInactive={false} iconSelectActive={false}
                                       disabled={false} onChange={this.fakeFunction} map={{text: 'win', value: true}}
                                       onToggle={this.fakeToggle} required/>}
                     </div>

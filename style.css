@@ -85,6 +85,10 @@
     padding-right: 10px;
 }
 
+.combo-select .combo-select-body .combo-select-item.selected.no-icon {
+    background: #e1f3f3;
+}
+
 .combo-select .combo-select-body .combo-select-item.selected i {
     color: #40b4e5;
 }

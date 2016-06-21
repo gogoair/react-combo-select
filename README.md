@@ -2,6 +2,8 @@
 React dropdown for select and multiselect 
 
 ## LATEST
+- Icons for active and inactive state using iconSelectActive nad iconSelectInactive
+- Better handling for new props, NOW you only have to set either text or value and other one will be recognized
 - Moving forward towards version 1 :) removed a lot of setStates, faster rendering
 - Resolving appearing of second select on iPad/Windows IE
 - Added alphanumerical sorting, combination of ordering of stings and number 
@@ -146,4 +148,15 @@ let standardArray = ["DDD", "CCC", "BBB", "AAA"];
 let standardArray = ["win-JA007D", "win-JA0008D", "win-JA009D"];
 <ComboSelect text="-Select me-" type="multiselect" data={standardArray} sort="alphanum"/>
 
+```
+
+### Active and inactive icons
+Can be default, custom or off. For custom just put class that you want, and it would be assigned to icon class. For default, just leave as is. And for off use false or 'off'
+
+```javascript
+let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"];
+
+<ComboSelect type="multiselect" data={this.state.data} value={this.state.data[1]} iconSelectInactive={false} iconSelectActive={false}/>
+<ComboSelect type="multiselect" data={this.state.data} value={this.state.data[1]} iconSelectInactive={'fa fa-check-circle'} iconSelectActive={'fa fa-check-circle'}/>
+<ComboSelect type="multiselect" data={this.state.data} value={this.state.data[1]}/>
 ```
