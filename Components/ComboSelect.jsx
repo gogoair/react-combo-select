@@ -538,6 +538,13 @@ export default class ComboSelect extends Component {
      * @param focus
      */
     focusItem(focus) {
+        const items = this.refs.comboSelect.getElementsByClassName('combo-select-item');
+
+        if (this.focus >= 0)
+            items[this.focus].style.backgroundColor = '';
+
+        items[focus].style.backgroundColor = '#f7f7f7';
+
         this.focus = focus;
     }
 
@@ -703,7 +710,6 @@ export default class ComboSelect extends Component {
         paddingBottom = paddingBottom > -1 ? paddingBottom : 0;
 
         let windowHeight = comboSelectBody.clientHeight - paddingTop - paddingBottom;
-        let focus = this.focus;
         let elementHeight = focusedItem.clientHeight;
         let elementOffsetTop = focusedItem.offsetTop - paddingTop;
         let elementCountPerWindow = Math.floor(windowHeight / elementHeight);
@@ -713,11 +719,11 @@ export default class ComboSelect extends Component {
             specialClassElement.scrollTop = elementOffsetTop - (elementCountPerWindow - 1) * elementHeight;
         } else if (elementOffsetTop < scrollTop) {
             specialClassElement.scrollTop = elementOffsetTop;
-        } else if (focus == 0) {
+        } else if (this.focus == 0) {
             specialClassElement.scrollTop = 0;
         }
 
-        let focusPrev = this.focus - 1;
+        /*let focusPrev = this.focus - 1;
         let focusNext = this.focus + 1;
 
         if (focusPrev < 0)
@@ -727,9 +733,9 @@ export default class ComboSelect extends Component {
 
         this.refs.comboSelect.getElementsByClassName('combo-select-item')[focusPrev].style.backgroundColor = ''
 
-        this.refs.comboSelect.getElementsByClassName('combo-select-item')[this.focus].style.backgroundColor = '#f7f7f7';
+        focusedItem.style.backgroundColor = '#f7f7f7';
 
-        this.refs.comboSelect.getElementsByClassName('combo-select-item')[focusNext].style.backgroundColor = ''
+        this.refs.comboSelect.getElementsByClassName('combo-select-item')[focusNext].style.backgroundColor = ''*/
     }
 
     /**
@@ -743,13 +749,13 @@ export default class ComboSelect extends Component {
                 case 38:
                     // Up
                     event.preventDefault();
-                    this.focus = this.focus < 1 ? this.state.data.length - 1 : this.focus - 1;
+                    this.focusItem(this.focus < 1 ? this.state.data.length - 1 : this.focus - 1);
                     this.controlScrolling();
                     break;
                 case 40:
                     // Down
                     event.preventDefault();
-                    this.focus = this.focus == this.state.data.length - 1 ? this.focus = 0 : this.focus + 1;
+                    this.focusItem(this.focus == this.state.data.length - 1 ? this.focus = 0 : this.focus + 1);
                     this.controlScrolling();
                     break;
                 case 37:
