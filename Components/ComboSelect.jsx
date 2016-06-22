@@ -29,6 +29,8 @@ export default class ComboSelect extends Component {
         this.globalWheel = this.globalWheel.bind(this);
         this.requiredSelectKeydown = this.requiredSelectKeydown.bind(this);
 
+        this.searchTimeout = null;
+
         let data = this.sortData(this.mapAllData(props.data));
         let selectedItems = this.findSelectedItems(data, props.text, props.value);
 
@@ -260,7 +262,13 @@ export default class ComboSelect extends Component {
         let search = this.ifSearch(style) ?
             (<input type="text" style={style ? style.search : {}}
                     className="search-input"
-                    onChange={() => this.filterBySearch()}/>)
+                    onChange={() => {
+                        if (this.searchTimeout)
+                            clearTimeout(this.searchTimeout);
+
+                        this.searchTimeout = setTimeout(this.filterBySearch.bind(this), 200);
+                    }}
+            />)
             : '';
 
         return (
@@ -414,6 +422,9 @@ export default class ComboSelect extends Component {
      * @returns {*}
      */
     sortData(data) {
+        if (this.props.sort === false || this.props.sort === 'off')
+            return data;
+
         let sortedData = [];
 
         if (data && data[0]) {
@@ -793,11 +804,10 @@ export default class ComboSelect extends Component {
 
         let mappedData = [];
 
-        if (data) {
-            data.map(function (item) {
-                mappedData.push(this.mapSingleData(item));
+        if (data)
+            mappedData = data.map(function (item) {
+                return this.mapSingleData(item);
             }.bind(this));
-        }
 
         return mappedData;
     }
