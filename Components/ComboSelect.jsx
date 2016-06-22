@@ -692,36 +692,44 @@ export default class ComboSelect extends Component {
      */
     controlScrolling() {
 
-        let paddingTop = parseInt(this.refs.comboSelect.getElementsByClassName('combo-select-body')[0].style.paddingTop.replace('px', ''));
-        let paddingBottom = parseInt(this.refs.comboSelect.getElementsByClassName('combo-select-body')[0].style.paddingBottom.replace('px', ''));
+        const comboSelectBody = this.refs.comboSelect.getElementsByClassName('combo-select-body')[0];
+        const focusedItem = this.refs.comboSelect.getElementsByClassName('combo-select-item')[this.focus];
+        const specialClassElement = this.refs.comboSelect.getElementsByClassName(specialClass)[0];
+
+        let paddingTop = parseInt(comboSelectBody.style.paddingTop);
+        let paddingBottom = parseInt(comboSelectBody.style.paddingBottom);
 
         paddingTop = paddingTop > -1 ? paddingTop : 0;
         paddingBottom = paddingBottom > -1 ? paddingBottom : 0;
 
-        let windowHeight = this.refs.comboSelect.getElementsByClassName('combo-select-body')[0].clientHeight - paddingTop - paddingBottom;
+        let windowHeight = comboSelectBody.clientHeight - paddingTop - paddingBottom;
         let focus = this.focus;
-        let elementHeight = this.refs.comboSelect.getElementsByClassName('combo-select-item')[this.focus].clientHeight;
-        let elementOffsetTop = this.refs.comboSelect.getElementsByClassName('combo-select-item')[this.focus].offsetTop - paddingTop;
+        let elementHeight = focusedItem.clientHeight;
+        let elementOffsetTop = focusedItem.offsetTop - paddingTop;
         let elementCountPerWindow = Math.floor(windowHeight / elementHeight);
-        let scrollTop = this.refs.comboSelect.getElementsByClassName(specialClass)[0].scrollTop;
+        let scrollTop = specialClassElement.scrollTop;
 
         if (elementOffsetTop > windowHeight + scrollTop - elementHeight) {
-            this.refs.comboSelect.getElementsByClassName(specialClass)[0].scrollTop = elementOffsetTop - (elementCountPerWindow - 1) * elementHeight;
+            specialClassElement.scrollTop = elementOffsetTop - (elementCountPerWindow - 1) * elementHeight;
         } else if (elementOffsetTop < scrollTop) {
-            this.refs.comboSelect.getElementsByClassName(specialClass)[0].scrollTop = elementOffsetTop;
+            specialClassElement.scrollTop = elementOffsetTop;
         } else if (focus == 0) {
-            this.refs.comboSelect.getElementsByClassName(specialClass)[0].scrollTop = 0;
+            specialClassElement.scrollTop = 0;
         }
 
-        if (this.focus - 1 > -1) {
-            this.refs.comboSelect.getElementsByClassName('combo-select-item')[this.focus - 1].style.backgroundColor = ''
-        }
+        let focusPrev = this.focus - 1;
+        let focusNext = this.focus + 1;
+
+        if (focusPrev < 0)
+            focusPrev = this.state.data.length - 1;
+        else if (focusNext >= this.state.data.length)
+            focusNext = 0;
+
+        this.refs.comboSelect.getElementsByClassName('combo-select-item')[focusPrev].style.backgroundColor = ''
 
         this.refs.comboSelect.getElementsByClassName('combo-select-item')[this.focus].style.backgroundColor = '#f7f7f7';
 
-        if (this.state.data && this.focus + 1 < this.state.data.length) {
-            this.refs.comboSelect.getElementsByClassName('combo-select-item')[this.focus + 1].style.backgroundColor = ''
-        }
+        this.refs.comboSelect.getElementsByClassName('combo-select-item')[focusNext].style.backgroundColor = ''
     }
 
     /**
