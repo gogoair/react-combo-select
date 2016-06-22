@@ -29,6 +29,8 @@ export default class ComboSelect extends Component {
         this.globalWheel = this.globalWheel.bind(this);
         this.requiredSelectKeydown = this.requiredSelectKeydown.bind(this);
 
+        this.searchTimeout = null;
+
         let data = this.sortData(this.mapAllData(props.data));
         let selectedItems = this.findSelectedItems(data, props.text, props.value);
 
@@ -260,7 +262,13 @@ export default class ComboSelect extends Component {
         let search = this.ifSearch(style) ?
             (<input type="text" style={style ? style.search : {}}
                     className="search-input"
-                    onChange={() => this.filterBySearch()}/>)
+                    onChange={() => {
+                        if (this.searchTimeout)
+                            clearTimeout(this.searchTimeout);
+
+                        this.searchTimeout = setTimeout(this.filterBySearch.bind(this), 200);
+                    }}
+            />)
             : '';
 
         return (
@@ -414,6 +422,9 @@ export default class ComboSelect extends Component {
      * @returns {*}
      */
     sortData(data) {
+        if (this.props.sort === false || this.props.sort === 'off')
+            return data;
+
         let sortedData = [];
 
         if (data && data[0]) {
@@ -473,6 +484,7 @@ export default class ComboSelect extends Component {
         if (!this.open && (event.keyCode == 13 || event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 32)) {
 
             event.preventDefault();
+            event.stopPropagation();
             this.toggleMenu();
 
         }
@@ -537,6 +549,13 @@ export default class ComboSelect extends Component {
      * @param focus
      */
     focusItem(focus) {
+        const items = this.refs.comboSelect.getElementsByClassName('combo-select-item');
+
+        if (this.focus >= 0)
+            items[this.focus].style.backgroundColor = '';
+
+        items[focus].style.backgroundColor = '#f7f7f7';
+
         this.focus = focus;
     }
 
@@ -691,36 +710,43 @@ export default class ComboSelect extends Component {
      */
     controlScrolling() {
 
-        let paddingTop = parseInt(this.refs.comboSelect.getElementsByClassName('combo-select-body')[0].style.paddingTop.replace('px', ''));
-        let paddingBottom = parseInt(this.refs.comboSelect.getElementsByClassName('combo-select-body')[0].style.paddingBottom.replace('px', ''));
+        const comboSelectBody = this.refs.comboSelect.getElementsByClassName('combo-select-body')[0];
+        const focusedItem = this.refs.comboSelect.getElementsByClassName('combo-select-item')[this.focus];
+        const specialClassElement = this.refs.comboSelect.getElementsByClassName(specialClass)[0];
+
+        let paddingTop = parseInt(comboSelectBody.style.paddingTop);
+        let paddingBottom = parseInt(comboSelectBody.style.paddingBottom);
 
         paddingTop = paddingTop > -1 ? paddingTop : 0;
         paddingBottom = paddingBottom > -1 ? paddingBottom : 0;
 
-        let windowHeight = this.refs.comboSelect.getElementsByClassName('combo-select-body')[0].clientHeight - paddingTop - paddingBottom;
-        let focus = this.focus;
-        let elementHeight = this.refs.comboSelect.getElementsByClassName('combo-select-item')[this.focus].clientHeight;
-        let elementOffsetTop = this.refs.comboSelect.getElementsByClassName('combo-select-item')[this.focus].offsetTop - paddingTop;
+        let windowHeight = comboSelectBody.clientHeight - paddingTop - paddingBottom;
+        let elementHeight = focusedItem.clientHeight;
+        let elementOffsetTop = focusedItem.offsetTop - paddingTop;
         let elementCountPerWindow = Math.floor(windowHeight / elementHeight);
-        let scrollTop = this.refs.comboSelect.getElementsByClassName(specialClass)[0].scrollTop;
+        let scrollTop = specialClassElement.scrollTop;
 
         if (elementOffsetTop > windowHeight + scrollTop - elementHeight) {
-            this.refs.comboSelect.getElementsByClassName(specialClass)[0].scrollTop = elementOffsetTop - (elementCountPerWindow - 1) * elementHeight;
+            specialClassElement.scrollTop = elementOffsetTop - (elementCountPerWindow - 1) * elementHeight;
         } else if (elementOffsetTop < scrollTop) {
-            this.refs.comboSelect.getElementsByClassName(specialClass)[0].scrollTop = elementOffsetTop;
-        } else if (focus == 0) {
-            this.refs.comboSelect.getElementsByClassName(specialClass)[0].scrollTop = 0;
+            specialClassElement.scrollTop = elementOffsetTop;
+        } else if (this.focus == 0) {
+            specialClassElement.scrollTop = 0;
         }
 
-        if (this.focus - 1 > -1) {
-            this.refs.comboSelect.getElementsByClassName('combo-select-item')[this.focus - 1].style.backgroundColor = ''
-        }
+        /*let focusPrev = this.focus - 1;
+        let focusNext = this.focus + 1;
 
-        this.refs.comboSelect.getElementsByClassName('combo-select-item')[this.focus].style.backgroundColor = '#f7f7f7';
+        if (focusPrev < 0)
+            focusPrev = this.state.data.length - 1;
+        else if (focusNext >= this.state.data.length)
+            focusNext = 0;
 
-        if (this.state.data && this.focus + 1 < this.state.data.length) {
-            this.refs.comboSelect.getElementsByClassName('combo-select-item')[this.focus + 1].style.backgroundColor = ''
-        }
+        this.refs.comboSelect.getElementsByClassName('combo-select-item')[focusPrev].style.backgroundColor = ''
+
+        focusedItem.style.backgroundColor = '#f7f7f7';
+
+        this.refs.comboSelect.getElementsByClassName('combo-select-item')[focusNext].style.backgroundColor = ''*/
     }
 
     /**
@@ -734,13 +760,13 @@ export default class ComboSelect extends Component {
                 case 38:
                     // Up
                     event.preventDefault();
-                    this.focus = this.focus < 1 ? this.state.data.length - 1 : this.focus - 1;
+                    this.focusItem(this.focus < 1 ? this.state.data.length - 1 : this.focus - 1);
                     this.controlScrolling();
                     break;
                 case 40:
                     // Down
                     event.preventDefault();
-                    this.focus = this.focus == this.state.data.length - 1 ? this.focus = 0 : this.focus + 1;
+                    this.focusItem(this.focus == this.state.data.length - 1 ? this.focus = 0 : this.focus + 1);
                     this.controlScrolling();
                     break;
                 case 37:
@@ -778,11 +804,10 @@ export default class ComboSelect extends Component {
 
         let mappedData = [];
 
-        if (data) {
-            data.map(function (item) {
-                mappedData.push(this.mapSingleData(item));
+        if (data)
+            mappedData = data.map(function (item) {
+                return this.mapSingleData(item);
             }.bind(this));
-        }
 
         return mappedData;
     }
