@@ -473,6 +473,7 @@ export default class ComboSelect extends Component {
         if (!this.open && (event.keyCode == 13 || event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 32)) {
 
             event.preventDefault();
+            event.stopPropagation();
             this.toggleMenu();
 
         }

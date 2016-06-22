@@ -83,6 +83,15 @@ export default class FakeComponent extends Component {
                                       disabled={false} onChange={this.fakeFunction} map={{text: 'win', value: true}}
                                       onToggle={this.fakeToggle} required/>}
                     </div>
+
+                    <div style={{position: 'relative', marginTop: '20px'}}>
+                        {<ComboSelect data={this.state.data}
+                                      icon="fa fa-chevron-circle-down" search="smart" value={this.state.data[1]}
+                                      sort="alphanum"
+                                      disabled={false} onChange={this.fakeFunction} map={{text: 'win', value: true}}
+                                      onToggle={this.fakeToggle} required/>}
+                    </div>
+
                     <br/>
                     <br/>
                     <input type="text" required/>
