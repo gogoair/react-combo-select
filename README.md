@@ -144,7 +144,7 @@ fakeFunctionObject(value) {
     console.log(value) // this will display {text: "air-JA007D", win: "win-JA007D", value: "JA007D"} and key object with text will be shown in tn select.
 }
 
-<ComboSelect data={arrayWithObjects} map={text: this.selectText(), value: true} onChange={this.fakeFunctionObject}/>
+<ComboSelect data={arrayWithObjects} map={text: this.selectText, value: true} onChange={this.fakeFunctionObject}/>
 ```
 
 ### sort

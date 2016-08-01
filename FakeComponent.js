@@ -51,6 +51,10 @@ export default class FakeComponent extends Component {
         return item.win.here;
     }
 
+    getValue(item){
+        return item.win;
+    }
+
     render() {
         //var standardArray = ["DDD", "CCC", "BBB", "AAA"];
         //var standardArray = [3, 1, 11, 111, 21, 33, 14, 32, 442];
@@ -95,7 +99,7 @@ export default class FakeComponent extends Component {
                                       icon="fa fa-chevron-circle-down" search="smart" value={this.state.data[1]}
                                       sort="alphanum"
                                       disabled={false} onChange={this.fakeFunction}
-                                      map={{text: this.getText, value: true}}
+                                      map={{text: this.getText, value: this.getValue}}
                                       onToggle={this.fakeToggle} required/>}
                     </div>
 
