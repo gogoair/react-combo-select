@@ -9,18 +9,25 @@ export default class FakeComponent extends Component {
         this.state = {
             text: '-Select me-',
             data: [
-                {text: 111, win: "win-JA009D", value: 111},
-                {text: 3, win: "win-JA007D", value: 3},
-                {text: 11, win: "win-JA0008D", value: 11},
-                {text: 12, win: "win-JA107D", value: 12},
-                {text: 13, win: "sin-JA101D", value: 13},
-                {text: 14, win: "win-JA102D", value: 14},
-                {text: 15, win: "win-JA103D", value: 15}
+                {
+                    text: 111,
+                    win: {
+                        here: 'win'
+                    },
+                    value: 111
+                },
+                {
+                    text: 3,
+                    win: {
+                        here: 'win-win'
+                    },
+                    value: 3
+                }
             ]
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
         //setTimeout(function () {
         //    this.setState({data: [
         //        {text: "air-JA007D", win: "win-111", value: "JA007D"},
@@ -38,6 +45,10 @@ export default class FakeComponent extends Component {
 
     fakeToggle(open, value) {
         //console.log(open, value);
+    }
+
+    getText(item) {
+        return item.win.here;
     }
 
     render() {
@@ -73,6 +84,9 @@ export default class FakeComponent extends Component {
         return (
             <div>
                 <form action="">
+                    <input type="text" required/>
+                    <br/>
+                    <br/>
                     <div style={{position: 'relative'}}>
                         {/*<ComboSelect type="select" data={this.state.data} sort='number'
                          icon="fa fa-chevron-circle-down" search="smart" value={this.state.data[0]}
@@ -80,16 +94,17 @@ export default class FakeComponent extends Component {
                         {<ComboSelect type="multiselect" data={this.state.data}
                                       icon="fa fa-chevron-circle-down" search="smart" value={this.state.data[1]}
                                       sort="alphanum"
-                                      disabled={false} onChange={this.fakeFunction} map={{text: 'win', value: true}}
+                                      disabled={false} onChange={this.fakeFunction}
+                                      map={{text: this.getText, value: true}}
                                       onToggle={this.fakeToggle} required/>}
                     </div>
 
                     <div style={{position: 'relative', marginTop: '20px'}}>
-                        {<ComboSelect data={this.state.data}
-                                      icon="fa fa-chevron-circle-down" search="smart" value={this.state.data[1]}
-                                      sort="off"
-                                      disabled={false} onChange={this.fakeFunction} map={{text: 'win', value: true}}
-                                      onToggle={this.fakeToggle} required/>}
+                        {/*<ComboSelect data={this.state.data}
+                         icon="fa fa-chevron-circle-down" search="smart" value={this.state.data[1]}
+                         sort="off"
+                         disabled={false} onChange={this.fakeFunction} map={{text: 'win.here', value: true}}
+                         onToggle={this.fakeToggle} borderActive="red" required/>*/}
                     </div>
 
                     <br/>

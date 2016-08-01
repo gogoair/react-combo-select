@@ -16,10 +16,11 @@ export default class ComboSelect extends Component {
         this.defaultText = props.text ? props.text : 'Select';
         this.open = false;
         this.icon = props.icon ? props.icon : 'fa fa-chevron-circle-down';
-        this.map = this.props.map && this.props.map.text && this.props.map.value && this.props.map.text.length > 0 ? this.props.map : {
+        this.map = this.props.map && this.props.map.text && this.props.map.value ? this.props.map : {
             value: 'value',
             text: 'text'
         };
+        this.borderActive = this.props.borderActive ? this.props.borderActive : '#40b4e5';
 
         this.iconSelectActive = props.iconSelectActive !== false || props.iconSelectActive !== 'off' ? props.iconSelectActive : true;
         this.iconSelectInactive = props.iconSelectInactive !== false || props.iconSelectInactive !== 'off' ? props.iconSelectInactive : true;
@@ -28,6 +29,8 @@ export default class ComboSelect extends Component {
         this.globalMouseClick = this.globalMouseClick.bind(this);
         this.globalWheel = this.globalWheel.bind(this);
         this.requiredSelectKeydown = this.requiredSelectKeydown.bind(this);
+        this.selectFocus = this.selectFocus.bind(this);
+        this.deSelectFocus = this.deSelectFocus.bind(this);
 
         this.searchTimeout = null;
 
@@ -52,8 +55,9 @@ export default class ComboSelect extends Component {
         window.addEventListener('keydown', this.globalKeyDown);
         window.addEventListener('click', this.globalMouseClick);
         window.addEventListener('wheel', this.globalWheel);
-        // Event for real select within select, this is needed for "required" attribute since it cannot be attached to the non-form elements
         this.refs.comboSelect.getElementsByClassName('combo-select-required-select')[0].addEventListener('keydown', this.requiredSelectKeydown);
+        this.refs.comboSelect.getElementsByClassName('combo-select-required-select')[0].addEventListener('focus', this.selectFocus);
+        this.refs.comboSelect.getElementsByClassName('combo-select-required-select')[0].addEventListener('focusout', this.deSelectFocus);
 
         /**
          * Inner scroll, scroll to top
@@ -66,7 +70,9 @@ export default class ComboSelect extends Component {
         window.removeEventListener('keydown', this.globalKeyDown);
         window.removeEventListener('click', this.globalMouseClick);
         window.removeEventListener('wheel', this.globalWheel);
-        this.refs.comboSelect.getElementsByClassName('combo-select-required-select')[0].removeEventListener('keydown', this.requiredSelectKeydown)
+        this.refs.comboSelect.getElementsByClassName('combo-select-required-select')[0].removeEventListener('keydown', this.requiredSelectKeydown);
+        this.refs.comboSelect.getElementsByClassName('combo-select-required-select')[0].addEventListener('focus', this.selectFocus);
+        this.refs.comboSelect.getElementsByClassName('combo-select-required-select')[0].addEventListener('focusout', this.deSelectFocus);
     }
 
     componentWillReceiveProps(newProps) {
@@ -78,6 +84,23 @@ export default class ComboSelect extends Component {
             text: selectedItems.text,
             value: selectedItems.value
         });
+    }
+
+    /**
+     * Focus event for select
+     */
+    selectFocus() {
+        this.borderColor = this.refs.comboSelect.getElementsByClassName('combo-select-head')[0].style.borderColor;
+        this.refs.comboSelect.getElementsByClassName('combo-select-head')[0].style.borderColor = this.borderActive;
+    }
+
+    /**
+     * Focus-out event for select
+     */
+    deSelectFocus() {
+        if (this.refs && this.refs.comboSelect && this.refs.comboSelect.getElementsByClassName('combo-select-head')) {
+            this.refs.comboSelect.getElementsByClassName('combo-select-head')[0].style.borderColor = this.borderColor;
+        }
     }
 
     /**
@@ -156,11 +179,14 @@ export default class ComboSelect extends Component {
                 }
             }
 
-            //if (hideMenu && target.className != 'combo-select-item' && target.className != 'combo-select-item selected' && target.className != 'combo-select-item active' && target.className != 'combo-select-item active selected' && target.className != 'combo-select-item selected no-icon' && target.className != 'combo-select-item active selected no-icon' && this.open) {
-            //console.log(target.className.indexOf('combo-select-item'));
-            if (hideMenu && target.className.indexOf('combo-select-item') < 0 && this.open) {
-                event.preventDefault();
-                this.toggleMenu();
+            if (this.open && hideMenu) {
+
+                if (target.className && typeof target.className == 'string' && target.className.indexOf('combo-select-item') > -1) {
+                    // nothing
+                } else {
+                    event.preventDefault();
+                    this.toggleMenu();
+                }
             }
         }
     }
@@ -186,26 +212,26 @@ export default class ComboSelect extends Component {
     _generateHead() {
 
         let head;
-        let text = this.state.text;
+        let stateText = this.state.text;
 
-        if (typeof text == 'object') {
-            text.length > 3 ? text = text.length + ' selected' :
-                (text = text.slice(), text = text.join(", "));
+        if (typeof stateText == 'object') {
+            stateText.length > 3 ? stateText = stateText.length + ' selected' :
+                (stateText = stateText.slice(), stateText = stateText.join(", "));
         }
 
         let options = this.state.data.map(function (item, i) {
             return <option key={i} value={item.text}>{item.text}</option>
         });
 
-        var {data, type, onChange, search, value, onToggle, ...other } = this.props;
+        var {data, type, onChange, search, value, onToggle, text, map, sort, iconSelectInactive, iconSelectActive, ...other } = this.props;
 
         if (this.state.value) {
 
             head = (<div onClick={() => this.toggleMenu()}>
-                <div className="combo-select-head">
-                    {text ? text : this.defaultText}<i className={this.icon}></i>
+                <div className={(this.props.disabled ? " disabled " : "") + "combo-select-head"}>
+                    {stateText ? stateText : this.defaultText}<i className={this.icon}></i>
                 </div>
-                <select disabled readOnly {...other} className="combo-select-required-select">
+                <select readOnly {...other} className="combo-select-required-select">
                     {options}
                 </select>
             </div>);
@@ -213,10 +239,10 @@ export default class ComboSelect extends Component {
         } else {
 
             head = (<div onClick={() => this.toggleMenu()}>
-                <div className="combo-select-head">
-                    {text ? text : this.defaultText}<i className={this.icon}></i>
+                <div className={(this.props.disabled ? " disabled " : "") + "combo-select-head"}>
+                    {stateText ? stateText : this.defaultText}<i className={this.icon}></i>
                 </div>
-                <select disabled readOnly {...other} className="combo-select-required-select">
+                <select readOnly {...other} className="combo-select-required-select">
                     <option value=""></option>
                     {options}
                 </select>
@@ -262,9 +288,18 @@ export default class ComboSelect extends Component {
         let search = this.ifSearch(style) ?
             (<input type="text" style={style ? style.search : {}}
                     className="search-input"
+                    onKeyDown={(event) => {
+                        if (event.keyCode == 32) {
+                            event.stopPropagation();
+                        } else if (this.focus < 0 && event.keyCode == 13) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                    }}
                     onChange={() => {
-                        if (this.searchTimeout)
+                        if (this.searchTimeout) {
                             clearTimeout(this.searchTimeout);
+                        }
 
                         this.searchTimeout = setTimeout(this.filterBySearch.bind(this), 200);
                     }}
@@ -422,8 +457,9 @@ export default class ComboSelect extends Component {
      * @returns {*}
      */
     sortData(data) {
-        if (this.props.sort === false || this.props.sort === 'off')
+        if (this.props.sort === false || this.props.sort === 'off') {
             return data;
+        }
 
         let sortedData = [];
 
@@ -450,6 +486,7 @@ export default class ComboSelect extends Component {
             }
         }
 
+        this.focus = -1;
         return sortedData;
     }
 
@@ -481,7 +518,7 @@ export default class ComboSelect extends Component {
     requiredSelectKeydown(event) {
 
         // space, up, down
-        if (!this.open && (event.keyCode == 13 || event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 32)) {
+        if (!this.props.disabled && !this.open && (event.keyCode == 13 || event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 32)) {
 
             event.preventDefault();
             event.stopPropagation();
@@ -494,53 +531,64 @@ export default class ComboSelect extends Component {
      * Open/close menu, with overflow hidden
      */
     toggleMenu() {
-        let comboSelect = this.refs.comboSelect;
 
-        this.open = !this.open;
+        if (!this.props.disabled) {
 
-        comboSelect.getElementsByClassName('combo-select-body-holder')[0].style.display = this.open ? 'block' : 'none';
+            let comboSelect = this.refs.comboSelect;
 
-        if (this.open) {
+            this.open = !this.open;
 
-            let style = this.calculateMetric();
+            comboSelect.getElementsByClassName('combo-select-body-holder')[0].style.display = this.open ? 'block' : 'none';
 
-            // Search
-            if (this.ifSearch(style) && comboSelect && this.refs.comboSelect.getElementsByClassName('search-input') && this.refs.comboSelect.getElementsByClassName('search-input')[0]) {
-                this.refs.comboSelect.getElementsByClassName('search-input')[0].style.display = 'block';
-                this.refs.comboSelect.getElementsByClassName('search-input')[0].style.top = style.search.top ? style.search.top + 'px' : '';
-                this.refs.comboSelect.getElementsByClassName('search-input')[0].style.bottom = style.search.bottom ? style.search.bottom + 'px' : '';
-            } else if (comboSelect && this.refs.comboSelect.getElementsByClassName('search-input') && this.refs.comboSelect.getElementsByClassName('search-input')[0]) {
-                this.refs.comboSelect.getElementsByClassName('search-input')[0].style.display = 'none';
+            if (this.open) {
+
+                let style = this.calculateMetric();
+
+                // Search
+                if (this.ifSearch(style) && comboSelect && this.refs.comboSelect.getElementsByClassName('search-input') && this.refs.comboSelect.getElementsByClassName('search-input')[0]) {
+                    this.refs.comboSelect.getElementsByClassName('search-input')[0].style.display = 'block';
+                    this.refs.comboSelect.getElementsByClassName('search-input')[0].style.top = style.search.top ? style.search.top + 'px' : '';
+                    this.refs.comboSelect.getElementsByClassName('search-input')[0].style.bottom = style.search.bottom ? style.search.bottom + 'px' : '';
+                } else if (comboSelect && this.refs.comboSelect.getElementsByClassName('search-input') && this.refs.comboSelect.getElementsByClassName('search-input')[0]) {
+                    this.refs.comboSelect.getElementsByClassName('search-input')[0].style.display = 'none';
+                }
+
+                // Body
+                if (comboSelect && this.refs.comboSelect.getElementsByClassName('combo-select-body')[0]) {
+                    this.refs.comboSelect.getElementsByClassName('combo-select-body')[0].style.top = style.body.top ? style.body.top + 'px' : '';
+                    this.refs.comboSelect.getElementsByClassName('combo-select-body')[0].style.bottom = style.body.bottom ? style.body.bottom + 'px' : '';
+                    this.refs.comboSelect.getElementsByClassName('combo-select-body')[0].style.paddingTop = style.body.paddingTop ? style.body.paddingTop + 'px' : '';
+                    this.refs.comboSelect.getElementsByClassName('combo-select-body')[0].style.paddingBottom = style.body.paddingBottom ? style.body.paddingBottom + 'px' : '';
+                }
+
+                // Search focus
+                if (comboSelect.getElementsByClassName('search-input') && comboSelect.getElementsByClassName('search-input').length > 0) {
+                    comboSelect.getElementsByClassName('search-input')[0].focus();
+                }
+
+                // Scroll
+                if (comboSelect.getElementsByClassName('combo-select-body-scroll') && comboSelect.getElementsByClassName('combo-select-body-scroll')[0]) {
+                    this.refs.comboSelect.getElementsByClassName('combo-select-body-scroll')[0].style.height = style.scroll.height + 'px';
+                    this.refs.comboSelect.getElementsByClassName('combo-select-body-scroll')[0].style.overflowY = style.scroll.overflowY;
+                }
+
+            } else {
+
+                if (navigator.userAgent.match(/Tablet|iPad/i)) {
+                    // do tablet stuff
+                } else if (navigator.userAgent.match(/IEMobile|Windows Phone|Lumia|Android|webOS|iPhone|iPod|Blackberry|PlayBook|BB10|Mobile Safari|Opera Mini|\bCrMo\/|Opera Mobi/i)) {
+                    // do mobile stuff
+                } else {
+                    comboSelect.getElementsByClassName('combo-select-required-select')[0].focus();
+                }
+
             }
 
-            // Body
-            if (comboSelect && this.refs.comboSelect.getElementsByClassName('combo-select-body')[0]) {
-                this.refs.comboSelect.getElementsByClassName('combo-select-body')[0].style.top = style.body.top ? style.body.top + 'px' : '';
-                this.refs.comboSelect.getElementsByClassName('combo-select-body')[0].style.bottom = style.body.bottom ? style.body.bottom + 'px' : '';
-                this.refs.comboSelect.getElementsByClassName('combo-select-body')[0].style.paddingTop = style.body.paddingTop ? style.body.paddingTop + 'px' : '';
-                this.refs.comboSelect.getElementsByClassName('combo-select-body')[0].style.paddingBottom = style.body.paddingBottom ? style.body.paddingBottom + 'px' : '';
+            // Propagate toggle event with data with to outside event
+            if (this.props.onToggle) {
+                this.props.onToggle(this.open, this.state.value);
             }
 
-            // Search focus
-            if (comboSelect.getElementsByClassName('search-input') && comboSelect.getElementsByClassName('search-input').length > 0) {
-                comboSelect.getElementsByClassName('search-input')[0].focus();
-            }
-
-            // Scroll
-            if (comboSelect.getElementsByClassName('combo-select-body-scroll') && comboSelect.getElementsByClassName('combo-select-body-scroll')[0]) {
-                this.refs.comboSelect.getElementsByClassName('combo-select-body-scroll')[0].style.height = style.scroll.height + 'px';
-                this.refs.comboSelect.getElementsByClassName('combo-select-body-scroll')[0].style.overflowY = style.scroll.overflowY;
-            }
-
-        } else {
-
-            comboSelect.getElementsByClassName('combo-select-required-select')[0].focus();
-
-        }
-
-        // Propagate toggle event with data with to outside event
-        if (this.props.onToggle) {
-            this.props.onToggle(this.open, this.state.value);
         }
     }
 
@@ -549,14 +597,18 @@ export default class ComboSelect extends Component {
      * @param focus
      */
     focusItem(focus) {
-        const items = this.refs.comboSelect.getElementsByClassName('combo-select-item');
+        if (this.state.data && this.state.data.length > 0) {
 
-        if (this.focus >= 0)
-            items[this.focus].style.backgroundColor = '';
+            const items = this.refs.comboSelect.getElementsByClassName('combo-select-item');
 
-        items[focus].style.backgroundColor = '#f7f7f7';
+            if (this.focus >= 0) {
+                items[this.focus].style.backgroundColor = '';
+            }
 
-        this.focus = focus;
+            items[focus].style.backgroundColor = '#f7f7f7';
+
+            this.focus = focus;
+        }
     }
 
     /**
@@ -735,18 +787,18 @@ export default class ComboSelect extends Component {
         }
 
         /*let focusPrev = this.focus - 1;
-        let focusNext = this.focus + 1;
+         let focusNext = this.focus + 1;
 
-        if (focusPrev < 0)
-            focusPrev = this.state.data.length - 1;
-        else if (focusNext >= this.state.data.length)
-            focusNext = 0;
+         if (focusPrev < 0)
+         focusPrev = this.state.data.length - 1;
+         else if (focusNext >= this.state.data.length)
+         focusNext = 0;
 
-        this.refs.comboSelect.getElementsByClassName('combo-select-item')[focusPrev].style.backgroundColor = ''
+         this.refs.comboSelect.getElementsByClassName('combo-select-item')[focusPrev].style.backgroundColor = ''
 
-        focusedItem.style.backgroundColor = '#f7f7f7';
+         focusedItem.style.backgroundColor = '#f7f7f7';
 
-        this.refs.comboSelect.getElementsByClassName('combo-select-item')[focusNext].style.backgroundColor = ''*/
+         this.refs.comboSelect.getElementsByClassName('combo-select-item')[focusNext].style.backgroundColor = ''*/
     }
 
     /**
@@ -819,12 +871,34 @@ export default class ComboSelect extends Component {
 
         if (typeof item == 'object') {
 
-            if (this.map.value === true) {
+            if (typeof this.map.text == 'function') {
+
+                text = this.map.text(item);
+                if (typeof this.map.value == 'function') {
+                    value = this.map.value(item);
+                } else {
+                    value = item[this.map.value];
+                }
+
+            } else if (typeof this.map.value == 'function') {
+
+                value = this.map.value(item);
+                if (typeof this.map.text == 'function') {
+                    text = this.map.text(item);
+                } else {
+                    text = item[this.map.text];
+                }
+
+            } else if (this.map.value === true) {
+
                 text = item[this.map.text];
                 value = item;
+
             } else {
+
                 text = item[this.map.text];
                 value = item[this.map.value];
+
             }
 
         } else {
@@ -865,5 +939,6 @@ ComboSelect
     controls: React.PropTypes.bool,
     value: React.PropTypes.any,
     disabled: React.PropTypes.bool,
-    onToggle: React.PropTypes.func
+    onToggle: React.PropTypes.func,
+    borderActive: React.PropTypes.string
 };

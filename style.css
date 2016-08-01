@@ -6,7 +6,7 @@
     position: relative;
     width: 100%;
     border: 2px solid #d1d3d4;
-    border-radius: 8px;
+    border-radius: 6px;
     padding-left: 19px;
     height: 42px;
     font-size: 15px;
@@ -17,6 +17,16 @@
     outline: none;
     line-height: 42px;
     box-sizing: border-box;
+}
+
+.combo-select .combo-select-head.disabled {
+    background-color: #fafafa;
+    color: #d1d3d4;
+    cursor: not-allowed;
+}
+
+.combo-select .combo-select-head.disabled i {
+    color: #d1d3d4;
 }
 
 .combo-select div.combo-select-head {

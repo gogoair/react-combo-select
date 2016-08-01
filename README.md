@@ -2,11 +2,10 @@
 React dropdown for select and multiselect 
 
 ## LATEST
-- Icons for active and inactive state using iconSelectActive nad iconSelectInactive
-- Better handling for new props, NOW you only have to set either text or value and other one will be recognized
-- Moving forward towards version 1 :) removed a lot of setStates, faster rendering
-- Resolving appearing of second select on iPad/Windows IE
-- Added alphanumerical sorting, combination of ordering of stings and number 
+- Big change: send function in map object to do complex selecting
+- Different border color if select if focused
+- Disable select
+- Detection for platform type and different logic
 
 ```javascript
 let standardArray = ["win-JA007D", "win-JA0008D", "win-JA009D"];
@@ -133,6 +132,19 @@ fakeFunctionObject(value) {
 }
 
 <ComboSelect data={arrayWithObjects} map={text: 'text', value: true} onChange={this.fakeFunctionObject}/>
+
+
+// Map through function, you allways get item, and have to return value
+selectText: function(item){
+    return item.hereIs.objectFor.text
+}
+
+// function
+fakeFunctionObject(value) {
+    console.log(value) // this will display {text: "air-JA007D", win: "win-JA007D", value: "JA007D"} and key object with text will be shown in tn select.
+}
+
+<ComboSelect data={arrayWithObjects} map={text: this.selectText(), value: true} onChange={this.fakeFunctionObject}/>
 ```
 
 ### sort
@@ -154,9 +166,22 @@ let standardArray = ["win-JA007D", "win-JA0008D", "win-JA009D"];
 Can be default, custom or off. For custom just put class that you want, and it would be assigned to icon class. For default, just leave as is. And for off use false or 'off'
 
 ```javascript
+
 let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"];
 
 <ComboSelect type="multiselect" data={this.state.data} value={this.state.data[1]} iconSelectInactive={false} iconSelectActive={false}/>
 <ComboSelect type="multiselect" data={this.state.data} value={this.state.data[1]} iconSelectInactive={'fa fa-check-circle'} iconSelectActive={'fa fa-check-circle'}/>
 <ComboSelect type="multiselect" data={this.state.data} value={this.state.data[1]}/>
+
+```
+
+### disabled
+Self explanatory
+
+```javascript
+
+let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"];
+
+<ComboSelect type="multiselect" data={this.state.data} value={this.state.data[1]} disabled}/>
+
 ```
