@@ -13,7 +13,7 @@ export default class ComboSelect extends Component {
 
         this.focus = -1;
         this.scroll = 0;
-        this.defaultText = props.text ? props.text : 'Select';
+        this.defaultText = props.defaultText ? props.defaultText : (props.text ? props.text : 'Select');
         this.open = false;
         this.icon = props.icon ? props.icon : 'fa fa-chevron-circle-down';
         this.map = this.props.map && this.props.map.text && this.props.map.value ? this.props.map : {
@@ -940,5 +940,6 @@ ComboSelect
     value: React.PropTypes.any,
     disabled: React.PropTypes.bool,
     onToggle: React.PropTypes.func,
-    borderActive: React.PropTypes.string
+    borderActive: React.PropTypes.string,
+    defaultText: React.PropTypes.any
 };

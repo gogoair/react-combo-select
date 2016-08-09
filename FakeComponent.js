@@ -100,7 +100,8 @@ export default class FakeComponent extends Component {
                                       sort="alphanum"
                                       disabled={false} onChange={this.fakeFunction}
                                       map={{text: this.getText, value: this.getValue}}
-                                      onToggle={this.fakeToggle} required/>}
+                                      onToggle={this.fakeToggle}
+                                      defaultText="Select meeee" required/>}
                     </div>
 
                     <div style={{position: 'relative', marginTop: '20px'}}>

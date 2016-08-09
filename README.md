@@ -2,10 +2,7 @@
 React dropdown for select and multiselect 
 
 ## LATEST
-- Big change: send function in map object to do complex selecting
-- Different border color if select if focused
-- Disable select
-- Detection for platform type and different logic
+- Default text, there were some problems with re-rendering applications where users had to use defined values as text, therefore just use default text for empty values.
 
 ```javascript
 let standardArray = ["win-JA007D", "win-JA0008D", "win-JA009D"];
