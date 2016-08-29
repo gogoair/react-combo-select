@@ -223,7 +223,7 @@ export default class ComboSelect extends Component {
             return <option key={i} value={item.text}>{item.text}</option>
         });
 
-        var {data, type, onChange, search, value, onToggle, text, map, sort, iconSelectInactive, iconSelectActive, ...other } = this.props;
+        var {data, type, onChange, search, value, onToggle, text, map, sort, iconSelectInactive, iconSelectActive, defaultText, ...other } = this.props;
 
         if (this.state.value) {
 
