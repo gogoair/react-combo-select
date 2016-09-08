@@ -34,11 +34,11 @@ export default class ComboSelect extends Component {
 
         this.searchTimeout = null;
 
-        let data = this.sortData(this.mapAllData(props.data));
-        let selectedItems = this.findSelectedItems(data, props.text, props.value);
+        this.mappedData = this.sortData(this.mapAllData(props.data));
+        let selectedItems = this.findSelectedItems(this.mappedData, props.text, props.value);
 
         this.state = {
-            data: data,
+            data: this.mappedData,
             text: selectedItems.text,
             value: selectedItems.value,
             type: props.type && (props.type == 'select' || props.type == 'multiselect') ? props.type : 'select',
@@ -55,9 +55,9 @@ export default class ComboSelect extends Component {
         window.addEventListener('keydown', this.globalKeyDown);
         window.addEventListener('click', this.globalMouseClick);
         window.addEventListener('wheel', this.globalWheel);
-        this.refs.comboSelect.getElementsByClassName('combo-select-required-select')[0].addEventListener('keydown', this.requiredSelectKeydown);
-        this.refs.comboSelect.getElementsByClassName('combo-select-required-select')[0].addEventListener('focus', this.selectFocus);
-        this.refs.comboSelect.getElementsByClassName('combo-select-required-select')[0].addEventListener('focusout', this.deSelectFocus);
+        this.refs.select.addEventListener('keydown', this.requiredSelectKeydown);
+        this.refs.select.addEventListener('focus', this.selectFocus);
+        this.refs.select.addEventListener('focusout', this.deSelectFocus);
 
         /**
          * Inner scroll, scroll to top
@@ -70,36 +70,47 @@ export default class ComboSelect extends Component {
         window.removeEventListener('keydown', this.globalKeyDown);
         window.removeEventListener('click', this.globalMouseClick);
         window.removeEventListener('wheel', this.globalWheel);
-        this.refs.comboSelect.getElementsByClassName('combo-select-required-select')[0].removeEventListener('keydown', this.requiredSelectKeydown);
-        this.refs.comboSelect.getElementsByClassName('combo-select-required-select')[0].addEventListener('focus', this.selectFocus);
-        this.refs.comboSelect.getElementsByClassName('combo-select-required-select')[0].addEventListener('focusout', this.deSelectFocus);
+        this.refs.select.removeEventListener('keydown', this.requiredSelectKeydown);
+        this.refs.select.addEventListener('focus', this.selectFocus);
+        this.refs.select.addEventListener('focusout', this.deSelectFocus);
     }
 
     componentWillReceiveProps(newProps) {
-        let data = this.sortData(this.mapAllData(newProps.data));
-        let selectedItems = this.findSelectedItems(data, newProps.text, newProps.value);
+        const dataChanged = newProps.data !== this.props.data;
+        const stateUpdate = {};
+        let changed = false;
 
-        this.setState({
-            data: data,
-            text: selectedItems.text,
-            value: selectedItems.value
-        });
+        if (dataChanged) {
+            this.mappedData = this.sortData(this.mapAllData(newProps.data));
+            stateUpdate.data = this.mappedData;
+            changed = true;
+        }
+
+        if (dataChanged || newProps.text !== this.props.text || newProps.value !== this.props.value) {
+            let selectedItems = this.findSelectedItems(this.mappedData, newProps.text, newProps.value);
+            stateUpdate.text = selectedItems.text;
+            stateUpdate.value = selectedItems.value;
+            changed = true;
+        }
+
+        if (changed)
+            this.setState(stateUpdate);
     }
 
     /**
      * Focus event for select
      */
     selectFocus() {
-        this.borderColor = this.refs.comboSelect.getElementsByClassName('combo-select-head')[0].style.borderColor;
-        this.refs.comboSelect.getElementsByClassName('combo-select-head')[0].style.borderColor = this.borderActive;
+        this.borderColor = this.refs.head.style.borderColor;
+        this.refs.head.style.borderColor = this.borderActive;
     }
 
     /**
      * Focus-out event for select
      */
     deSelectFocus() {
-        if (this.refs && this.refs.comboSelect && this.refs.comboSelect.getElementsByClassName('combo-select-head')) {
-            this.refs.comboSelect.getElementsByClassName('combo-select-head')[0].style.borderColor = this.borderColor;
+        if (this.refs && this.refs.head) {
+            this.refs.head.style.borderColor = this.borderColor;
         }
     }
 
@@ -118,7 +129,7 @@ export default class ComboSelect extends Component {
 
             let data = this.state.data.length;
             let elementHeight = this.refs.comboSelect.getElementsByClassName('combo-select-item')[0].clientHeight;
-            let menuHeight = this.refs.comboSelect.getElementsByClassName('combo-select-body-scroll')[0].clientHeight;
+            let menuHeight = this.refs.scroll.clientHeight;
 
             let potentialScrollBottom = this.refs.comboSelect.getElementsByClassName(specialClass)[0].scrollTop + menuHeight + event.deltaY;
             let maximumScroll = data * elementHeight;
@@ -129,7 +140,7 @@ export default class ComboSelect extends Component {
                     target = target.parentElement;
                     i++;
 
-                    if (target.innerHTML == this.refs.comboSelect.getElementsByClassName('combo-select-body-scroll')[0].innerHTML) {
+                    if (target.innerHTML == this.refs.scroll.innerHTML) {
                         outside = false;
                     }
                 }
@@ -141,13 +152,13 @@ export default class ComboSelect extends Component {
 
             } else if (this.refs.comboSelect.getElementsByClassName(specialClass)[0].scrollTop + event.deltaY <= 0) {
 
-                this.refs.comboSelect.getElementsByClassName('combo-select-body-scroll')[0].scrollTop = 0;
+                this.refs.scroll.scrollTop = 0;
                 event.stopPropagation();
                 event.preventDefault();
 
             } else {
 
-                this.refs.comboSelect.getElementsByClassName('combo-select-body-scroll')[0].scrollTop = 9999999;
+                this.refs.scroll.scrollTop = 9999999;
                 event.stopPropagation();
                 event.preventDefault();
 
@@ -228,10 +239,10 @@ export default class ComboSelect extends Component {
         if (this.state.value) {
 
             head = (<div onClick={() => this.toggleMenu()}>
-                <div className={(this.props.disabled ? " disabled " : "") + "combo-select-head"}>
+                <div className={(this.props.disabled ? " disabled " : "") + "combo-select-head"} ref="head">
                     {stateText ? stateText : this.defaultText}<i className={this.icon}></i>
                 </div>
-                <select readOnly {...other} className="combo-select-required-select">
+                <select readOnly {...other} className="combo-select-required-select" ref="select">
                     {options}
                 </select>
             </div>);
@@ -239,10 +250,10 @@ export default class ComboSelect extends Component {
         } else {
 
             head = (<div onClick={() => this.toggleMenu()}>
-                <div className={(this.props.disabled ? " disabled " : "") + "combo-select-head"}>
+                <div className={(this.props.disabled ? " disabled " : "") + "combo-select-head"} ref="head">
                     {stateText ? stateText : this.defaultText}<i className={this.icon}></i>
                 </div>
-                <select readOnly {...other} className="combo-select-required-select">
+                <select readOnly {...other} className="combo-select-required-select" ref="select">
                     <option value=""></option>
                     {options}
                 </select>
@@ -287,6 +298,7 @@ export default class ComboSelect extends Component {
 
         let search = this.ifSearch(style) ?
             (<input type="text" style={style ? style.search : {}}
+                    ref="searchInput"
                     className="search-input"
                     onKeyDown={(event) => {
                         if (event.keyCode == 32) {
@@ -309,8 +321,8 @@ export default class ComboSelect extends Component {
         return (
             <div>
                 {search}
-                <div className="combo-select-body" style={style ? style.body : {}}>
-                    <div style={style ? style.scroll : {}} className="combo-select-body-scroll">
+                <div className="combo-select-body" ref="body" style={style ? style.body : {}}>
+                    <div style={style ? style.scroll : {}} className="combo-select-body-scroll" ref="scroll">
                         {body && body.length > 0 ? body : (
                             <div className="combo-select-item">There is no eligible items</div>)}
                     </div>
@@ -332,7 +344,7 @@ export default class ComboSelect extends Component {
             value: []
         };
 
-        data.map(function (item) {
+        data.forEach(function (item) {
             if (this.findSelectedItem(item, text, value)) {
                 selectedItems.text.push(item.text);
                 selectedItems.value.push(item.value);
@@ -400,7 +412,7 @@ export default class ComboSelect extends Component {
         return this.state.search == 'on' ||
             (this.state.search == 'smart' &&
                 (!style || style.scroll.height != 'auto' ||
-                    (this.refs.comboSelect.getElementsByClassName('search-input') && this.refs.comboSelect.getElementsByClassName('search-input')[0] && this.refs.comboSelect.getElementsByClassName('search-input')[0].value && this.refs.comboSelect.getElementsByClassName('search-input')[0].value.length > 0)
+                    (this.refs.searchInput && this.refs.searchInput.value)
                 )
             );
     }
@@ -494,14 +506,16 @@ export default class ComboSelect extends Component {
      * Filter data to match searched term
      */
     filterBySearch() {
-        let filter = this.refs.comboSelect.getElementsByClassName('search-input')[0].value;
+        if (!this.refs.searchInput)
+            return;
+
+        let filter = this.refs.searchInput.value.toLowerCase();
         let data = [];
-        let unsortedData = this.sortData(this.mapAllData(this.props.data));
 
-        for (let i in unsortedData) {
+        for (let i in this.mappedData) {
 
-            if (unsortedData[i].text.toString().toLowerCase().indexOf(filter.toLowerCase()) > -1) {
-                data.push(unsortedData[i]);
+            if (this.mappedData[i].text.toString().toLowerCase().indexOf(filter) > -1) {
+                data.push(this.mappedData[i]);
             }
 
         }
@@ -538,38 +552,38 @@ export default class ComboSelect extends Component {
 
             this.open = !this.open;
 
-            comboSelect.getElementsByClassName('combo-select-body-holder')[0].style.display = this.open ? 'block' : 'none';
+            this.refs.holder.style.display = this.open ? 'block' : 'none';
 
             if (this.open) {
 
                 let style = this.calculateMetric();
 
                 // Search
-                if (this.ifSearch(style) && comboSelect && this.refs.comboSelect.getElementsByClassName('search-input') && this.refs.comboSelect.getElementsByClassName('search-input')[0]) {
-                    this.refs.comboSelect.getElementsByClassName('search-input')[0].style.display = 'block';
-                    this.refs.comboSelect.getElementsByClassName('search-input')[0].style.top = style.search.top ? style.search.top + 'px' : '';
-                    this.refs.comboSelect.getElementsByClassName('search-input')[0].style.bottom = style.search.bottom ? style.search.bottom + 'px' : '';
-                } else if (comboSelect && this.refs.comboSelect.getElementsByClassName('search-input') && this.refs.comboSelect.getElementsByClassName('search-input')[0]) {
-                    this.refs.comboSelect.getElementsByClassName('search-input')[0].style.display = 'none';
+                if (this.ifSearch(style) && comboSelect && this.refs.searchInput) {
+                    this.refs.searchInput.style.display = 'block';
+                    this.refs.searchInput.style.top = style.search.top ? style.search.top + 'px' : '';
+                    this.refs.searchInput.style.bottom = style.search.bottom ? style.search.bottom + 'px' : '';
+                } else if (comboSelect && this.refs.searchInput) {
+                    this.refs.searchInput.style.display = 'none';
                 }
 
                 // Body
-                if (comboSelect && this.refs.comboSelect.getElementsByClassName('combo-select-body')[0]) {
-                    this.refs.comboSelect.getElementsByClassName('combo-select-body')[0].style.top = style.body.top ? style.body.top + 'px' : '';
-                    this.refs.comboSelect.getElementsByClassName('combo-select-body')[0].style.bottom = style.body.bottom ? style.body.bottom + 'px' : '';
-                    this.refs.comboSelect.getElementsByClassName('combo-select-body')[0].style.paddingTop = style.body.paddingTop ? style.body.paddingTop + 'px' : '';
-                    this.refs.comboSelect.getElementsByClassName('combo-select-body')[0].style.paddingBottom = style.body.paddingBottom ? style.body.paddingBottom + 'px' : '';
+                if (comboSelect && this.refs.body) {
+                    this.refs.body.style.top = style.body.top ? style.body.top + 'px' : '';
+                    this.refs.body.style.bottom = style.body.bottom ? style.body.bottom + 'px' : '';
+                    this.refs.body.style.paddingTop = style.body.paddingTop ? style.body.paddingTop + 'px' : '';
+                    this.refs.body.style.paddingBottom = style.body.paddingBottom ? style.body.paddingBottom + 'px' : '';
                 }
 
                 // Search focus
-                if (comboSelect.getElementsByClassName('search-input') && comboSelect.getElementsByClassName('search-input').length > 0) {
-                    comboSelect.getElementsByClassName('search-input')[0].focus();
+                if (this.refs.searchInput) {
+                    this.refs.searchInput.focus();
                 }
 
                 // Scroll
-                if (comboSelect.getElementsByClassName('combo-select-body-scroll') && comboSelect.getElementsByClassName('combo-select-body-scroll')[0]) {
-                    this.refs.comboSelect.getElementsByClassName('combo-select-body-scroll')[0].style.height = style.scroll.height + 'px';
-                    this.refs.comboSelect.getElementsByClassName('combo-select-body-scroll')[0].style.overflowY = style.scroll.overflowY;
+                if (this.refs.scroll) {
+                    this.refs.scroll.style.height = style.scroll.height + 'px';
+                    this.refs.scroll.style.overflowY = style.scroll.overflowY;
                 }
 
             } else {
@@ -579,7 +593,7 @@ export default class ComboSelect extends Component {
                 } else if (navigator.userAgent.match(/IEMobile|Windows Phone|Lumia|Android|webOS|iPhone|iPod|Blackberry|PlayBook|BB10|Mobile Safari|Opera Mini|\bCrMo\/|Opera Mobi/i)) {
                     // do mobile stuff
                 } else {
-                    comboSelect.getElementsByClassName('combo-select-required-select')[0].focus();
+                    this.refs.select.focus();
                 }
 
             }
@@ -754,7 +768,7 @@ export default class ComboSelect extends Component {
             }
         }
 
-        this.refs.comboSelect.getElementsByClassName('combo-select-required-select')[0].value = text;
+        this.refs.select.value = text;
     }
 
     /**
@@ -762,7 +776,7 @@ export default class ComboSelect extends Component {
      */
     controlScrolling() {
 
-        const comboSelectBody = this.refs.comboSelect.getElementsByClassName('combo-select-body')[0];
+        const comboSelectBody = this.refs.body;
         const focusedItem = this.refs.comboSelect.getElementsByClassName('combo-select-item')[this.focus];
         const specialClassElement = this.refs.comboSelect.getElementsByClassName(specialClass)[0];
 
@@ -918,7 +932,7 @@ export default class ComboSelect extends Component {
         return (
             <div ref="comboSelect" className="combo-select">
                 {head}
-                <div style={{display: 'none'}} className="combo-select-body-holder">{body}</div>
+                <div style={{display: 'none'}} className="combo-select-body-holder" ref="holder">{body}</div>
             </div>
         );
     }

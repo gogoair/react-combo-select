@@ -8,6 +8,7 @@ export default class FakeComponent extends Component {
 
         this.state = {
             text: '-Select me-',
+            selectedValue: 3,
             data: [
                 {
                     text: 111,
@@ -28,14 +29,42 @@ export default class FakeComponent extends Component {
     }
 
     componentDidMount() {
-        //setTimeout(function () {
-        //    this.setState({data: [
-        //        {text: "air-JA007D", win: "win-111", value: "JA007D"},
-        //        {text: "air-JA008D", win: "win-222", value: "JA008D"},
-        //        {text: "air-JA009D", win: "win-333", value: "JA009D"},
-        //        {text: "air-JA107D", win: "win-444", value: "JA010D"}
-        //    ]})
-        //}.bind(this), 2000);
+        const self = this;
+        setTimeout(function () {
+            this.setState({
+                selectedValue: 'JA009D3',
+                data: [
+                    {text: "air-JA007D", win: "win-111", value: "JA007D"},
+                    {text: "air-JA008D", win: "win-222", value: "JA008D"},
+                    {text: "air-JA009D", win: "win-333", value: "JA009D"},
+                    {text: "air-JA107D", win: "win-444", value: "JA010D"},
+                    {text: "air-JA007D1", win: "win-111", value: "JA007D1"},
+                    {text: "air-JA008D1", win: "win-222", value: "JA008D1"},
+                    {text: "air-JA009D1", win: "win-333", value: "JA009D1"},
+                    {text: "air-JA107D1", win: "win-444", value: "JA010D1"},
+                    {text: "air-JA007D2", win: "win-111", value: "JA007D2"},
+                    {text: "air-JA008D2", win: "win-222", value: "JA008D2"},
+                    {text: "air-JA009D2", win: "win-333", value: "JA009D2"},
+                    {text: "air-JA107D3", win: "win-444", value: "JA010D2"},
+                    {text: "air-JA007D3", win: "win-111", value: "JA007D3"},
+                    {text: "air-JA008D3", win: "win-222", value: "JA008D3"},
+                    {text: "air-JA009D3", win: "win-333", value: "JA009D3"},
+                    {text: "air-JA107D4", win: "win-444", value: "JA010D3"},
+                    {text: "air-JA007D4", win: "win-111", value: "JA007D4"},
+                    {text: "air-JA008D4", win: "win-222", value: "JA008D4"},
+                    {text: "air-JA009D4", win: "win-333", value: "JA009D4"},
+                    {text: "air-JA107D5", win: "win-444", value: "JA010D4"},
+                    {text: "air-JA007D5", win: "win-111", value: "JA007D5"},
+                    {text: "air-JA008D5", win: "win-222", value: "JA008D5"},
+                    {text: "air-JA009D5", win: "win-333", value: "JA009D5"},
+                    {text: "air-JA107D5", win: "win-444", value: "JA010D5"},
+                ]
+            }, function() {
+                setTimeout(function() {
+                    this.setState({selectedValue: 'JA007D5'});
+                }.bind(self), 2000);
+            });
+        }.bind(this), 2000);
 
     }
 
@@ -48,7 +77,7 @@ export default class FakeComponent extends Component {
     }
 
     getText(item) {
-        return item.win.here;
+        return item.win;
     }
 
     getValue(item){
@@ -92,9 +121,10 @@ export default class FakeComponent extends Component {
                     <br/>
                     <br/>
                     <div style={{position: 'relative'}}>
-                        {/*<ComboSelect type="select" data={this.state.data} sort='number'
-                         icon="fa fa-chevron-circle-down" search="smart" value={this.state.data[0]}
-                         disabled={false} onChange={this.fakeFunction} map={{text: 'text', value: true}} onToggle={this.fakeToggle} required />*/}
+                        {<ComboSelect type="select" data={this.state.data} sort='number'
+                         icon="fa fa-chevron-circle-down" search="smart" value={this.state.selectedValue}
+                         disabled={false} onChange={this.fakeFunction} map={{text: 'text', value: 'value'}} onToggle={this.fakeToggle} required />}
+
                         {<ComboSelect type="multiselect" data={this.state.data}
                                       icon="fa fa-chevron-circle-down" search="smart" value={this.state.data[1]}
                                       sort="alphanum"
@@ -108,7 +138,7 @@ export default class FakeComponent extends Component {
                         {/*<ComboSelect data={this.state.data}
                          icon="fa fa-chevron-circle-down" search="smart" value={this.state.data[1]}
                          sort="off"
-                         disabled={false} onChange={this.fakeFunction} map={{text: 'win.here', value: true}}
+                         disabled={false} onChange={this.fakeFunction} map={{text: 'win', value: 'value'}}
                          onToggle={this.fakeToggle} borderActive="red" required/>*/}
                     </div>
 
