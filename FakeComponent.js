@@ -37,27 +37,7 @@ export default class FakeComponent extends Component {
                     {text: "air-JA007D", win: "win-111", value: "JA007D"},
                     {text: "air-JA008D", win: "win-222", value: "JA008D"},
                     {text: "air-JA009D", win: "win-333", value: "JA009D"},
-                    {text: "air-JA107D", win: "win-444", value: "JA010D"},
-                    {text: "air-JA007D1", win: "win-111", value: "JA007D1"},
-                    {text: "air-JA008D1", win: "win-222", value: "JA008D1"},
-                    {text: "air-JA009D1", win: "win-333", value: "JA009D1"},
-                    {text: "air-JA107D1", win: "win-444", value: "JA010D1"},
-                    {text: "air-JA007D2", win: "win-111", value: "JA007D2"},
-                    {text: "air-JA008D2", win: "win-222", value: "JA008D2"},
-                    {text: "air-JA009D2", win: "win-333", value: "JA009D2"},
-                    {text: "air-JA107D3", win: "win-444", value: "JA010D2"},
-                    {text: "air-JA007D3", win: "win-111", value: "JA007D3"},
-                    {text: "air-JA008D3", win: "win-222", value: "JA008D3"},
-                    {text: "air-JA009D3", win: "win-333", value: "JA009D3"},
-                    {text: "air-JA107D4", win: "win-444", value: "JA010D3"},
-                    {text: "air-JA007D4", win: "win-111", value: "JA007D4"},
-                    {text: "air-JA008D4", win: "win-222", value: "JA008D4"},
-                    {text: "air-JA009D4", win: "win-333", value: "JA009D4"},
-                    {text: "air-JA107D5", win: "win-444", value: "JA010D4"},
-                    {text: "air-JA007D5", win: "win-111", value: "JA007D5"},
-                    {text: "air-JA008D5", win: "win-222", value: "JA008D5"},
-                    {text: "air-JA009D5", win: "win-333", value: "JA009D5"},
-                    {text: "air-JA107D5", win: "win-444", value: "JA010D5"},
+                    {text: "air-JA107D", win: "win-444", value: "JA010D"}
                 ]
             }, function() {
                 setTimeout(function() {
