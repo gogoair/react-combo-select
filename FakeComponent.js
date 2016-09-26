@@ -8,7 +8,6 @@ export default class FakeComponent extends Component {
 
         this.state = {
             text: '-Select me-',
-            selectedValue: 3,
             data: [
                 {
                     text: 111,
@@ -26,13 +25,14 @@ export default class FakeComponent extends Component {
                 }
             ]
         }
+
+        this.state.selectedValue = this.state.data[1];
     }
 
     componentDidMount() {
         const self = this;
         setTimeout(function () {
-            this.setState({
-                selectedValue: 'JA009D3',
+            const newState = {
                 data: [
                     {text: "air-JA007D", win: "win-111", value: "JA007D"},
                     {text: "air-JA008D", win: "win-222", value: "JA008D"},
@@ -59,9 +59,13 @@ export default class FakeComponent extends Component {
                     {text: "air-JA009D5", win: "win-333", value: "JA009D5"},
                     {text: "air-JA107D5", win: "win-444", value: "JA010D5"},
                 ]
-            }, function() {
+            };
+
+            newState.selectedValue = newState.data[5];
+
+            this.setState(newState, function() {
                 setTimeout(function() {
-                    this.setState({selectedValue: 'JA007D5'});
+                    this.setState({selectedValue: newState.data[8]});
                 }.bind(self), 2000);
             });
         }.bind(this), 2000);
@@ -123,15 +127,15 @@ export default class FakeComponent extends Component {
                     <div style={{position: 'relative'}}>
                         {<ComboSelect type="select" data={this.state.data} sort='number'
                          icon="fa fa-chevron-circle-down" search="smart" value={this.state.selectedValue}
-                         disabled={false} onChange={this.fakeFunction} map={{text: 'text', value: 'value'}} onToggle={this.fakeToggle} required />}
+                         disabled={false} onChange={this.fakeFunction} map={{text: 'text', value: true}} onToggle={this.fakeToggle} required />}
 
-                        {<ComboSelect type="multiselect" data={this.state.data}
+                        {/*<ComboSelect type="multiselect" data={this.state.data}
                                       icon="fa fa-chevron-circle-down" search="smart" value={this.state.data[1]}
                                       sort="alphanum"
                                       disabled={false} onChange={this.fakeFunction}
                                       map={{text: this.getText, value: this.getValue}}
                                       onToggle={this.fakeToggle}
-                                      defaultText="Select meeee" required/>}
+                                      defaultText="Select meeee" required/>*/}
                     </div>
 
                     <div style={{position: 'relative', marginTop: '20px'}}>

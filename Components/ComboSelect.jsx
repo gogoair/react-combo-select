@@ -395,7 +395,15 @@ export default class ComboSelect extends Component {
                 }
             }
         } else {
-            if (item[key] == keyData) {
+            if (typeof keyData == 'object') {
+                selected = true;
+                for (let itemKey in keyData)
+                    if (item[key][itemKey] !== keyData[itemKey]) {
+                        selected = false;
+                        break;
+                    }
+            }
+            else if (item[key] == keyData) {
                 selected = true;
             }
         }
