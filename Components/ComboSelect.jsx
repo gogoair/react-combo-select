@@ -594,6 +594,11 @@ export default class ComboSelect extends Component {
                     this.refs.scroll.style.overflowY = style.scroll.overflowY;
                 }
 
+                // Is search there?
+                if (style && style.search && style.search.top != 'auto' && !comboSelect.getElementsByClassName('search-input')[0]) {
+                    this.forceUpdate();
+                }
+
             } else {
 
                 if (navigator.userAgent.match(/Tablet|iPad/i)) {
@@ -934,6 +939,7 @@ export default class ComboSelect extends Component {
     }
 
     render() {
+
         let head = this._generateHead();
         let body = this._generateBody();
 

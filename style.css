@@ -64,7 +64,6 @@
     border-radius: 8px;
     z-index: 1001;
 }
-
 .combo-select .combo-select-body {
     position: absolute;
     border: 1px solid #d1d3d4;
@@ -74,8 +73,12 @@
     color: #5a5a5a;
     font-size: 15px;
     font-weight: 400;
-    overflow-x: hidden;
+    overflow: hidden;
     z-index: 1000;
+}
+
+.combo-select .combo-select-body .combo-select-body-scroll {
+    overflow-x: hidden;
 }
 
 .combo-select .combo-select-body .combo-select-item {

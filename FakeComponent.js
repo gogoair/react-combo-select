@@ -9,46 +9,39 @@ export default class FakeComponent extends Component {
         this.state = {
             text: '-Select me-',
             data: [
-                {
-                    text: 111,
-                    win: {
-                        here: 'win'
-                    },
-                    value: 111
-                },
-                {
-                    text: 3,
-                    win: {
-                        here: 'win-win'
-                    },
-                    value: 3
-                }
-            ]
+                {text: "air-JA007D", win: "win-111", value: "JA007D"},
+                {text: "air-JA008D", win: "win-222", value: "JA008D"},
+                {text: "air-JA009D", win: "win-333", value: "JA009D"},
+                {text: "air-JA107D", win: "win-444", value: "JA010D"},
+                {text: "air-JA107R", win: "win-555", value: "JA107R"},
+                {text: "air-JA107Y", win: "win-666", value: "JA107Y"}
+            ],
+            selectedValue: {text: "air-JA007D", win: "win-111", value: "JA007D"}
         }
-
-        this.state.selectedValue = this.state.data[1];
     }
 
     componentDidMount() {
-        const self = this;
-        setTimeout(function () {
-            const newState = {
-                data: [
-                    {text: "air-JA007D", win: "win-111", value: "JA007D"},
-                    {text: "air-JA008D", win: "win-222", value: "JA008D"},
-                    {text: "air-JA009D", win: "win-333", value: "JA009D"},
-                    {text: "air-JA107D", win: "win-444", value: "JA010D"}
-                ]
-            };
-
-            newState.selectedValue = newState.data[5];
-
-            this.setState(newState, function() {
-                setTimeout(function() {
-                    this.setState({selectedValue: newState.data[8]});
-                }.bind(self), 2000);
-            });
-        }.bind(this), 2000);
+        //const self = this;
+        //setTimeout(function () {
+        //    const newState = {
+        //        data: [
+        //            {text: "air-JA007D", win: "win-111", value: "JA007D"},
+        //            {text: "air-JA008D", win: "win-222", value: "JA008D"},
+        //            {text: "air-JA009D", win: "win-333", value: "JA009D"},
+        //            {text: "air-JA107D", win: "win-444", value: "JA010D"},
+        //            {text: "air-JA107R", win: "win-555", value: "JA107R"},
+        //            {text: "air-JA107Y", win: "win-666", value: "JA107Y"}
+        //        ]
+        //    };
+        //
+        //    newState.selectedValue = newState.data[5];
+        //
+        //    this.setState(newState, function() {
+        //        setTimeout(function() {
+        //            this.setState({selectedValue: newState.data[8]});
+        //        }.bind(self), 2000);
+        //    });
+        //}.bind(this), 2000);
 
     }
 
