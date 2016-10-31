@@ -2,7 +2,7 @@
 React dropdown for select and multiselect 
 
 ## LATEST
-- Default text, there were some problems with re-rendering applications where users had to use defined values as text, therefore just use default text for empty values.
+- Text is also returned with value for onToggle() and onChange() callbacks. 
 
 ```javascript
 let standardArray = ["win-JA007D", "win-JA0008D", "win-JA009D"];
@@ -72,8 +72,8 @@ let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D", "JA219J", "JA302J",
 Returns function, which will return value that you have picked. It can work with returning just values you have selected, or whole objects if can you need to pass them around
 
 ```javascript    
-fakeFunction(value) {
-    console.log(value);
+fakeFunction(value, text) {
+    console.log(value, text);
 }
 
 let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"];
@@ -85,13 +85,13 @@ let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"];
 Function that emit event for opening and closing menu. Returns boolean, true for open, false for close and value which is all selected values
 
 ```javascript    
-fakeToggle(open, value) {
-    console.log(open, value);
+fakeToggle(open, value, text) {
+    console.log(open, value, text);
 }
 
 let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"];
 
-<ComboSelect text="-Select me-" type="multiselect" data={standardArray} fakeToggle={this.fakeFunction}/>
+<ComboSelect text="-Select me-" type="multiselect" data={standardArray} onToggle={this.fakeFunction}/>
 ```
 
 ### search 
@@ -117,15 +117,15 @@ let arrayWithObjects = [
         ];
 
 // Key object
-fakeFunction(value) {
-    console.log(value) // this will display key object win and key object with text will be shown in tn select.
+fakeFunction(value, text) {
+    console.log(value, text) // this will display key object win and key object with text will be shown in tn select.
 }
 
 <ComboSelect data={arrayWithObjects} map={text: 'text', value: 'win'} onChange={this.fakeFunction}/>
 
 // Whole object
-fakeFunctionObject(value) {
-    console.log(value) // this will display {text: "air-JA007D", win: "win-JA007D", value: "JA007D"} and key object with text will be shown in tn select.
+fakeFunctionObject(value, text) {
+    console.log(value, text) // this will display {text: "air-JA007D", win: "win-JA007D", value: "JA007D"} and key object with text will be shown in tn select.
 }
 
 <ComboSelect data={arrayWithObjects} map={text: 'text', value: true} onChange={this.fakeFunctionObject}/>
@@ -137,8 +137,8 @@ selectText: function(item){
 }
 
 // function
-fakeFunctionObject(value) {
-    console.log(value) // this will display {text: "air-JA007D", win: "win-JA007D", value: "JA007D"} and key object with text will be shown in tn select.
+fakeFunctionObject(value, text) {
+    console.log(value, text) // this will display {text: "air-JA007D", win: "win-JA007D", value: "JA007D"} and key object with text will be shown in tn select.
 }
 
 <ComboSelect data={arrayWithObjects} map={text: this.selectText, value: true} onChange={this.fakeFunctionObject}/>

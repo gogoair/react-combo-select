@@ -613,7 +613,7 @@ export default class ComboSelect extends Component {
 
             // Propagate toggle event with data with to outside event
             if (this.props.onToggle) {
-                this.props.onToggle(this.open, this.state.value);
+                this.props.onToggle(this.open, this.state.value, this.state.text);
             }
 
         }
@@ -628,7 +628,7 @@ export default class ComboSelect extends Component {
 
             const items = this.refs.comboSelect.getElementsByClassName('combo-select-item');
 
-            if (this.focus >= 0) {
+            if (items && this.focus >= 0 && items[this.focus]) {
                 items[this.focus].style.backgroundColor = '';
             }
 
@@ -736,7 +736,7 @@ export default class ComboSelect extends Component {
 
             this.setState({text: text, value: value}, () => {
                 this.toggleMenu();
-                this.props.onChange ? this.props.onChange(value) : '';
+                this.props.onChange ? this.props.onChange(value, text) : '';
             });
 
         } else {
@@ -747,7 +747,7 @@ export default class ComboSelect extends Component {
                     text: [text],
                     value: [value]
                 }, () => {
-                    this.props.onChange ? this.props.onChange([value]) : '';
+                    this.props.onChange ? this.props.onChange([value], text) : '';
                 });
 
             } else {
@@ -775,7 +775,7 @@ export default class ComboSelect extends Component {
                     text: texts,
                     value: values
                 }, () => {
-                    this.props.onChange ? this.props.onChange(values) : '';
+                    this.props.onChange ? this.props.onChange(values, texts) : '';
                 });
 
             }
@@ -812,20 +812,6 @@ export default class ComboSelect extends Component {
         } else if (this.focus == 0) {
             specialClassElement.scrollTop = 0;
         }
-
-        /*let focusPrev = this.focus - 1;
-         let focusNext = this.focus + 1;
-
-         if (focusPrev < 0)
-         focusPrev = this.state.data.length - 1;
-         else if (focusNext >= this.state.data.length)
-         focusNext = 0;
-
-         this.refs.comboSelect.getElementsByClassName('combo-select-item')[focusPrev].style.backgroundColor = ''
-
-         focusedItem.style.backgroundColor = '#f7f7f7';
-
-         this.refs.comboSelect.getElementsByClassName('combo-select-item')[focusNext].style.backgroundColor = ''*/
     }
 
     /**

@@ -45,12 +45,12 @@ export default class FakeComponent extends Component {
 
     }
 
-    fakeFunction(value) {
-        //console.log(value);
+    fakeFunction(value, text) {
+        //console.log(value, text);
     }
 
-    fakeToggle(open, value) {
-        //console.log(open, value);
+    fakeToggle(open, value, text) {
+        //console.log(open, value, text);
     }
 
     getText(item) {
@@ -98,7 +98,7 @@ export default class FakeComponent extends Component {
                     <br/>
                     <br/>
                     <div style={{position: 'relative'}}>
-                        {<ComboSelect type="select" data={this.state.data} sort='number'
+                        {<ComboSelect type="multiselect" data={this.state.data} sort='number'
                          icon="fa fa-chevron-circle-down" search="smart" value={this.state.selectedValue}
                          disabled={false} onChange={this.fakeFunction} map={{text: 'text', value: true}} onToggle={this.fakeToggle} required />}
 
