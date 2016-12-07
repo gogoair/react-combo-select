@@ -825,14 +825,18 @@ export default class ComboSelect extends Component {
                 case 38:
                     // Up
                     event.preventDefault();
-                    this.focusItem(this.focus < 1 ? this.state.data.length - 1 : this.focus - 1);
-                    this.controlScrolling();
+                    if (this.state.data && this.state.data.length > 0) {
+                        this.focusItem(this.focus < 1 ? this.state.data.length - 1 : this.focus - 1);
+                        this.controlScrolling();
+                    }
                     break;
                 case 40:
                     // Down
                     event.preventDefault();
-                    this.focusItem(this.focus == this.state.data.length - 1 ? this.focus = 0 : this.focus + 1);
-                    this.controlScrolling();
+                    if (this.state.data && this.state.data.length > 0) {
+                        this.focusItem(this.focus == this.state.data.length - 1 ? this.focus = 0 : this.focus + 1);
+                        this.controlScrolling();
+                    }
                     break;
                 case 37:
                     // Left
@@ -850,7 +854,9 @@ export default class ComboSelect extends Component {
                 case 13:
                     // Enter
                     event.preventDefault();
-                    this.selectItem(this.state.data[this.focus]);
+                    if (this.state.data && this.state.data.length > 0 && this.focus) {
+                        this.selectItem(this.state.data[this.focus]);
+                    }
                     break;
                 case 9:
                     // Tab
