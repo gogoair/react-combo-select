@@ -324,7 +324,7 @@ export default class ComboSelect extends Component {
                 <div className="combo-select-body" ref="body" style={style ? style.body : {}}>
                     <div style={style ? style.scroll : {}} className="combo-select-body-scroll" ref="scroll">
                         {body && body.length > 0 ? body : (
-                            <div className="combo-select-item">There is no eligible items</div>)}
+                            <div className="combo-select-item">There are no eligible items</div>)}
                     </div>
                 </div>
             </div>
