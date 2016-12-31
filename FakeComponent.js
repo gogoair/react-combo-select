@@ -99,7 +99,7 @@ export default class FakeComponent extends Component {
                     <br/>
                     <div style={{position: 'relative'}}>
                         {<ComboSelect type="multiselect" data={this.state.data} sort='number'
-                         icon="fa fa-chevron-circle-down" search="smart" value={this.state.selectedValue}
+                         icon="fa fa-chevron-circle-down" search="smart"
                          disabled={false} onChange={this.fakeFunction} map={{text: 'text', value: true}} onToggle={this.fakeToggle} required />}
 
                         {/*<ComboSelect type="multiselect" data={this.state.data}

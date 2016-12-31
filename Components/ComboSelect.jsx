@@ -236,7 +236,7 @@ export default class ComboSelect extends Component {
 
         var {data, type, onChange, search, value, onToggle, text, map, sort, iconSelectInactive, iconSelectActive, defaultText, ...other } = this.props;
 
-        if (this.state.value) {
+        if (this.state.value && this.state.value.length > 0) {
 
             head = (<div onClick={() => this.toggleMenu()}>
                 <div className={(this.props.disabled ? " disabled " : "") + "combo-select-head"} ref="head">
@@ -253,9 +253,8 @@ export default class ComboSelect extends Component {
                 <div className={(this.props.disabled ? " disabled " : "") + "combo-select-head"} ref="head">
                     {stateText ? stateText : this.defaultText}<i className={this.icon}></i>
                 </div>
-                <select readOnly {...other} className="combo-select-required-select" ref="select">
+                <select {...other} className="combo-select-required-select" ref="select">
                     <option value=""></option>
-                    {options}
                 </select>
             </div>);
 
