@@ -9,12 +9,12 @@ export default class FakeComponent extends Component {
         this.state = {
             text: '-Select me-',
             data: [
-                {text: "air-JA007D", win: "win-111", value: "JA007D"},
-                {text: "air-JA008D", win: "win-222", value: "JA008D"},
-                {text: "air-JA009D", win: "win-333", value: "JA009D"},
-                {text: "air-JA107D", win: "win-444", value: "JA010D"},
-                {text: "air-JA107R", win: "win-555", value: "JA107R"},
-                {text: "air-JA107Y", win: "win-666", value: "JA107Y"}
+                {text: "air-JA007D", win: "win-111", value: "JA007D", number: 0},
+                {text: "air-JA008D", win: "win-222", value: "JA008D", number: 0},
+                {text: "air-JA009D", win: "win-333", value: "JA009D", number: 1},
+                {text: "air-JA107D", win: "win-444", value: "JA010D", number: 1},
+                {text: "air-JA107R", win: "win-555", value: "JA107R", number: 1},
+                {text: "air-JA107Y", win: "win-666", value: "JA107Y", number: 1}
             ],
             selectedValue: {text: "air-JA007D", win: "win-111", value: "JA007D"}
         }
