@@ -242,7 +242,7 @@ export default class ComboSelect extends Component {
                 <div className={(this.props.disabled ? " disabled " : "") + "combo-select-head"} ref="head">
                     {stateText ? stateText : this.defaultText}<i className={this.icon}></i>
                 </div>
-                <select readOnly {...other} className="combo-select-required-select" ref="select">
+                <select {...other} className="combo-select-required-select" ref="select">
                     {options}
                 </select>
             </div>);
