@@ -97,6 +97,11 @@ export default class FakeComponent extends Component {
                     <input type="text" required/>
                     <br/>
                     <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
                     <div style={{position: 'relative'}}>
                         {<ComboSelect type="multiselect" data={this.state.data} sort='number'
                          icon="fa fa-chevron-circle-down" search="smart"

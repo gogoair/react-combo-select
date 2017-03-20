@@ -54,6 +54,7 @@ export default class ComboSelect extends Component {
          */
         window.addEventListener('keydown', this.globalKeyDown);
         window.addEventListener('click', this.globalMouseClick);
+        window.addEventListener('touchstart', this.globalMouseClick);
         window.addEventListener('wheel', this.globalWheel);
         this.refs.select.addEventListener('keydown', this.requiredSelectKeydown);
         this.refs.select.addEventListener('focus', this.selectFocus);
@@ -69,6 +70,7 @@ export default class ComboSelect extends Component {
     componentWillUnmount() {
         window.removeEventListener('keydown', this.globalKeyDown);
         window.removeEventListener('click', this.globalMouseClick);
+        window.removeEventListener('touchstart', this.globalMouseClick);
         window.removeEventListener('wheel', this.globalWheel);
         this.refs.select.removeEventListener('keydown', this.requiredSelectKeydown);
         this.refs.select.addEventListener('focus', this.selectFocus);
