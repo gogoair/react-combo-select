@@ -182,3 +182,20 @@ let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"];
 <ComboSelect type="multiselect" data={this.state.data} value={this.state.data[1]} disabled}/>
 
 ```
+
+### scrollHeight and prefferedDirection
+scrollHeight lets you choose maximal height of the scrollable options area. It requires preferredDirection prop,
+which allows you to choose the direction of the options area
+
+```javascript
+
+const heightProps = {
+    scrollHeight: 200, // number
+    preferredDirection: 'down' // 'top' | 'down'
+}
+
+let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"];
+
+<ComboSelect type="multiselect" data={this.state.data} value={this.state.data[1]} {...heightProps} }/>
+
+```
