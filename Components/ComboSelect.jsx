@@ -236,7 +236,7 @@ export default class ComboSelect extends Component {
             return <option key={i} value={item.text}>{item.text}</option>
         });
 
-        var {data, type, onChange, search, value, onToggle, text, map, sort, iconSelectInactive, iconSelectActive, defaultText, ...other } = this.props;
+        var { data, type, onChange, search, value, onToggle, text, map, sort, iconSelectInactive, iconSelectActive, defaultText, scrollHeight, preferredDirection, ...other } = this.props;
 
         if (this.state.value === 0 || (this.state.value && ((this.state.value instanceof Array && this.state.value.length > 0) || !(this.state.value instanceof Array)))) {
 
@@ -284,13 +284,13 @@ export default class ComboSelect extends Component {
                 return (
                     <div key={i}>
                         <ComboSelectItem item={item} selected={this.findSelectedByKey(item, this.state.text, 'text')}
-                                         index={i}
-                                         focused={focused}
-                                         type={this.state.type}
-                                         selectItem={this.selectItem.bind(this)}
-                                         focusItem={this.focusItem.bind(this)}
-                                         iconSelectActive={this.iconSelectActive}
-                                         iconSelectInactive={this.iconSelectInactive}
+                            index={i}
+                            focused={focused}
+                            type={this.state.type}
+                            selectItem={this.selectItem.bind(this)}
+                            focusItem={this.focusItem.bind(this)}
+                            iconSelectActive={this.iconSelectActive}
+                            iconSelectInactive={this.iconSelectInactive}
                         />
                     </div>
                 );
@@ -299,23 +299,23 @@ export default class ComboSelect extends Component {
 
         let search = this.ifSearch(style) ?
             (<input type="text" style={style ? style.search : {}}
-                    ref="searchInput"
-                    className="search-input"
-                    onKeyDown={(event) => {
-                        if (event.keyCode == 32) {
-                            event.stopPropagation();
-                        } else if (this.focus < 0 && event.keyCode == 13) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                        }
-                    }}
-                    onChange={() => {
-                        if (this.searchTimeout) {
-                            clearTimeout(this.searchTimeout);
-                        }
+                ref="searchInput"
+                className="search-input"
+                onKeyDown={(event) => {
+                    if (event.keyCode == 32) {
+                        event.stopPropagation();
+                    } else if (this.focus < 0 && event.keyCode == 13) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                }}
+                onChange={() => {
+                    if (this.searchTimeout) {
+                        clearTimeout(this.searchTimeout);
+                    }
 
-                        this.searchTimeout = setTimeout(this.filterBySearch.bind(this), 200);
-                    }}
+                    this.searchTimeout = setTimeout(this.filterBySearch.bind(this), 200);
+                }}
             />)
             : '';
 
@@ -672,6 +672,11 @@ export default class ComboSelect extends Component {
                 overflow = false;
             }
 
+            if (this.props.scrollHeight && this.props.preferredDirection) {
+                direction = this.props.preferredDirection;
+                height = this.props.scrollHeight;
+            }
+
             return this.openMenu(direction, height, overflow, elementHeight);
         }
     }
@@ -735,7 +740,7 @@ export default class ComboSelect extends Component {
 
         if (this.state.type == 'select') {
 
-            this.setState({text: text, value: value}, () => {
+            this.setState({ text: text, value: value }, () => {
                 this.toggleMenu();
                 this.props.onChange ? this.props.onChange(value, text) : '';
             });
@@ -928,7 +933,7 @@ export default class ComboSelect extends Component {
 
         }
 
-        return {text: text, value: value}
+        return { text: text, value: value }
     }
 
     render() {
@@ -939,7 +944,7 @@ export default class ComboSelect extends Component {
         return (
             <div ref="comboSelect" className="combo-select">
                 {head}
-                <div style={{display: 'none'}} className="combo-select-body-holder" ref="holder">{body}</div>
+                <div style={{ display: 'none' }} className="combo-select-body-holder" ref="holder">{body}</div>
             </div>
         );
     }
@@ -947,20 +952,22 @@ export default class ComboSelect extends Component {
 
 ComboSelect
     .propTypes = {
-    text: React.PropTypes.any,
-    search: React.PropTypes.string,
-    type: React.PropTypes.string,
-    icon: React.PropTypes.string,
-    iconSelectInactive: React.PropTypes.any,
-    iconSelectActive: React.PropTypes.any,
-    data: React.PropTypes.array.isRequired,
-    onChange: React.PropTypes.func,
-    map: React.PropTypes.object,
-    sort: React.PropTypes.string,
-    controls: React.PropTypes.bool,
-    value: React.PropTypes.any,
-    disabled: React.PropTypes.bool,
-    onToggle: React.PropTypes.func,
-    borderActive: React.PropTypes.string,
-    defaultText: React.PropTypes.any
-};
+        text: React.PropTypes.any,
+        search: React.PropTypes.string,
+        type: React.PropTypes.string,
+        icon: React.PropTypes.string,
+        iconSelectInactive: React.PropTypes.any,
+        iconSelectActive: React.PropTypes.any,
+        data: React.PropTypes.array.isRequired,
+        onChange: React.PropTypes.func,
+        map: React.PropTypes.object,
+        sort: React.PropTypes.string,
+        controls: React.PropTypes.bool,
+        value: React.PropTypes.any,
+        disabled: React.PropTypes.bool,
+        onToggle: React.PropTypes.func,
+        borderActive: React.PropTypes.string,
+        defaultText: React.PropTypes.any,
+        scrollHeight: React.PropTypes.number,
+        preferredDirection: React.PropTypes.oneOf(['top', 'down'])
+    };
