@@ -236,7 +236,7 @@ export default class ComboSelect extends Component {
             return <option key={i} value={item.text}>{item.text}</option>
         });
 
-        var { data, type, onChange, search, value, onToggle, text, map, sort, iconSelectInactive, iconSelectActive, defaultText, scrollHeight, preferredDirection, ...other } = this.props;
+        var { data, type, onChange, search, value, onToggle, text, map, sort, iconSelectInactive, iconSelectActive, defaultText, scrollHeight, scrollMaxHeight, preferredDirection, ...other } = this.props;
 
         if (this.state.value === 0 || (this.state.value && ((this.state.value instanceof Array && this.state.value.length > 0) || !(this.state.value instanceof Array)))) {
 
@@ -589,9 +589,10 @@ export default class ComboSelect extends Component {
                     this.refs.searchInput.focus();
                 }
 
-                // Scroll
+                //Scroll
                 if (this.refs.scroll) {
                     this.refs.scroll.style.height = style.scroll.height + 'px';
+                    this.refs.scroll.style.maxHeight = style.scroll.maxHeight + 'px';
                     this.refs.scroll.style.overflowY = style.scroll.overflowY;
                 }
 
@@ -656,6 +657,7 @@ export default class ComboSelect extends Component {
             let windowHeight = window.innerHeight;
             let bottom = windowHeight - (top + elementHeight);
             let overflow = true;
+            let maxHeight = null;
 
             let direction, height;
 
@@ -672,12 +674,13 @@ export default class ComboSelect extends Component {
                 overflow = false;
             }
 
-            if (this.props.scrollHeight && this.props.preferredDirection) {
+            if ((this.props.scrollHeight || this.props.scrollMaxHeight) && this.props.preferredDirection) {
                 direction = this.props.preferredDirection;
-                height = this.props.scrollHeight;
+                height = this.props.scrollHeight || 'auto';
+                maxHeight = this.props.scrollMaxHeight || null;
             }
 
-            return this.openMenu(direction, height, overflow, elementHeight);
+            return this.openMenu(direction, height, maxHeight, overflow, elementHeight);
         }
     }
 
@@ -689,7 +692,7 @@ export default class ComboSelect extends Component {
      * @param elementHeight
      * @returns {{}}
      */
-    openMenu(direction, height, overflow, elementHeight) {
+    openMenu(direction, height, maxHeight, overflow, elementHeight) {
 
         let style = {
             body: {},
@@ -699,6 +702,7 @@ export default class ComboSelect extends Component {
         };
 
         style.scroll.height = height;
+        style.scroll.maxHeight = maxHeight;
         style.scroll.overflowY = overflow ? 'scroll' : 'visible';
 
         if (direction == 'top') {
@@ -969,5 +973,6 @@ ComboSelect
         borderActive: React.PropTypes.string,
         defaultText: React.PropTypes.any,
         scrollHeight: React.PropTypes.number,
+        scrollMaxHeight: React.PropTypes.number,
         preferredDirection: React.PropTypes.oneOf(['top', 'down'])
     };

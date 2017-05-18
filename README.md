@@ -183,19 +183,24 @@ let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"];
 
 ```
 
-### scrollHeight and prefferedDirection
-scrollHeight lets you choose maximal height of the scrollable options area. It requires preferredDirection prop,
-which allows you to choose the direction of the options area
+### scrollHeight, scrollMaxHeight and prefferedDirection
+scrollHeight lets you choose height of the scrollable options area. Similarily, scrollMaxHeight will set max-height. 
+Both of those props require preferredDirection prop, which allows you to choose the direction of the options area.
 
 ```javascript
 
 const heightProps = {
     scrollHeight: 200, // number
     preferredDirection: 'down' // 'top' | 'down'
-}
+};
 
-let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"];
+const maxHeightProps = {
+    scrollMaxHeight: 100, // number
+    preferredDirection: 'top' // 'top' | 'down'
+};
 
-<ComboSelect type="multiselect" data={this.state.data} value={this.state.data[1]} {...heightProps} }/>
+<ComboSelect type="multiselect" data={this.state.data} value={this.state.data[1]} {...heightProps} />
+
+<ComboSelect type="select" data={this.state.data} value={this.state.data[1]} {...maxHeightProps} />
 
 ```

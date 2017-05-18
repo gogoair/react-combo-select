@@ -60,10 +60,11 @@ export default class ComboSelectItem extends Component {
 
     render() {
         let input = this._generateInput();
+        let id = (this.props.item && this.props.item.value && this.props.item.value.id) ? this.props.item.value.id : null;
 
         return (
             <div
-                key={Math.floor(Math.random() * 1000001111)}
+                key={id ? id : this.props.index}
                 className={'combo-select-item' + ((this.props.focused) ? ' active' : '') + ((this.props.selected) ? ' selected' : '') + (input == '' ? ' no-icon' : '')}
                 onClick={() => this.props.selectItem(this.props.item)}
                 onMouseEnter={() => this.props.focusItem(this.props.index)}>
