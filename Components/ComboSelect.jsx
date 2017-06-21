@@ -82,6 +82,10 @@ export default class ComboSelect extends Component {
 		const stateUpdate = {};
 		let changed = false;
 
+		if(this.props.defaultText !== newProps.defaultText){
+			this.defaultText = newProps.defaultText;
+		}
+
 		if (dataChanged) {
 			this.mappedData = this.sortData(this.mapAllData(newProps.data));
 			stateUpdate.data = this.mappedData;
