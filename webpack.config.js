@@ -1,10 +1,11 @@
 var webpack = require('webpack');
-var jsLoaders = ['babel?presets[]=react,presets[]=es2015,plugins[]=add-module-exports'];
+var jsLoaders = 'babel?babelrc=true';
 
 module.exports = {
     entry: [
+    	'react-hot-loader/patch',
         'webpack/hot/only-dev-server',
-        './index.jsx'
+        './demo.js'
     ],
     output: {
         path: __dirname + '/build',
@@ -15,12 +16,12 @@ module.exports = {
             {
                 test: /\.jsx$/,
                 exclude: /node_modules/,
-                loaders: ['react-hot'].concat(jsLoaders)
+                loader: jsLoaders
             },
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                loader: 'babel?presets[]=react,presets[]=es2015,plugins[]=add-module-exports'
+                loader: jsLoaders
             },
             {
                 test: /\.css$/,

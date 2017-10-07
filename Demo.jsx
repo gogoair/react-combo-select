@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import ComboSelect from './Components/ComboSelect.jsx';
 
-export default class FakeComponent extends Component {
+export default class Demo extends Component {
 
 	constructor(props) {
 		super(props);
@@ -29,6 +29,7 @@ export default class FakeComponent extends Component {
 	}
 
 	componentDidMount() {
+		console.log('mounted');
 		//const self = this;
 		//setTimeout(function () {
 		//    const newState = {

@@ -1,6 +1,6 @@
-'use strict';
-
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
 import ComboSelectItem from './ComboSelectItem.jsx';
 
 // TODO: move to this.specialClass
@@ -966,23 +966,23 @@ export default class ComboSelect extends Component {
 
 ComboSelect
 	.propTypes = {
-	text: React.PropTypes.any,
-	search: React.PropTypes.string,
-	type: React.PropTypes.string,
-	icon: React.PropTypes.string,
-	iconSelectInactive: React.PropTypes.any,
-	iconSelectActive: React.PropTypes.any,
-	data: React.PropTypes.array.isRequired,
-	onChange: React.PropTypes.func,
-	map: React.PropTypes.object,
-	sort: React.PropTypes.string,
-	controls: React.PropTypes.bool,
-	value: React.PropTypes.any,
-	disabled: React.PropTypes.bool,
-	onToggle: React.PropTypes.func,
-	borderActive: React.PropTypes.string,
-	defaultText: React.PropTypes.any,
-	scrollHeight: React.PropTypes.number,
-	scrollMaxHeight: React.PropTypes.number,
-	preferredDirection: React.PropTypes.oneOf(['top', 'down'])
+	text: PropTypes.any,
+	search: PropTypes.string,
+	type: PropTypes.string,
+	icon: PropTypes.string,
+	iconSelectInactive: PropTypes.any,
+	iconSelectActive: PropTypes.any,
+	data: PropTypes.array.isRequired,
+	onChange: PropTypes.func,
+	map: PropTypes.object,
+	sort: PropTypes.string,
+	controls: PropTypes.bool,
+	value: PropTypes.any,
+	disabled: PropTypes.bool,
+	onToggle: PropTypes.func,
+	borderActive: PropTypes.string,
+	defaultText: PropTypes.any,
+	scrollHeight: PropTypes.number,
+	scrollMaxHeight: PropTypes.number,
+	preferredDirection: PropTypes.oneOf(['top', 'down'])
 };

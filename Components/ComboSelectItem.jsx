@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 export default class ComboSelectItem extends Component {
 
@@ -76,13 +77,13 @@ export default class ComboSelectItem extends Component {
 }
 
 ComboSelectItem.propTypes = {
-    item: React.PropTypes.any,
-    index: React.PropTypes.number,
-    focused: React.PropTypes.bool,
-    selected: React.PropTypes.bool,
-    type: React.PropTypes.string,
-    selectItem: React.PropTypes.func,
-    focusItem: React.PropTypes.func,
-    iconSelectActive: React.PropTypes.any,
-    iconSelectInactive: React.PropTypes.any
+    item: PropTypes.any,
+    index: PropTypes.number,
+    focused: PropTypes.bool,
+    selected: PropTypes.bool,
+    type: PropTypes.string,
+    selectItem: PropTypes.func,
+    focusItem: PropTypes.func,
+    iconSelectActive: PropTypes.any,
+    iconSelectInactive: PropTypes.any
 };
