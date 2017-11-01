@@ -791,8 +791,8 @@ export default class ComboSelect extends Component {
 			}
 		}
 
-		this.refs.select.value = text;
-	}
+        if (this.refs.select) this.refs.select.value = text;
+    }
 
 	/**
 	 * Control scrolling within open menu with arrowZ
