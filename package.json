@@ -7,7 +7,7 @@
   "scripts": {
     "start": "./node_modules/.bin/webpack-dev-server --config webpack.config.js  --hot --progress --colors --port 8080 --open",
     "test": "mocha -r mock-local-storage --compilers js:babel-core/register --require ./test/test.js \"test/**/*@(.js|.jsx)\"",
-    "prepublish": "./node_modules/.bin/babel Components/ComboSelect.jsx --out-file lib/ComboSelect.jsx && ./node_modules/.bin/babel Components/ComboSelectItem.jsx --out-file lib/ComboSelectItem.jsx"
+    "prepublish": "rm -rf lib && mkdir lib && ./node_modules/.bin/babel Components/ComboSelect.jsx --out-file lib/ComboSelect.jsx && ./node_modules/.bin/babel Components/ComboSelectItem.jsx --out-file lib/ComboSelectItem.jsx"
   },
   "repository": {
     "type": "git",
@@ -33,6 +33,7 @@
     "enzyme-adapter-react-16": "^1.0.1",
     "eslint": "^2.7.0",
     "eslint-plugin-react": "^4.2.3",
+    "immutable": "^3.8.2",
     "jsdom": "^8.3.0",
     "mocha": "^4.0.1",
     "mock-local-storage": "^1.0.2",
