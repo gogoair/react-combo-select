@@ -103,8 +103,10 @@ export default class ComboSelect extends Component {
 	 * Focus event for select
 	 */
 	selectFocus() {
-		this.borderColor = this.refs.head.style.borderColor;
-		this.refs.head.style.borderColor = this.borderActive;
+		if (this.refs && this.refs.head) {
+            this.borderColor = this.refs.head.style.borderColor;
+            this.refs.head.style.borderColor = this.borderActive;
+		}
 	}
 
 	/**
