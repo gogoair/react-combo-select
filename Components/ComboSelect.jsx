@@ -144,7 +144,7 @@ export default class ComboSelect extends Component {
 					target = target.parentElement;
 					i++;
 
-					if (target.innerHTML == this.refs.scroll.innerHTML) {
+					if (target && target.innerHTML == this.refs.scroll.innerHTML) {
 						outside = false;
 					}
 				}
