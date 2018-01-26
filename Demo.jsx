@@ -112,7 +112,7 @@ export default class Demo extends Component {
 					<br />
 					<br />
 					<div style={{position: 'relative'}}>
-						{<ComboSelect type="multiselect"
+						{<ComboSelect type="select"
 							data={this.state.data}
 							sort='number'
 							icon="fa fa-chevron-circle-down"
@@ -121,15 +121,42 @@ export default class Demo extends Component {
 							onChange={this.fakeFunction}
 							map={{text: 'text', value: true}}
 							onToggle={this.fakeToggle}
-							required />}
+							required
+							// dataAttr is used for QE testing
+							dataAttr={{
+								wrapper: {
+									automation: 'ComboSelect'
+								},
+								dropDownHeader: {
+									automation: 'ComboSelectHeader'
+								},
+								listItem: {
+									automation: item => item && 'ComboSelectItem_' + item.text
+								}
+							}}
+							/>
+							}
 
-						{/*<ComboSelect type="multiselect" data={this.state.data}
-						 icon="fa fa-chevron-circle-down" search="smart" value={this.state.data[1]}
-						 sort="alphanum"
-						 disabled={false} onChange={this.fakeFunction}
-						 map={{text: this.getText, value: this.getValue}}
-						 onToggle={this.fakeToggle}
-						 defaultText="Select meeee" required/>*/}
+						<ComboSelect type="multiselect" data={this.state.data}
+							icon="fa fa-chevron-circle-down" search="smart" value={this.state.data[1]}
+							sort="alphanum"
+							disabled={false} onChange={this.fakeFunction}
+							map={{text: this.getText, value: this.getValue}}
+							onToggle={this.fakeToggle}
+							defaultText="Select more than one"
+							// dataAttr is used for QE testing
+							dataAttr={{
+								wrapper: {
+									automation: 'ComboSelect'
+								},
+								dropDownHeader: {
+									automation: 'ComboSelectHeader'
+								},
+								listItem: {
+									automation: item => item && 'ComboSelectItem_' + item.text
+								}
+							}}
+							required />
 					</div>
 
 					<div style={{position: 'relative', marginTop: '20px'}}>

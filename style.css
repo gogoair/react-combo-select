@@ -25,15 +25,19 @@
     cursor: not-allowed;
 }
 
-.combo-select .combo-select-head.disabled i {
-    color: #d1d3d4;
+.combo-select .combo-select-head svg path {
+    fill: #40b4e5 !important;
+}
+
+.combo-select .combo-select-head.disabled svg path {
+    fill: #d1d3d4 !important;
 }
 
 .combo-select div.combo-select-head {
     cursor: pointer;
 }
 
-.combo-select .combo-select-head i {
+.combo-select .combo-select-head svg {
     display: inline-block;
     font: normal normal normal 14px/1 FontAwesome;
     font-size: inherit;
@@ -46,7 +50,6 @@
     position: absolute;
     right: 18px;
     top: 12px;
-    color: #40b4e5;
 }
 
 .combo-select .search-input {
@@ -94,16 +97,17 @@
     background-color: white;
 }
 
-.combo-select .combo-select-body .combo-select-item i {
+.combo-select .combo-select-body .combo-select-item svg {
     padding-right: 10px;
+    margin-bottom: -0.1em;
 }
 
 .combo-select .combo-select-body .combo-select-item.selected.no-icon {
     background: #e1f3f3;
 }
 
-.combo-select .combo-select-body .combo-select-item.selected i {
-    color: #40b4e5;
+.combo-select .combo-select-body .combo-select-item.selected svg path {
+    fill: #40b4e5 !important;
 }
 
 .combo-select .combo-select-body .combo-select-item:hover,

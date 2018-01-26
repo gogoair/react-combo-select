@@ -2,6 +2,29 @@
 React dropdown for select and multiselect 
 
 ## LATEST
+Added dataAttr prop to be used for QE testing. Each property can be string on transform function. When added to HtmlDOM element attribute will be prefixed with `data-`, like `automation` will become `data-automation`.
+
+For each dataAttr of type function only one argument is forwarded to that function:
++ wrapper: `Component.props`
++ dropDownHeader: `Component.props`
++ listItem: `Component.props.data[index]`
+
+```javascript
+<ComboSelect type="multiselect" data={this.state.data}
+    dataAttr={{
+        wrapper: {
+            automation: 'ComboSelect'
+        },
+        dropDownHeader: {
+            automation: 'ComboSelectHeader'
+        },
+        listItem: {
+            automation: item => item && 'ComboSelectItem_' + item.text
+        }
+    }}
+/>
+```
+
 - Text is also returned with value for onToggle() and onChange() callbacks. 
 
 ```javascript
@@ -33,7 +56,7 @@ let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"];
 ```
 
 ### text
-Text will be displayed as somehintg you have selected or set as a start value, default for this is "-Select me-"
+Text will be displayed as somehintg you have selected or set as a start value, default for this is "Select"
 
 ```javascript
 let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"];

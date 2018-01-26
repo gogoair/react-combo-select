@@ -1,7 +1,7 @@
 {
   "name": "react-combo-select",
-  "version": "1.1.2",
-  "keywords": "react, select, singleselect, multiselect, search, react-component",
+  "version": "1.1.4",
+  "keywords": ["react", "select", "singleselect", "multiselect", "search", "react-component"],
   "description": "React select component that can be used as a single select, multiselect, search",
   "main": "./lib/ComboSelect.jsx",
   "scripts": {
