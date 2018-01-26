@@ -2,7 +2,7 @@
 React dropdown for select and multiselect 
 
 ## LATEST
-Added dataAttr prop to be used for QE testing. Each property can be string on transform function. When added to HtmlDOM element attribute will be prefixed with `data-`, like `automation` will become `data-automation`.
+Added dataAttr prop to be used for QE testing. Each property can be a string or a transform function. When added to HtmlDOM element attribute will be prefixed with `data-`, like `automation` will become `data-automation`.
 
 For each dataAttr of type function only one argument is forwarded to that function:
 + wrapper: `Component.props`
