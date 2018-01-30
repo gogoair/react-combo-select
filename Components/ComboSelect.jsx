@@ -144,25 +144,24 @@ export default class ComboSelect extends Component {
 					target = target.parentElement;
 					i++;
 
-					if (target && target.innerHTML == this.refs.scroll.innerHTML) {
+					if (target && target == this.refs.scroll) {
 						outside = false;
 					}
 				}
 
 				if (outside) {
 					event.stopPropagation();
-					event.preventDefault();
 				}
 
 			} else if (this.refs.comboSelect.getElementsByClassName(specialClass)[0].scrollTop + event.deltaY <= 0) {
 
 				this.refs.scroll.scrollTop = 0;
 				event.stopPropagation();
-				event.preventDefault();
 
 			} else {
 
 				this.refs.scroll.scrollTop = 9999999;
+				console.log('second one');
 				event.stopPropagation();
 				event.preventDefault();
 
@@ -189,7 +188,7 @@ export default class ComboSelect extends Component {
 			while (this.checkParentElement(target) && i < 10) {
 				target = target.parentElement;
 				i++;
-				if (target.innerHTML == this.refs.comboSelect.innerHTML) {
+				if (target == this.refs.comboSelect) {
 					hideMenu = false;
 				}
 			}
