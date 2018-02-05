@@ -161,7 +161,6 @@ export default class ComboSelect extends Component {
 			} else {
 
 				this.refs.scroll.scrollTop = 9999999;
-				console.log('second one');
 				event.stopPropagation();
 				event.preventDefault();
 
