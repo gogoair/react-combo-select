@@ -3,9 +3,9 @@ var jsLoaders = 'babel?babelrc=true';
 
 module.exports = {
     entry: [
-    	'react-hot-loader/patch',
+        'react-hot-loader/patch',
         'webpack/hot/only-dev-server',
-        './demo.js'
+        './index.js'
     ],
     output: {
         path: __dirname + '/build',
