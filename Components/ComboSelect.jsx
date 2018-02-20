@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import ComboSelectItem from './ComboSelectItem.jsx';
+import { transformDataAttributes } from '../helpers';
 
 // TODO: move to this.specialClass
 let specialClass = 'combo-select-body-scroll';
@@ -22,8 +22,8 @@ export default class ComboSelect extends Component {
 		};
 		this.borderActive = this.props.borderActive ? this.props.borderActive : '#40b4e5';
 
-		this.iconSelectActive = props.iconSelectActive !== false || props.iconSelectActive !== 'off' ? props.iconSelectActive : true;
-		this.iconSelectInactive = props.iconSelectInactive !== false || props.iconSelectInactive !== 'off' ? props.iconSelectInactive : true;
+		this.iconSelectActive = props.iconSelectActive === false || props.iconSelectActive === 'off' ? true : props.iconSelectActive;
+		this.iconSelectInactive = props.iconSelectInactive === false || props.iconSelectInactive === 'off' ? true : props.iconSelectInactive;
 
 		this.globalKeyDown = this.globalKeyDown.bind(this);
 		this.globalMouseClick = this.globalMouseClick.bind(this);
@@ -44,6 +44,29 @@ export default class ComboSelect extends Component {
 			type: props.type && (props.type == 'select' || props.type == 'multiselect') ? props.type : 'select',
 			selected: -1,
 			search: this.props.search && (this.props.search == 'on' || this.props.search == 'smart' || this.props.search == 'off') ? this.props.search : 'off'
+		}
+
+		this.processTransformFunctions();
+	}
+	
+	processTransformFunctions(newProps) {
+		const props = newProps || this.props;
+		const allowedKeys = ['wrapper', 'dropDownHeader', 'listItem'];
+		if (!props.dataAttr) {
+			this.wrapperDataTransformer = {};
+			this.dropDownHeaderDataTransformer = {};
+			this.listItemDataTransformer = {};
+		}
+		else {
+			const { dataAttr } = props;
+			Object.keys(dataAttr).forEach((key) => {
+				if (!allowedKeys.includes(key)) {
+					throw new Error (`Unknown dataAttr property: ${key}`);
+				}
+			});
+			this.wrapperDataTransformer = dataAttr.wrapper || {};
+			this.dropDownHeaderDataTransformer = dataAttr.dropDownHeader || {};
+			this.listItemDataTransformer = dataAttr.listItem || {};
 		}
 	}
 
@@ -73,14 +96,16 @@ export default class ComboSelect extends Component {
 		window.removeEventListener('touchstart', this.globalMouseClick);
 		window.removeEventListener('wheel', this.globalWheel);
 		this.refs.select.removeEventListener('keydown', this.requiredSelectKeydown);
-		this.refs.select.addEventListener('focus', this.selectFocus);
-		this.refs.select.addEventListener('focusout', this.deSelectFocus);
+		this.refs.select.removeEventListener('focus', this.selectFocus);
+		this.refs.select.removeEventListener('focusout', this.deSelectFocus);
 	}
 
 	componentWillReceiveProps(newProps) {
 		const dataChanged = newProps.data !== this.props.data;
 		const stateUpdate = {};
 		let changed = false;
+
+		this.processTransformFunctions(newProps);
 
 		if (dataChanged) {
 			this.mappedData = this.sortData(this.mapAllData(newProps.data));
@@ -94,9 +119,10 @@ export default class ComboSelect extends Component {
 			stateUpdate.value = selectedItems.value;
 			changed = true;
 		}
-
-		if (changed)
+		this.defaultText = newProps.defaultText ? newProps.defaultText : (newProps.text ? newProps.text : 'Select');
+		if (changed) {
 			this.setState(stateUpdate);
+		}
 	}
 
 	/**
@@ -104,8 +130,8 @@ export default class ComboSelect extends Component {
 	 */
 	selectFocus() {
 		if (this.refs && this.refs.head) {
-            this.borderColor = this.refs.head.style.borderColor;
-            this.refs.head.style.borderColor = this.borderActive;
+			this.borderColor = this.refs.head.style.borderColor;
+			this.refs.head.style.borderColor = this.borderActive;
 		}
 	}
 
@@ -144,19 +170,21 @@ export default class ComboSelect extends Component {
 					target = target.parentElement;
 					i++;
 
-					if (target && target == this.refs.scroll) {
+					if (target && target.innerHTML == this.refs.scroll.innerHTML) {
 						outside = false;
 					}
 				}
 
 				if (outside) {
 					event.stopPropagation();
+					event.preventDefault();
 				}
 
 			} else if (this.refs.comboSelect.getElementsByClassName(specialClass)[0].scrollTop + event.deltaY <= 0) {
 
 				this.refs.scroll.scrollTop = 0;
 				event.stopPropagation();
+				event.preventDefault();
 
 			} else {
 
@@ -187,7 +215,7 @@ export default class ComboSelect extends Component {
 			while (this.checkParentElement(target) && i < 10) {
 				target = target.parentElement;
 				i++;
-				if (target == this.refs.comboSelect) {
+				if (target.innerHTML == this.refs.comboSelect.innerHTML) {
 					hideMenu = false;
 				}
 			}
@@ -236,13 +264,17 @@ export default class ComboSelect extends Component {
 			return <option key={i} value={item.text}>{item.text}</option>
 		});
 
-		var { data, type, onChange, search, value, onToggle, text, map, sort, iconSelectInactive, iconSelectActive, defaultText, scrollHeight, scrollMaxHeight, preferredDirection, ...other } = this.props;
+		var { data, type, onChange, search, value, onToggle, text, map, sort, iconSelectInactive, iconSelectActive, defaultText, scrollHeight, scrollMaxHeight, preferredDirection, dataAttr, ...other } = this.props;
 
 		if (this.state.value === 0 || (this.state.value && ((this.state.value instanceof Array && this.state.value.length > 0) || !(this.state.value instanceof Array)))) {
-
 			head = (<div onClick={() => this.toggleMenu()}>
-				<div className={(this.props.disabled ? " disabled " : "") + "combo-select-head"} ref="head">
-					{stateText ? stateText : this.defaultText}<i className={this.icon}></i>
+				<div
+					{...transformDataAttributes(this.dropDownHeaderDataTransformer, this.props)}
+					className={(this.props.disabled ? " disabled " : "") + "combo-select-head"}
+					ref="head"
+				>
+					{stateText ? stateText : this.defaultText}
+					{<i className={this.icon}></i>}
 				</div>
 				<select {...other} className="combo-select-required-select" ref="select">
 					{options}
@@ -252,8 +284,13 @@ export default class ComboSelect extends Component {
 		} else {
 
 			head = (<div onClick={() => this.toggleMenu()}>
-				<div className={(this.props.disabled ? " disabled " : "") + "combo-select-head"} ref="head">
-					{stateText ? stateText : this.defaultText}<i className={this.icon}></i>
+				<div
+					{...transformDataAttributes(this.dropDownHeaderDataTransformer, this.props)}
+					className={(this.props.disabled ? " disabled " : "") + "combo-select-head"}
+					ref="head"
+				>
+					{stateText ? stateText : this.defaultText}
+					{<i className={this.icon}></i>}
 				</div>
 				<select {...other} className="combo-select-required-select" ref="select">
 					<option value=""></option>
@@ -283,7 +320,10 @@ export default class ComboSelect extends Component {
 
 				return (
 					<div key={i}>
-						<ComboSelectItem item={item} selected={this.findSelectedByKey(item, this.state.text, 'text')}
+						<ComboSelectItem
+							{...transformDataAttributes(this.listItemDataTransformer, item)}
+							item={item}
+							selected={this.findSelectedByKey(item, this.state.text, 'text')}
 							index={i}
 							focused={focused}
 							type={this.state.type}
@@ -302,20 +342,20 @@ export default class ComboSelect extends Component {
 				ref="searchInput"
 				className="search-input"
 				onKeyDown={(event) => {
-                    if (event.keyCode == 32) {
-                        event.stopPropagation();
-                    } else if (this.focus < 0 && event.keyCode == 13) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                }}
+					if (event.keyCode == 32) {
+						event.stopPropagation();
+					} else if (this.focus < 0 && event.keyCode == 13) {
+						event.preventDefault();
+						event.stopPropagation();
+					}
+				}}
 				onChange={() => {
-                    if (this.searchTimeout) {
-                        clearTimeout(this.searchTimeout);
-                    }
+					if (this.searchTimeout) {
+						clearTimeout(this.searchTimeout);
+					}
 
-                    this.searchTimeout = setTimeout(this.filterBySearch.bind(this), 200);
-                }}
+					this.searchTimeout = setTimeout(this.filterBySearch.bind(this), 200);
+				}}
 			/>)
 			: '';
 
@@ -791,8 +831,8 @@ export default class ComboSelect extends Component {
 			}
 		}
 
-        if (this.refs.select) this.refs.select.value = text;
-    }
+		if (this.refs.select) this.refs.select.value = text;
+	}
 
 	/**
 	 * Control scrolling within open menu with arrowZ
@@ -956,7 +996,11 @@ export default class ComboSelect extends Component {
 		let body = this._generateBody();
 
 		return (
-			<div ref="comboSelect" className="combo-select">
+			<div
+				{...transformDataAttributes(this.wrapperDataTransformer, this.props)}
+				ref="comboSelect"
+				className="combo-select"
+			>
 				{head}
 				<div style={{ display: 'none' }} className="combo-select-body-holder" ref="holder">{body}</div>
 			</div>
@@ -966,23 +1010,23 @@ export default class ComboSelect extends Component {
 
 ComboSelect
 	.propTypes = {
-	text: PropTypes.any,
-	search: PropTypes.string,
-	type: PropTypes.string,
-	icon: PropTypes.string,
-	iconSelectInactive: PropTypes.any,
-	iconSelectActive: PropTypes.any,
-	data: PropTypes.array.isRequired,
-	onChange: PropTypes.func,
-	map: PropTypes.object,
-	sort: PropTypes.string,
-	controls: PropTypes.bool,
-	value: PropTypes.any,
-	disabled: PropTypes.bool,
-	onToggle: PropTypes.func,
-	borderActive: PropTypes.string,
-	defaultText: PropTypes.any,
-	scrollHeight: PropTypes.number,
-	scrollMaxHeight: PropTypes.number,
-	preferredDirection: PropTypes.oneOf(['top', 'down'])
+		text: PropTypes.any,
+		search: PropTypes.string,
+		type: PropTypes.string,
+		icon: PropTypes.string,
+		iconSelectInactive: PropTypes.any,
+		iconSelectActive: PropTypes.any,
+		data: PropTypes.array.isRequired,
+		onChange: PropTypes.func,
+		map: PropTypes.object,
+		sort: PropTypes.string,
+		controls: PropTypes.bool,
+		value: PropTypes.any,
+		disabled: PropTypes.bool,
+		onToggle: PropTypes.func,
+		borderActive: PropTypes.string,
+		defaultText: PropTypes.any,
+		scrollHeight: PropTypes.number,
+		scrollMaxHeight: PropTypes.number,
+		preferredDirection: PropTypes.oneOf(['top', 'down'])
 };
