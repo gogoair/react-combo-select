@@ -2,6 +2,7 @@
 React dropdown for select and multiselect 
 
 ## LATEST
+
 - Text is also returned with value for onToggle() and onChange() callbacks. 
 
 ```javascript
@@ -33,7 +34,7 @@ let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"];
 ```
 
 ### text
-Text will be displayed as somehintg you have selected or set as a start value, default for this is "-Select me-"
+Text will be displayed as somehintg you have selected or set as a start value, default for this is "Select"
 
 ```javascript
 let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"];
@@ -202,5 +203,18 @@ const maxHeightProps = {
 <ComboSelect type="multiselect" data={this.state.data} value={this.state.data[1]} {...heightProps} />
 
 <ComboSelect type="select" data={this.state.data} value={this.state.data[1]} {...maxHeightProps} />
+
+```
+
+## Swtiched to SVG icons
+Out of the box ComboSelect is using custom SVG icons that can be overriden by specifing new `ClassNames` using props: `icon`, `iconSelectActive`, `iconSelectInactive`.
+
+```javascript
+
+<ComboSelect
+  icon="fa fa-chevron-down"
+  iconSelectInactive="fa fa-circle-thin"
+  iconSelectActive="fa fa-check"
+/>
 
 ```
