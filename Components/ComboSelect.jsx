@@ -95,8 +95,11 @@ export default class ComboSelect extends Component {
 			changed = true;
 		}
 
-		if (changed)
+		if (changed) {
 			this.setState(stateUpdate);
+		}
+		
+		this.defaultText = newProps.defaultText ? newProps.defaultText : (newProps.text ? newProps.text : 'Select');
 	}
 
 	/**
