@@ -1,25 +1,28 @@
 {
-    "env": {
-        "browser": true,
-        "amd": true,
-        "es6": true,
-        "mocha": true
-    },
-    "parser": "babel-eslint",
-    /*"rules": {
-        "strict": 1,
-        "comma-dangle": [1, "always-multiline"],
-        "quotes": [1, "single"],
-        "no-underscore-dangle": 0
-    },*/
-      "globals": {
-      "expect": true
-    },
-    "plugins": [
-      "react"
-    ],
-    "extends": [
-      "eslint:recommended",
-      "plugin:react/recommended"
-    ]
+	"env": {
+		"browser": true,
+		"amd": true,
+		"es6": true,
+		"mocha": true
+	},
+	"parser": "babel-eslint",
+	"rules": {
+		"strict": 0,
+		"comma-dangle": [1, "always-multiline"],
+		"quotes": [1, "single"],
+		"no-underscore-dangle": 0,
+		"no-cond-assign": 0,
+		"no-unused-vars": [0, { "vars": "all", "args": "after-used", "ignoreRestSiblings": true }]
+	},
+	"globals": {
+		"module": true,
+		"expect": true
+	},
+	"plugins": [
+		"react"
+	],
+	"extends": [
+		"eslint:recommended",
+		"plugin:react/recommended"
+	]
 }

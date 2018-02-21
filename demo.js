@@ -16,10 +16,10 @@ if (module.hot) {
 	module.hot.accept('./Demo.jsx', () => {
 		const NextApp = require('./Demo.jsx').default;
 		ReactDOM.render(
-	  		<AppContainer>
-				<NextApp/>
-	  		</AppContainer>,
-	  		document.getElementById('react')
+			<AppContainer>
+				<NextApp />
+			</AppContainer>,
+			document.getElementById('react')
 		);
 	});
 }
