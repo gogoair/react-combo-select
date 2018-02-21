@@ -121,7 +121,18 @@ export default class Demo extends Component {
 							onChange={this.fakeFunction}
 							map={{text: 'text', value: true}}
 							onToggle={this.fakeToggle}
-							required />}
+							dataAttr={{
+								wrapper: {
+									automation: 'ComboSelect'
+								},
+								dropDownHeader: {
+									automation: 'ComboSelectHeader'
+								},
+								listItem: {
+									automation: item => item && 'ComboSelectItem_' + item.text
+								}
+							}}
+							required/>}
 
 						{/*<ComboSelect type="multiselect" data={this.state.data}
 						 icon="fa fa-chevron-circle-down" search="smart" value={this.state.data[1]}

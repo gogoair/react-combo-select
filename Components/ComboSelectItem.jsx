@@ -62,9 +62,11 @@ export default class ComboSelectItem extends Component {
 	render() {
 		let input = this._generateInput();
 		let id = (this.props.item && this.props.item.value && this.props.item.value.id) ? this.props.item.value.id : null;
+		const { item, selected, index, focused, type, selectItem, focusItem, iconSelectActive, iconSelectInactive, ...restProps } = this.props;
 
 		return (
 			<div
+				{...restProps}
 				key={id ? id : this.props.index}
 				className={'combo-select-item' + ((this.props.focused) ? ' active' : '') + ((this.props.selected) ? ' selected' : '') + (input == '' ? ' no-icon' : '')}
 				onClick={() => this.props.selectItem(this.props.item)}
