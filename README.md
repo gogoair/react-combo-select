@@ -11,15 +11,18 @@ let standardArray = ["win-JA007D", "win-JA0008D", "win-JA009D"];
 
 
 ## Usability
-This plugin require for you to have react and font-awesome, after that import react combo select
+react-combo-select requires react and react-dom as peer dependency. All versions should be supported, but make sure you are using matching versions of the two packages.
+
 ```javascript
 import ComboSelect from 'react-combo-select';
 ```
-and include css files with styles and font awesome (you may include this in different way)
+and include css files with styles (you may include this in different way)
+
 ```javascript
 require('../node_modules/react-combo-select/style.css');
-require('../node_modules/font-awesome/css/font-awesome.min.css');
 ```
+
+As of version 1.2, font-awesome is no longer required, but may be optionally used instead of built-in SVG icons. Check the "custom icons" section below for more details.
 
 ## props/options
 
@@ -69,7 +72,7 @@ let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D", "JA219J", "JA302J",
 ```
 
 ### onChange 
-Returns function, which will return value that you have picked. It can work with returning just values you have selected, or whole objects if can you need to pass them around
+Function to be called when an option is selected. It will receive value and display text of the selected item, in that order, as arguments.
 
 ```javascript    
 fakeFunction(value, text) {
@@ -82,7 +85,7 @@ let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"];
 ```
 
 ### onToggle 
-Function that emit event for opening and closing menu. Returns boolean, true for open, false for close and value which is all selected values
+Function to be called when the dropdown menu is opened or closed. It will receive open/closed state as boolean, value and display text of the selected item, in that order, as arguments.
 
 ```javascript    
 fakeToggle(open, value, text) {
@@ -95,7 +98,7 @@ let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"];
 ```
 
 ### search 
-Search through data, will show only data that contain string from search bar. On, off (default), smart (search will be shown only if there is more items then can be shown in window)
+Whether to render a filter field at the top of the dropdown. Allowed values: On, off (default), smart (search will be shown only if there is more items then can be shown in window)
 
 ```javascript
 
@@ -105,7 +108,7 @@ let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D", "JA219J", "JA302J",
 ```
 
 ### map
-If you want to display data from objects, use map! You need to define object with key objects text and value. Text will be the one you display as a text, and value is returning in a onChange function as a paramater. If you want to return whole object, put value=true (boolean). Default is ```map={text: 'text', value: 'value'}```, which means you will have collection of objects, and on select value will be returned and text will be shown in select.
+If you want to display data from objects, use map! You need to define object with properties text and value. Text will be the one you display as a text, and value is returning in a onChange function as the first argument. If you want to return the whole object, put value=true (boolean). Default is ```map={text: 'text', value: 'value'}```, which means you will have collection of objects, and on select value will be returned and text will be shown in select.
 
 ```javascript
 
@@ -145,7 +148,7 @@ fakeFunctionObject(value, text) {
 ```
 
 ### sort
-You can sort data, numbers, alphanumercial (alphanum) or don't sort at all. By the default, it will sort strings, but only if the parameters in value are strings
+You can sort as data, numbers, alphanumercial (alphanum) or not sort at all. By default, it will sort as strings, but only if the parameters in value are strings.
 
 ```javascript
 
@@ -160,7 +163,7 @@ let standardArray = ["win-JA007D", "win-JA0008D", "win-JA009D"];
 ```
 
 ### Active and inactive icons
-Can be default, custom or off. For custom just put class that you want, and it would be assigned to icon class. For default, just leave as is. And for off use false or 'off'
+Can be default, custom or off. For custom just put class that you want, and it would be assigned to the i DOM element. For default, just leave as is. false or off will render no icons.
 
 ```javascript
 
@@ -185,7 +188,7 @@ let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"];
 
 ### scrollHeight, scrollMaxHeight and prefferedDirection
 scrollHeight lets you choose height of the scrollable options area. Similarily, scrollMaxHeight will set max-height. 
-Both of those props require preferredDirection prop, which allows you to choose the direction of the options area.
+Both of those props require preferredDirection prop, which allows you to choose the direction in which the dropdown opens.
 
 ```javascript
 
@@ -205,8 +208,10 @@ const maxHeightProps = {
 
 ```
 
-## New `dataAttr` prop
-Added dataAttr prop to be used for QE testing. Each property can be a string or a transform function. When added to HtmlDOM element attribute will be prefixed with `data-`, i.e. `automation` will become `data-automation`.
+### data attributes
+Added dataAttr prop used to pass html5 data attributes to DOM elements. The value of the prop should be an object mapping some or all of the 3 supported elements to data attributes that should be added to them. Each data attribute is specified as string which will be appended to 'data-' to form the attribute name.
+
+Each property can be a string or a transform function. 
 
 For each dataAttr property of type function only one argument is forwarded to that function:
 + wrapper: `Component.props`
@@ -228,8 +233,8 @@ For each dataAttr property of type function only one argument is forwarded to th
     }}
 ```
 
-### Swtiched to SVG icons
-Out of the box ComboSelect is using custom SVG icons that can be overriden by specifing new `ClassNames` using props: `icon`, `iconSelectActive`, `iconSelectInactive`.
+### custom icons
+Out of the box ComboSelect is using custom SVG icons that can be overriden by specifing new classes for i elements using props: `icon`, `iconSelectActive`, `iconSelectInactive`.
 
 ```javascript
 <ComboSelect
