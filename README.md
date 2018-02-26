@@ -204,3 +204,15 @@ const maxHeightProps = {
 <ComboSelect type="select" data={this.state.data} value={this.state.data[1]} {...maxHeightProps} />
 
 ```
+
+### Swtiched to SVG icons
+Out of the box ComboSelect is using custom SVG icons that can be overriden by specifing new `ClassNames` using props: `icon`, `iconSelectActive`, `iconSelectInactive`.
+
+```javascript
+
+<ComboSelect
+  icon="fa fa-chevron-down"
+  iconSelectInactive="fa fa-circle-thin"
+  iconSelectActive="fa fa-check"
+/>
+```
