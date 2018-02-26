@@ -1,124 +1,124 @@
 .combo-select {
-    position: relative;
+	position: relative;
 }
 
 .combo-select .combo-select-head {
-    position: relative;
-    width: 100%;
-    border: 2px solid #d1d3d4;
-    border-radius: 6px;
-    padding-left: 19px;
-    height: 42px;
-    font-size: 15px;
-    font-weight: 400;
-    color: #5a5a5a;
-    background-color: #fff;
-    text-align: left;
-    outline: none;
-    line-height: 42px;
-    box-sizing: border-box;
+	position: relative;
+	width: 100%;
+	border: 2px solid #d1d3d4;
+	border-radius: 6px;
+	padding-left: 19px;
+	height: 42px;
+	font-size: 15px;
+	font-weight: 400;
+	color: #5a5a5a;
+	background-color: #fff;
+	text-align: left;
+	outline: none;
+	line-height: 42px;
+	box-sizing: border-box;
 }
 
 .combo-select .combo-select-head.disabled {
-    background-color: #fafafa;
-    color: #d1d3d4;
-    cursor: not-allowed;
+	background-color: #fafafa;
+	color: #d1d3d4;
+	cursor: not-allowed;
 }
 
 .combo-select .combo-select-head.disabled i {
-    color: #d1d3d4;
+	color: #d1d3d4;
 }
 
 .combo-select div.combo-select-head {
-    cursor: pointer;
+	cursor: pointer;
 }
 
 .combo-select .combo-select-head i {
-    display: inline-block;
-    font: normal normal normal 14px/1 FontAwesome;
-    font-size: inherit;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-transform: translate(0,0);
-    transform: translate(0,0);
-    border: 0;
-    position: absolute;
-    right: 18px;
-    top: 12px;
-    color: #40b4e5;
+	display: inline-block;
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: inherit;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-transform: translate(0,0);
+	transform: translate(0,0);
+	border: 0;
+	position: absolute;
+	right: 18px;
+	top: 12px;
+	color: #40b4e5;
 }
 
 .combo-select .search-input {
-    height: 32px;
-    text-indent: 10px;
-    border: 2px solid #d1d3d4;
-    box-shadow: none;
-    outline: none;
-    font-size: 15px;
-    padding: 0;
-    position: absolute;
-    left: 0;
-    width: 92%;
-    margin-left: 3%;
-    border-radius: 8px;
-    z-index: 1001;
+	height: 32px;
+	text-indent: 10px;
+	border: 2px solid #d1d3d4;
+	box-shadow: none;
+	outline: none;
+	font-size: 15px;
+	padding: 0;
+	position: absolute;
+	left: 0;
+	width: 92%;
+	margin-left: 3%;
+	border-radius: 8px;
+	z-index: 1001;
 }
 .combo-select .combo-select-body {
-    position: absolute;
-    border: 1px solid #d1d3d4;
-    border-radius: 8px;
-    width: 100%;
-    background-color: #fff;
-    color: #5a5a5a;
-    font-size: 15px;
-    font-weight: 400;
-    overflow: hidden;
-    z-index: 1000;
+	position: absolute;
+	border: 1px solid #d1d3d4;
+	border-radius: 8px;
+	width: 100%;
+	background-color: #fff;
+	color: #5a5a5a;
+	font-size: 15px;
+	font-weight: 400;
+	overflow: hidden;
+	z-index: 1000;
 }
 
 .combo-select .combo-select-body .combo-select-body-scroll {
-    overflow-x: hidden;
+	overflow-x: hidden;
 }
 
 .combo-select .combo-select-body .combo-select-item {
-    position: relative;
-    width: 100%;
-    padding-left: 19px;
-    height: 42px;
-    text-align: left;
-    outline: none;
-    line-height: 42px;
-    box-sizing: border-box;
-    cursor: pointer;
-    background-color: white;
+	position: relative;
+	width: 100%;
+	padding-left: 19px;
+	height: 42px;
+	text-align: left;
+	outline: none;
+	line-height: 42px;
+	box-sizing: border-box;
+	cursor: pointer;
+	background-color: white;
 }
 
 .combo-select .combo-select-body .combo-select-item i {
-    padding-right: 10px;
+	padding-right: 10px;
 }
 
 .combo-select .combo-select-body .combo-select-item.selected.no-icon {
-    background: #e1f3f3;
+	background: #e1f3f3;
 }
 
 .combo-select .combo-select-body .combo-select-item.selected i {
-    color: #40b4e5;
+	color: #40b4e5;
 }
 
 .combo-select .combo-select-body .combo-select-item:hover,
 .combo-select .combo-select-body .combo-select-item.active {
-    background: #f7f7f7;
+	background: #f7f7f7;
 }
 
 .combo-select .combo-select-required-select {
-    position: absolute;
-    top: 4px;
-    left: 30px;
-    z-index: -1;
-    width: 1px;
+	position: absolute;
+	top: 4px;
+	left: 30px;
+	z-index: -1;
+	width: 1px;
 }
 
 .combo-select .combo-select-controls {
-    position: absolute;
+	position: absolute;
 }

@@ -9,27 +9,27 @@ export default class Demo extends Component {
 		this.state = {
 			text: '-Select me-',
 			data: [
-				{text: "1air-JA007D", win: "win-111", value: "JA007D", number: 0},
-				{text: "1air-JA008D", win: "win-222", value: "JA008D", number: 0},
-				{text: "1air-JA009D", win: "win-333", value: "JA009D", number: 1},
-				{text: "111air-JA107D", win: "win-444", value: "JA010D", number: 1},
-				{text: "111air-JA107R", win: "win-555", value: "JA107R", number: 1},
-				{text: "11air-JA008D1", win: "win-2221", value: "JA0081D", number: 0},
-				{text: "11air-JA009D2", win: "win-3332", value: "JA009D2", number: 1},
-				{text: "11air-JA107D3", win: "win-4443", value: "JA010D3", number: 1},
-				{text: "11air-JA107R4", win: "win-5554", value: "JA107R4", number: 1},
-				{text: "11air-JA008D5", win: "win-2225", value: "JA008D5", number: 0},
-				{text: "air-JA009D8", win: "win-3336", value: "JA009D6", number: 1},
-				{text: "air-JA107D6", win: "win-4447", value: "JA010D7", number: 1},
-				{text: "air-JA107R7", win: "win-5558", value: "JA107R8", number: 1},
-				{text: "air-JA107Y9", win: "win-6669", value: "JA107Y9", number: 1}
+				{text: '1air-JA007D', win: 'win-111', value: 'JA007D', number: 0},
+				{text: '1air-JA008D', win: 'win-222', value: 'JA008D', number: 0},
+				{text: '1air-JA009D', win: 'win-333', value: 'JA009D', number: 1},
+				{text: '111air-JA107D', win: 'win-444', value: 'JA010D', number: 1},
+				{text: '111air-JA107R', win: 'win-555', value: 'JA107R', number: 1},
+				{text: '11air-JA008D1', win: 'win-2221', value: 'JA0081D', number: 0},
+				{text: '11air-JA009D2', win: 'win-3332', value: 'JA009D2', number: 1},
+				{text: '11air-JA107D3', win: 'win-4443', value: 'JA010D3', number: 1},
+				{text: '11air-JA107R4', win: 'win-5554', value: 'JA107R4', number: 1},
+				{text: '11air-JA008D5', win: 'win-2225', value: 'JA008D5', number: 0},
+				{text: 'air-JA009D8', win: 'win-3336', value: 'JA009D6', number: 1},
+				{text: 'air-JA107D6', win: 'win-4447', value: 'JA010D7', number: 1},
+				{text: 'air-JA107R7', win: 'win-5558', value: 'JA107R8', number: 1},
+				{text: 'air-JA107Y9', win: 'win-6669', value: 'JA107Y9', number: 1},
 			],
-			selectedValue: {text: "air-JA007D", win: "win-111", value: "JA007D"}
+			selectedValue: {text: 'air-JA007D', win: 'win-111', value: 'JA007D'},
 		}
 	}
 
 	componentDidMount() {
-		console.log('mounted');
+		// console.log('mounted');
 		//const self = this;
 		//setTimeout(function () {
 		//    const newState = {
@@ -71,34 +71,34 @@ export default class Demo extends Component {
 	}
 
 	render() {
-		//var standardArray = ["DDD", "CCC", "BBB", "AAA"];
-		//var standardArray = [3, 1, 11, 111, 21, 33, 14, 32, 442];
-		//var standardArray = ["JA007D", "JA008D", "JA009D", "JA010D", "JA219J", "JA302J", "JA306J", "JA308J", "JA309J", "JA311J", "JA313J", "JA314J", "JA316J", "JA318J", "JA319J", "JA322J", "JA324J", "JA325J", "JA326J"];
-		//var standardArray = ["737-800", "767-300", "777-200", "777-300", "ERJ 170-100"];
-		//var standardArray = [];
+		// var standardArray = ["DDD", "CCC", "BBB", "AAA"];
+		// var standardArray = [3, 1, 11, 111, 21, 33, 14, 32, 442];
+		// var standardArray = ["JA007D", "JA008D", "JA009D", "JA010D", "JA219J", "JA302J", "JA306J", "JA308J", "JA309J", "JA311J", "JA313J", "JA314J", "JA316J", "JA318J", "JA319J", "JA322J", "JA324J", "JA325J", "JA326J"];
+		// var standardArray = ["737-800", "767-300", "777-200", "777-300", "ERJ 170-100"];
+		// var standardArray = [];
 		// var standardArray = [
-		//     {text: "air-JA007D", win: "win-JA007D", value: "JA007D"},
-		//     {text: "air-JA008D", win: "win-JA008D", value: "JA008D"},
-		//     {text: "air-JA009D", win: "win-JA009D", value: "JA009D"},
-		//     {text: "air-JA107D", win: "win-JA107D", value: "JA010D"}
+		// 	{text: "air-JA007D", win: "win-JA007D", value: "JA007D"},
+		// 	{text: "air-JA008D", win: "win-JA008D", value: "JA008D"},
+		// 	{text: "air-JA009D", win: "win-JA009D", value: "JA009D"},
+		// 	{text: "air-JA107D", win: "win-JA107D", value: "JA010D"}
 		// ];
 		// var standardArray = [
-		//     {text: 111, win: "win-JA009D", value: 111},
-		//     {text: 3, win: "win-JA007D", value: 3},
-		//     {text: 11, win: "win-JA0008D", value: 11},
-		//     {text: 12, win: "win-JA107D", value: 12},
-		//     {text: 13, win: "sin-JA101D", value: 13},
-		//     {text: 14, win: "win-JA102D", value: 14},
-		//     {text: 15, win: "win-JA103D", value: 15}
+		// 	{text: 111, win: "win-JA009D", value: 111},
+		// 	{text: 3, win: "win-JA007D", value: 3},
+		// 	{text: 11, win: "win-JA0008D", value: 11},
+		// 	{text: 12, win: "win-JA107D", value: 12},
+		// 	{text: 13, win: "sin-JA101D", value: 13},
+		// 	{text: 14, win: "win-JA102D", value: 14},
+		// 	{text: 15, win: "win-JA103D", value: 15}
 		// ];
 
-		//var standardArray = [
+		// var standardArray = [
 		//    {value: 'EFFECTIVE_DATE', text: 'Day'},
 		//    {value: 'EFFECTIVE_YEAR_WEEK', text: 'Week'},
 		//    {value: 'EFFECTIVE_YEAR_MONTH', text: 'Month'},
 		//    {value: 'EFFECTIVE_YEAR_QUARTER', text: 'Quarter'},
 		//    {value: 'EFFECTIVE_YEAR', text: 'Year'}
-		//];
+		// ];
 
 		return (
 			<div>
