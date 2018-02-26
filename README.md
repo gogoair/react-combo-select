@@ -226,6 +226,7 @@ For each dataAttr property of type function only one argument is forwarded to th
             automation: item => item && 'ComboSelectItem_' + item.text
         }
     }}
+```
 
 ### Swtiched to SVG icons
 Out of the box ComboSelect is using custom SVG icons that can be overriden by specifing new `ClassNames` using props: `icon`, `iconSelectActive`, `iconSelectInactive`.
