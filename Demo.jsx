@@ -112,10 +112,20 @@ export default class Demo extends Component {
 					<br />
 					<br />
 					<div style={{position: 'relative'}}>
+					
+						{<ComboSelect type="select"
+							data={this.state.data}
+							sort='number'
+							search="smart"
+							disabled={false}
+							onChange={this.fakeFunction}
+							map={{text: 'text', value: true}}
+							onToggle={this.fakeToggle}
+							required />}
+
 						{<ComboSelect type="multiselect"
 							data={this.state.data}
 							sort='number'
-							icon="fa fa-chevron-circle-down"
 							search="smart"
 							disabled={false}
 							onChange={this.fakeFunction}
@@ -134,13 +144,18 @@ export default class Demo extends Component {
 							}}
 							required/>}
 
-						{/*<ComboSelect type="multiselect" data={this.state.data}
-						 icon="fa fa-chevron-circle-down" search="smart" value={this.state.data[1]}
-						 sort="alphanum"
-						 disabled={false} onChange={this.fakeFunction}
-						 map={{text: this.getText, value: this.getValue}}
-						 onToggle={this.fakeToggle}
-						 defaultText="Select meeee" required/>*/}
+						{<ComboSelect type="multiselect" data={this.state.data}
+							icon="fa fa-chevron-down"
+							iconSelectInactive="fa fa-circle-thin"
+							iconSelectActive="fa fa-check"
+							search="smart"
+							value={this.state.data[1]}
+							sort="alphanum"
+							disabled={false} onChange={this.fakeFunction}
+							map={{text: this.getText, value: this.getValue}}
+							onToggle={this.fakeToggle}
+							defaultText="Select more than one"
+							required />}
 					</div>
 
 					<div style={{position: 'relative', marginTop: '20px'}}>

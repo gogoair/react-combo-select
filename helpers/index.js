@@ -1,4 +1,3 @@
-
 // if stringOrFunction is string result will be that string
 // if stringOrFunction is function result will be stringOrFunction(data)
 const transformOneDataAttribute = (stringOrFunction, data) => {
@@ -34,4 +33,11 @@ export const transformDataAttributes = (transformer, data) => {
 		returnValue['data-' + key] = transformOneDataAttribute(transformer[key], data);
 	});
 	return returnValue;
+}
+
+export const formatLength = (numberOrString) => {
+	if (typeof numberOrString === 'number') {
+		return numberOrString + 'px';
+	}
+	return numberOrString;
 }

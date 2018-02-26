@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import CircleIcon from './svg/CircleIcon.jsx';
+import CircleIconChecked from './svg/CircleIconChecked.jsx';
+import SquareIcon from './svg/SquareIcon.jsx';
+import SquareIconChecked from './svg/SquareIconChecked.jsx';
 
 export default class ComboSelectItem extends Component {
 
@@ -11,7 +15,7 @@ export default class ComboSelectItem extends Component {
 			if (this.props.selected) {
 
 				if (this.props.iconSelectActive === true || this.props.iconSelectActive === undefined || this.props.iconSelectActive === null) {
-					input = <i className="fa fa-check-circle" />;
+					input = <CircleIconChecked />;
 				} else if (this.props.iconSelectActive === false || this.props.iconSelectActive === 'off') {
 					input = '';
 				} else {
@@ -21,7 +25,7 @@ export default class ComboSelectItem extends Component {
 			} else {
 
 				if (this.props.iconSelectInactive === true || this.props.iconSelectActive === undefined || this.props.iconSelectActive === null) {
-					input = <i className="fa fa-circle-o" />;
+					input = <CircleIcon />;
 				} else if (this.props.iconSelectInactive === false || this.props.iconSelectInactive === 'off') {
 					input = '';
 				} else {
@@ -35,7 +39,7 @@ export default class ComboSelectItem extends Component {
 			if (this.props.selected) {
 
 				if (this.props.iconSelectActive === true || this.props.iconSelectActive === undefined || this.props.iconSelectActive === null) {
-					input = <i className="fa fa-check-square" />;
+					input = <SquareIconChecked />;
 				} else if (this.props.iconSelectActive === false || this.props.iconSelectActive === 'off') {
 					input = '';
 				} else {
@@ -45,7 +49,7 @@ export default class ComboSelectItem extends Component {
 			} else {
 
 				if (this.props.iconSelectInactive === true || this.props.iconSelectActive === undefined || this.props.iconSelectActive === null) {
-					input = <i className="fa fa-square-o" />;
+					input = <SquareIcon />;
 				} else if (this.props.iconSelectInactive === false || this.props.iconSelectInactive === 'off') {
 					input = '';
 				} else {

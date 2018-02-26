@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import ComboSelectItem from './ComboSelectItem.jsx';
 import { transformDataAttributes } from '../helpers';
+import DropDownIcon from './svg/DropDownIcon.jsx';
 
 // TODO: move to this.specialClass
 let specialClass = 'combo-select-body-scroll';
@@ -16,6 +17,7 @@ export default class ComboSelect extends Component {
 		this.scroll = 0;
 		this.defaultText = props.defaultText ? props.defaultText : (props.text ? props.text : 'Select');
 		this.open = false;
+		this.useCustomIcon = props.icon && (props.icon !== true) && (props.icon !== 'on');
 		this.icon = props.icon ? props.icon : 'fa fa-chevron-circle-down';
 		this.map = this.props.map && this.props.map.text && this.props.map.value ? this.props.map : {
 			value: 'value',
@@ -23,8 +25,8 @@ export default class ComboSelect extends Component {
 		};
 		this.borderActive = this.props.borderActive ? this.props.borderActive : '#40b4e5';
 
-		this.iconSelectActive = props.iconSelectActive !== false || props.iconSelectActive !== 'off' ? props.iconSelectActive : true;
-		this.iconSelectInactive = props.iconSelectInactive !== false || props.iconSelectInactive !== 'off' ? props.iconSelectInactive : true;
+		this.iconSelectActive = (props.iconSelectActive === false) || (props.iconSelectActive === 'off' ? true : props.iconSelectActive);
+		this.iconSelectInactive = (props.iconSelectInactive === false) || (props.iconSelectInactive === 'off' ? true : props.iconSelectInactive);
 
 		this.globalKeyDown = this.globalKeyDown.bind(this);
 		this.globalMouseClick = this.globalMouseClick.bind(this);
@@ -121,8 +123,11 @@ export default class ComboSelect extends Component {
 			changed = true;
 		}
 
-		if (changed)
+		if (changed) {
 			this.setState(stateUpdate);
+		}
+		
+		this.defaultText = newProps.defaultText ? newProps.defaultText : (newProps.text ? newProps.text : 'Select');
 	}
 
 	/**
@@ -273,7 +278,7 @@ export default class ComboSelect extends Component {
 					ref="head"
 				>
 					{stateText ? stateText : this.defaultText}
-					{<i className={this.icon}></i>}
+					{this.useCustomIcon ? <i className={this.icon} /> : <DropDownIcon />}
 				</div>
 				<select {...other} className='combo-select-required-select' ref='select'>
 					{options}
@@ -289,7 +294,7 @@ export default class ComboSelect extends Component {
 					ref="head"
 				>
 					{stateText ? stateText : this.defaultText}
-					{<i className={this.icon}></i>}
+					{this.useCustomIcon ? <i className={this.icon} /> : <DropDownIcon />}
 				</div>
 				<select {...other} className='combo-select-required-select' ref='select'>
 					<option value=''></option>
