@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import ComboSelectItem from './ComboSelectItem.jsx';
+import { transformDataAttributes } from '../helpers';
 import DropDownIcon from './svg/DropDownIcon.jsx';
 
 // TODO: move to this.specialClass
@@ -47,6 +48,29 @@ export default class ComboSelect extends Component {
 			selected: -1,
 			search: this.props.search && (this.props.search === 'on' || this.props.search == 'smart' || this.props.search === 'off') ? this.props.search : 'off',
 		}
+
+		this.processDataAttributes();
+	}
+
+	processDataAttributes(newProps) {
+		const props = newProps || this.props;
+		const allowedKeys = ['wrapper', 'dropDownHeader', 'listItem'];
+		if (!props.dataAttr) {
+			this.wrapperDataTransformer = {};
+			this.dropDownHeaderDataTransformer = {};
+			this.listItemDataTransformer = {};
+		}
+		else {
+			const { dataAttr } = props;
+			Object.keys(dataAttr).forEach((key) => {
+				if (!allowedKeys.includes(key)) {
+					throw new Error (`Unknown dataAttr property: ${key}`);
+				}
+			});
+			this.wrapperDataTransformer = dataAttr.wrapper || {};
+			this.dropDownHeaderDataTransformer = dataAttr.dropDownHeader || {};
+			this.listItemDataTransformer = dataAttr.listItem || {};
+		}
 	}
 
 	componentDidMount() {
@@ -89,6 +113,8 @@ export default class ComboSelect extends Component {
 			stateUpdate.data = this.mappedData;
 			changed = true;
 		}
+
+		this.processDataAttributes(newProps);
 
 		if (dataChanged || newProps.text !== this.props.text || newProps.value !== this.props.value) {
 			let selectedItems = this.findSelectedItems(this.mappedData, newProps.text, newProps.value);
@@ -241,12 +267,16 @@ export default class ComboSelect extends Component {
 			return <option key={i} value={item.text}>{item.text}</option>
 		});
 
-		const { data, type, onChange, search, value, onToggle, text, map, sort, iconSelectInactive, iconSelectActive, defaultText, scrollHeight, scrollMaxHeight, preferredDirection, ...other } = this.props;
+		const { data, type, onChange, search, value, onToggle, text, map, sort, iconSelectInactive, iconSelectActive, defaultText, scrollHeight, scrollMaxHeight, preferredDirection, dataAttr, ...other } = this.props;
 
 		if (this.state.value === 0 || (this.state.value && ((this.state.value instanceof Array && this.state.value.length > 0) || !(this.state.value instanceof Array)))) {
 
 			head = (<div onClick={() => this.toggleMenu()}>
-				<div className={(this.props.disabled ? ' disabled ' : '') + 'combo-select-head'} ref='head'>
+				<div
+					{...transformDataAttributes(this.dropDownHeaderDataTransformer, this.props)}
+					className={(this.props.disabled ? " disabled " : "") + "combo-select-head"}
+					ref="head"
+				>
 					{stateText ? stateText : this.defaultText}
 					{this.useCustomIcon ? <i className={this.icon} /> : <DropDownIcon />}
 				</div>
@@ -258,7 +288,11 @@ export default class ComboSelect extends Component {
 		} else {
 
 			head = (<div onClick={() => this.toggleMenu()}>
-				<div className={(this.props.disabled ? ' disabled ' : '') + 'combo-select-head'} ref='head'>
+				<div
+					{...transformDataAttributes(this.dropDownHeaderDataTransformer, this.props)}
+					className={(this.props.disabled ? " disabled " : "") + "combo-select-head"}
+					ref="head"
+				>
 					{stateText ? stateText : this.defaultText}
 					{this.useCustomIcon ? <i className={this.icon} /> : <DropDownIcon />}
 				</div>
@@ -290,7 +324,10 @@ export default class ComboSelect extends Component {
 
 				return (
 					<div key={i}>
-						<ComboSelectItem item={item} selected={this.findSelectedByKey(item, this.state.text, 'text')}
+						<ComboSelectItem
+							{...transformDataAttributes(this.listItemDataTransformer, item)}
+							item={item}
+							selected={this.findSelectedByKey(item, this.state.text, 'text')}
 							index={i}
 							focused={focused}
 							type={this.state.type}
@@ -963,7 +1000,11 @@ export default class ComboSelect extends Component {
 		let body = this._generateBody();
 
 		return (
-			<div ref='comboSelect' className='combo-select'>
+			<div
+				{...transformDataAttributes(this.wrapperDataTransformer, this.props)}
+				ref="comboSelect"
+				className="combo-select"
+			>
 				{head}
 				<div style={{ display: 'none' }} className='combo-select-body-holder' ref='holder'>{body}</div>
 			</div>
@@ -992,4 +1033,5 @@ ComboSelect
 		scrollHeight: PropTypes.number,
 		scrollMaxHeight: PropTypes.number,
 		preferredDirection: PropTypes.oneOf(['top', 'down']),
+		dataAttr: PropTypes.object,
 	};

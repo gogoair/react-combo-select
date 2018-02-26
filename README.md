@@ -205,11 +205,32 @@ const maxHeightProps = {
 
 ```
 
+## New `dataAttr` prop
+Added dataAttr prop to be used for QE testing. Each property can be a string or a transform function. When added to HtmlDOM element attribute will be prefixed with `data-`, i.e. `automation` will become `data-automation`.
+
+For each dataAttr property of type function only one argument is forwarded to that function:
++ wrapper: `Component.props`
++ dropDownHeader: `Component.props`
++ listItem: `Component.props.data[index]`
+
+```javascript
+<ComboSelect type="multiselect" data={this.state.data}
+    dataAttr={{
+        wrapper: {
+            automation: 'ComboSelect'
+        },
+        dropDownHeader: {
+            automation: 'ComboSelectHeader'
+        },
+        listItem: {
+            automation: item => item && 'ComboSelectItem_' + item.text
+        }
+    }}
+
 ### Swtiched to SVG icons
 Out of the box ComboSelect is using custom SVG icons that can be overriden by specifing new `ClassNames` using props: `icon`, `iconSelectActive`, `iconSelectInactive`.
 
 ```javascript
-
 <ComboSelect
   icon="fa fa-chevron-down"
   iconSelectInactive="fa fa-circle-thin"
