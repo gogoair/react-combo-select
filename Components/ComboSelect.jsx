@@ -782,7 +782,7 @@ export default class ComboSelect extends Component {
 	 * @param item
 	 */
 	selectItem(item) {
-
+		if (!item) { return; }
 		let text = item.text;
 		let value = item.value;
 
@@ -913,7 +913,9 @@ export default class ComboSelect extends Component {
 				case 32:
 					// Space
 					event.preventDefault();
-					this.selectItem(this.state.data[this.focus]);
+					if (this.state.data[this.focus]) {
+						this.selectItem(this.state.data[this.focus]);
+					}
 					break;
 				case 13:
 					// Enter
