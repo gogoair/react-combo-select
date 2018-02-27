@@ -1,9 +1,9 @@
 {
   "name": "react-combo-select",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "keywords": "react, select, singleselect, multiselect, search, react-component",
   "description": "React select component that can be used as a single select, multiselect, search",
-  "main": "./lib/ComboSelect.jsx",
+  "main": "./lib/ComboSelect.js",
   "scripts": {
     "start": "./node_modules/.bin/webpack-dev-server --config webpack.config.js  --hot --progress --colors --port 8080 --open",
     "test": "mocha -r mock-local-storage --compilers js:babel-core/register --require ./test/test.js \"test/**/*@(.js|.jsx)\"",
