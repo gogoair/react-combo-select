@@ -1,14 +1,7 @@
 # react-combo-select
 React dropdown for select and multiselect 
 
-## LATEST
-- Text is also returned with value for onToggle() and onChange() callbacks. 
-
-```javascript
-let standardArray = ["win-JA007D", "win-JA0008D", "win-JA009D"];
-<ComboSelect text="-Select me-" type="multiselect" data={standardArray} sort="alphanum"/>
-```
-
+[![npm version](https://badge.fury.io/js/react-combo-select.svg)](http://badge.fury.io/js/react-combo-select)
 
 ## Usability
 react-combo-select requires react and react-dom as peer dependency. All versions should be supported, but make sure you are using matching versions of the two packages.
