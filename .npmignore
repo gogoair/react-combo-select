@@ -1,10 +1,14 @@
 test
-Components
+src
 node_modules
 index.html
-index.jsx
-FakeComponent.js
+DemoComponent.jsx
+demo.js
 .idea
 .babelrc
 .eslintrc
+.directory
+.DS_Store
 webpack.config.js
+package-lock.json
+yarn.lock
