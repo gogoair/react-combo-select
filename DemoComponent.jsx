@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import ComboSelect from './Components/ComboSelect';
+import ComboSelect from './src/Components/ComboSelect';
 
 export default class Demo extends Component {
 
