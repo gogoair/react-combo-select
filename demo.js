@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Demo from './Demo.jsx';
+import Demo from './DemoComponent';
 import { AppContainer } from 'react-hot-loader';
 
 ReactDOM.render(
@@ -13,8 +13,8 @@ ReactDOM.render(
 );
 
 if (module.hot) {
-	module.hot.accept('./Demo.jsx', () => {
-		const NextApp = require('./Demo.jsx').default;
+	module.hot.accept('./DemoComponent', () => {
+		const NextApp = require('./DemoComponent').default;
 		ReactDOM.render(
 			<AppContainer>
 				<NextApp />

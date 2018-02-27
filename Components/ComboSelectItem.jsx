@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import CircleIcon from './svg/CircleIcon.jsx';
-import CircleIconChecked from './svg/CircleIconChecked.jsx';
-import SquareIcon from './svg/SquareIcon.jsx';
-import SquareIconChecked from './svg/SquareIconChecked.jsx';
+import CircleIcon from './svg/CircleIcon';
+import CircleIconChecked from './svg/CircleIconChecked';
+import SquareIcon from './svg/SquareIcon';
+import SquareIconChecked from './svg/SquareIconChecked';
 
 export default class ComboSelectItem extends Component {
 

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import ComboSelectItem from './ComboSelectItem.jsx';
+import ComboSelectItem from './ComboSelectItem';
 import { transformDataAttributes } from '../helpers';
-import DropDownIcon from './svg/DropDownIcon.jsx';
+import DropDownIcon from './svg/DropDownIcon';
 
 // TODO: move to this.specialClass
 let specialClass = 'combo-select-body-scroll';

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ReactSvgIcon, { enabledColor } from './ReactSvgIcon/index.jsx';
+import ReactSvgIcon, { enabledColor } from './ReactSvgIcon/index';
 
 export default class DropDownIcon extends Component {
 	render() {

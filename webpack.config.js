@@ -5,7 +5,7 @@ module.exports = {
 	entry: [
 		'react-hot-loader/patch',
 		'webpack/hot/only-dev-server',
-		'./demo.js'
+		'./demo'
 	],
 	output: {
 		path: __dirname + '/build',
@@ -28,6 +28,9 @@ module.exports = {
 				loader: "style!css"
 			}
 		]
+	},
+	resolve: {
+		extensions: ['', '.js', '.jsx', '.json'],
 	},
 	plugins: [
 		new webpack.NoErrorsPlugin()
