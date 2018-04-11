@@ -39,5 +39,9 @@ describe('Placeholder updates', () => {
         const comboPlaceholder3 = "Third Placeholder";
         wrapper.setProps({text: comboPlaceholder3, defaultText: null});
         expect(wrapper.find('.combo-select-head').text()).to.equal(comboPlaceholder3);
+
+        const comboPlaceholder4 = "Fourth Placeholder";
+        wrapper.setProps({text: comboPlaceholder4, defaultText: 'Select'});
+        expect(wrapper.find('.combo-select-head').text()).to.equal(comboPlaceholder4);
     });
 });

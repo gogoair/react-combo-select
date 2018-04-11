@@ -14,7 +14,7 @@ export default class ComboSelect extends Component {
 
 		this.focus = -1;
 		this.scroll = 0;
-		this.defaultText = props.defaultText ? props.defaultText : props.text ? props.text : 'Select';
+		this.defaultText = props.text ? props.text : props.defaultText ? props.defaultText : 'Select';
 		this.open = false;
 		this.useCustomIcon = props.icon && props.icon !== true && props.icon !== 'on';
 		this.icon = props.icon ? props.icon : 'fa fa-chevron-circle-down';
@@ -134,7 +134,7 @@ export default class ComboSelect extends Component {
 			this.setState(stateUpdate);
 		}
 
-		this.defaultText = newProps.defaultText ? newProps.defaultText : newProps.text ? newProps.text : 'Select';
+		this.defaultText = newProps.text ? newProps.text : newProps.defaultText ? newProps.defaultText : 'Select';
 	}
 
 	/**

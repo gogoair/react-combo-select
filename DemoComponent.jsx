@@ -121,7 +121,7 @@ export default class Demo extends Component {
 								map={{ text: 'text', value: true }}
 								onToggle={this.fakeToggle}
 								required
-							/>
+                            />
 						}
 
 						{
