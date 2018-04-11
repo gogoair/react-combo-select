@@ -5,7 +5,7 @@ import sinon from 'sinon';
 import {expect} from 'chai';
 
 import React from 'react';
-import ComboSelect from '../Components/ComboSelect.jsx';
+import ComboSelect from '../src/Components/ComboSelect';
 
 const data = [
 	{text: 111, win: 'win-111', value: 111},

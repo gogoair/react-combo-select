@@ -55,7 +55,7 @@ export default class Demo extends Component {
 	}
 
 	fakeFunction(value, text) {
-		//console.log(value, text);
+		console.log(value, text);
 	}
 
 	fakeToggle(open, value, text) {

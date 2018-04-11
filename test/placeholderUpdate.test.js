@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import ComboSelect from '../Components/ComboSelect.jsx';
+import ComboSelect from '../src/Components/ComboSelect';
 
 import { mount } from 'enzyme';
 import sinon from 'sinon';
