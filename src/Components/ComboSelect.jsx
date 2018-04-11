@@ -605,7 +605,9 @@ export default class ComboSelect extends Component {
 
 			this.open = !this.open;
 
-			this.refs.holder.style.display = this.open ? 'block' : 'none';
+			if (this.refs.holder) {
+                this.refs.holder.style.display = this.open ? 'block' : 'none';
+            }
 
 			if (this.open) {
 
