@@ -8,7 +8,7 @@ const transformOneDataAttribute = (stringOrFunction, data) => {
 		return stringOrFunction(data);
 	}
 	throw new Error('dataAttr grand children must be string or function');
-}
+};
 
 /*
     SAMPLE:
@@ -33,11 +33,11 @@ export const transformDataAttributes = (transformer, data) => {
 		returnValue['data-' + key] = transformOneDataAttribute(transformer[key], data);
 	});
 	return returnValue;
-}
+};
 
 export const formatLength = (numberOrString) => {
 	if (typeof numberOrString === 'number') {
 		return numberOrString + 'px';
 	}
 	return numberOrString;
-}
+};
