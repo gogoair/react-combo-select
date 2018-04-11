@@ -28,8 +28,7 @@ let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D"];
 <ComboSelect data={standardArray}/>
 ```
 
-### text
-### defaultText
+### text, defaultText
 Text will be displayed as something you have selected or set as a start value, for this example it's "-Select me-". 
 If you dont provide `defaultText` or `text` prop, value by default is 'Select'. `text` have greater specificity than `defaultText`
 
