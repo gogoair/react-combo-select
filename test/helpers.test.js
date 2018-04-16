@@ -1,6 +1,6 @@
 'use strict';
 
-import {transformDataAttributes} from '../helpers';
+import {transformDataAttributes} from '../src/helpers';
 
 import {expect} from 'chai';
 

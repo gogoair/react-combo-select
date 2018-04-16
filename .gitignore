@@ -6,3 +6,7 @@ lib
 .directory
 .DS_Store
 package-lock.json
+
+*-lock.*
+*.lock*
+*-error.log
