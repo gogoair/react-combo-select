@@ -3,8 +3,7 @@
 const transformOneDataAttribute = (stringOrFunction, data) => {
 	if (typeof stringOrFunction === 'string') {
 		return stringOrFunction;
-	}
-	else if (typeof stringOrFunction === 'function') {
+	} else if (typeof stringOrFunction === 'function') {
 		return stringOrFunction(data);
 	}
 	throw new Error('dataAttr grand children must be string or function');
@@ -29,13 +28,13 @@ const transformOneDataAttribute = (stringOrFunction, data) => {
 */
 export const transformDataAttributes = (transformer, data) => {
 	const returnValue = {};
-	Object.keys(transformer).forEach((key) => {
+	Object.keys(transformer).forEach(key => {
 		returnValue['data-' + key] = transformOneDataAttribute(transformer[key], data);
 	});
 	return returnValue;
 };
 
-export const formatLength = (numberOrString) => {
+export const formatLength = numberOrString => {
 	if (typeof numberOrString === 'number') {
 		return numberOrString + 'px';
 	}
