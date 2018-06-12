@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import ComboSelectItem from './ComboSelectItem';
+import ComboSelectGroup from './ComboSelectGroup';
 import { transformDataAttributes } from '../helpers';
 import DropDownIcon from './svg/DropDownIcon';
 
@@ -347,6 +348,7 @@ export default class ComboSelect extends Component {
 	 * Generate body (menu)
 	 * @returns {XML}
 	 */
+
 	_generateBody = () => {
 		let style = this.calculateMetric();
 		let body = '';
@@ -356,7 +358,9 @@ export default class ComboSelect extends Component {
 				let focused = false;
 				this.focus == i ? (focused = true) : '';
 
-				return (
+				console.log({ item, text: this.state.text });
+
+				return !this.props.groups ? (
 					<div key={i}>
 						<ComboSelectItem
 							{...transformDataAttributes(this.listItemDataTransformer, item)}
@@ -371,6 +375,16 @@ export default class ComboSelect extends Component {
 							iconSelectInactive={this.iconSelectInactive}
 						/>
 					</div>
+				) : (
+					<ComboSelectGroup
+						key={item.groupName}
+						{...transformDataAttributes(this.listItemDataTransformer, item)}
+						item={item}
+						index={i}
+						selectItem={this.selectItem.bind(this)}
+						iconSelectActive={this.iconSelectActive}
+						iconSelectInactive={this.iconSelectInactive}
+					/>
 				);
 			});
 		}
@@ -426,6 +440,25 @@ export default class ComboSelect extends Component {
 		);
 	};
 
+	// Example
+	// values = [{partner_code: 'AAL', airlines: ['aal1', 'aal2', 'aal3']}]
+	// group = mappedData
+
+	findSelectedGroupItems = (data, values = []) => {
+		const selectedItems = [];
+		const flattenedGroupNames = data.map(group => group.groupName);
+		const flattenedPartnerNames = values.map(partner => partner.partner_code);
+
+		// WIP
+		flattenedPartnerNames.forEach((name, i) => {
+			if (flattenedGroupNames.includes(name)) {
+				console.log('match');
+			}
+		});
+
+		return selectedItems;
+	};
+
 	/**
 	 * Connect text and value if component received only one of them
 	 * @param data
@@ -438,12 +471,17 @@ export default class ComboSelect extends Component {
 			value: [],
 		};
 
-		data.forEach(item => {
-			if (this.findSelectedItem(item, text, value)) {
-				selectedItems.text.push(item.text);
-				selectedItems.value.push(item.value);
-			}
-		});
+		if (this.props.groups) {
+			selectedItems = this.findSelectedGroupItems(data);
+		} else {
+			data.forEach(item => {
+				if (this.findSelectedItem(item, text, value)) {
+					selectedItems.text.push(item.text);
+					selectedItems.value.push(item.value);
+				}
+			});
+		}
+
 		return selectedItems;
 	};
 
@@ -477,7 +515,9 @@ export default class ComboSelect extends Component {
 	 * @returns {boolean}
 	 */
 	findSelectedByKey = (item, keyData, key) => {
+		console.log('ARGS', { item, keyData, key });
 		let selected;
+
 		if (Array.isArray(keyData)) {
 			for (let i in keyData) {
 				if (item[key] == keyData[i]) {
@@ -559,6 +599,37 @@ export default class ComboSelect extends Component {
 		return ar;
 	};
 
+	sortGroupData = (data, sortMethod) => {
+		let sortedData = [];
+
+		if (data) {
+			let sort = sortMethod ? sortMethod : 'string';
+			// No alphanum sort for groups right now
+
+			if (sort == 'string') {
+				sortedData = data.map(group => {
+					if (group.data.length) {
+						const options = group.data.sort(
+							(a, b) => (a.text.toString() > b.text.toString() ? 1 : b.text.toString() > a.text.toString() ? -1 : 0)
+						);
+
+						return { ...group, data: options };
+					}
+				});
+			} else if (sort == 'number') {
+				sortedData = data.map(group => {
+					if (group.data.length) {
+						const options = group.data.sort((a, b) => a.text - b.text);
+						return { ...group, data: options };
+					}
+				});
+			}
+		}
+
+		this.focus = -1;
+		return sortedData;
+	};
+
 	/**
 	 * Sort data alphabetically or numerically
 	 * @param data
@@ -568,22 +639,25 @@ export default class ComboSelect extends Component {
 		if (this.props.sort === false || this.props.sort === 'off') {
 			return data;
 		}
-
 		let sortedData = [];
 
-		if (data && data[0]) {
-			let sort = this.props.sort ? this.props.sort : 'alphanum';
+		if (this.props.groups) {
+			sortedData = this.sortGroupData(data, this.props.sort);
+		} else {
+			if (data && data[0]) {
+				let sort = this.props.sort ? this.props.sort : 'alphanum';
 
-			if (sort == 'string') {
-				sortedData = data.sort(function(a, b) {
-					return a.text.toString() > b.text.toString() ? 1 : b.text.toString() > a.text.toString() ? -1 : 0;
-				});
-			} else if (sort == 'number') {
-				sortedData = data.sort(function(a, b) {
-					return a.text - b.text;
-				});
-			} else {
-				sortedData = this.alphanumSort(data);
+				if (sort == 'string') {
+					sortedData = data.sort(function(a, b) {
+						return a.text.toString() > b.text.toString() ? 1 : b.text.toString() > a.text.toString() ? -1 : 0;
+					});
+				} else if (sort == 'number') {
+					sortedData = data.sort(function(a, b) {
+						return a.text - b.text;
+					});
+				} else {
+					sortedData = this.alphanumSort(data);
+				}
 			}
 		}
 
@@ -812,6 +886,52 @@ export default class ComboSelect extends Component {
 		return style;
 	};
 
+	selectGroupItem = item => {
+		const { text, value, selected, parent } = item;
+		const updatedData = [...this.state.data];
+		// Because of this names of the items and names of the partners should be unique
+		const partnerData = updatedData.filter(group => group.groupName === parent);
+		const itemData = partnerData[0].data.filter(datum => datum.value === value)[0];
+
+		itemData.selected = !itemData.selected;
+
+		if (!this.state.text) {
+			return this.setState(
+				{
+					data: updatedData,
+					text: [text],
+					value: [value],
+				},
+				() => {
+					this.props.onChange ? this.props.onChange([...value], text) : '';
+				}
+			);
+		}
+
+		let index = this.state.text.findIndex(txtItem => text === txtItem);
+		let texts = [...this.state.text];
+		let values = [...this.state.value];
+
+		if (index !== -1) {
+			texts.splice(index, 1);
+			values.splice(index, 1);
+		} else {
+			texts.push(text);
+			values.push(value);
+		}
+
+		return this.setState(
+			{
+				data: updatedData,
+				text: texts,
+				value: values,
+			},
+			() => {
+				this.props.onChange ? this.props.onChange(values, texts) : '';
+			}
+		);
+	};
+
 	/**
 	 * Logic for selecting item(s) in select vs multiselect
 	 * @param item
@@ -819,8 +939,9 @@ export default class ComboSelect extends Component {
 	selectItem = item => {
 		if (!item) return;
 
-		let text = item.text;
-		let value = item.value;
+		if (this.props.groups) return this.selectGroupItem(item);
+
+		let { text, value } = item;
 
 		if (this.state.type === 'select') {
 			this.setState({ text: text, value: value }, () => {
@@ -970,18 +1091,16 @@ export default class ComboSelect extends Component {
 
 	mapAllData = data => {
 		let mappedData = [];
+		if (data) {
+			if (this.props.groups) mappedData = data.map(group => this.mapGroupData(group));
+			else mappedData = data.map(item => this.mapSingleData(item));
+		}
 
-		if (data)
-			mappedData = data.map(
-				function(item) {
-					return this.mapSingleData(item);
-				}.bind(this)
-			);
-
+		console.log('mappedData', mappedData);
 		return mappedData;
 	};
 
-	mapSingleData = item => {
+	mapSingleData = (item, parent) => {
 		let text = '';
 		let value = '';
 
@@ -1012,12 +1131,23 @@ export default class ComboSelect extends Component {
 			value = item;
 		}
 
-		return { text: text, value: value };
+		if (parent && this.props.groups) return { text, value, selected: false, parent };
+		else return { text, value };
+	};
+
+	mapGroupData = group => {
+		const partnerName = group.groupName;
+		if (group.options.length) {
+			const data = group.options.map(option => this.mapSingleData(option, partnerName));
+			return { groupName: partnerName, data };
+		}
 	};
 
 	render() {
 		let head = this._generateHead();
 		let body = this._generateBody();
+
+		console.log('STATE', this.state);
 
 		return (
 			<div

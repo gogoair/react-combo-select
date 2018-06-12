@@ -23,6 +23,32 @@ export default class Demo extends Component {
 				{ text: 'air-JA107R7', win: 'win-5558', value: 'JA107R8', number: 1 },
 				{ text: 'air-JA107Y9', win: 'win-6669', value: 'JA107Y9', number: 1 },
 			],
+			groups: [
+				{
+					groupName: 'AAL',
+					options: [
+						{ text: 'air-JA107Y9', win: 'win-6669', value: 'JA107Y9', number: 1 },
+						{ text: 'air-JA107D6', win: 'win-4447', value: 'JA010D7', number: 1 },
+						{ text: 'air-JA107R7', win: 'win-5558', value: 'JA107R8', number: 1 },
+					],
+				},
+				{
+					groupName: 'DAL',
+					options: [
+						{ text: '11air-JA107D3', win: 'win-4443', value: 'JA010D3', number: 1 },
+						{ text: '11air-JA009D2', win: 'win-3332', value: 'JA009D2', number: 1 },
+						{ text: '11air-JA107R4', win: 'win-5554', value: 'JA107R4', number: 1 },
+					],
+				},
+				{
+					groupName: 'WAR',
+					options: [
+						{ text: '1air-JA008D', win: 'win-222', value: 'JA008D', number: 0 },
+						{ text: '1air-JA007D', win: 'win-111', value: 'JA007D', number: 0 },
+						{ text: '1air-JA009D', win: 'win-333', value: 'JA009D', number: 1 },
+					],
+				},
+			],
 			selectedValue: { text: 'air-JA007D', win: 'win-111', value: 'JA007D' },
 		};
 	}
@@ -121,7 +147,7 @@ export default class Demo extends Component {
 								map={{ text: 'text', value: true }}
 								onToggle={this.fakeToggle}
 								required
-                            />
+							/>
 						}
 
 						{
@@ -164,7 +190,27 @@ export default class Demo extends Component {
 								map={{ text: this.getText, value: this.getValue }}
 								onToggle={this.fakeToggle}
 								defaultText="Select more than one"
-                                required
+								required
+							/>
+						}
+
+						{
+							<ComboSelect
+								type="multiselect"
+								groups
+								data={this.state.groups}
+								icon="fa fa-chevron-down"
+								iconSelectInactive="fa fa-circle-thin"
+								iconSelectActive="fa fa-check"
+								search="smart"
+								sort="string"
+								value={this.state.groups[0]}
+								disabled={false}
+								onChange={this.fakeFunction}
+								map={{ text: this.getText, value: this.getValue }}
+								onToggle={this.fakeToggle}
+								defaultText="Select damn group"
+								required
 							/>
 						}
 					</div>
