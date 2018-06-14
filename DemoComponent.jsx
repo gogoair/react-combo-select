@@ -7,49 +7,96 @@ export default class Demo extends Component {
 
 		this.state = {
 			text: '-Select me-',
-			data: [
-				{ text: '1air-JA007D', win: 'win-111', value: 'JA007D', number: 0 },
-				{ text: '1air-JA008D', win: 'win-222', value: 'JA008D', number: 0 },
-				{ text: '1air-JA009D', win: 'win-333', value: 'JA009D', number: 1 },
-				{ text: '111air-JA107D', win: 'win-444', value: 'JA010D', number: 1 },
-				{ text: '111air-JA107R', win: 'win-555', value: 'JA107R', number: 1 },
-				{ text: '11air-JA008D1', win: 'win-2221', value: 'JA0081D', number: 0 },
-				{ text: '11air-JA009D2', win: 'win-3332', value: 'JA009D2', number: 1 },
-				{ text: '11air-JA107D3', win: 'win-4443', value: 'JA010D3', number: 1 },
-				{ text: '11air-JA107R4', win: 'win-5554', value: 'JA107R4', number: 1 },
-				{ text: '11air-JA008D5', win: 'win-2225', value: 'JA008D5', number: 0 },
-				{ text: 'air-JA009D8', win: 'win-3336', value: 'JA009D6', number: 1 },
-				{ text: 'air-JA107D6', win: 'win-4447', value: 'JA010D7', number: 1 },
-				{ text: 'air-JA107R7', win: 'win-5558', value: 'JA107R8', number: 1 },
-				{ text: 'air-JA107Y9', win: 'win-6669', value: 'JA107Y9', number: 1 },
-			],
+			// data: [
+			// 	{ text: '1air-JA007D', win: 'win-111', value: 'JA007D', number: 0 },
+			// 	{ text: '1air-JA008D', win: 'win-222', value: 'JA008D', number: 0 },
+			// 	{ text: '1air-JA009D', win: 'win-333', value: 'JA009D', number: 1 },
+			// 	{ text: '111air-JA107D', win: 'win-444', value: 'JA010D', number: 1 },
+			// 	{ text: '111air-JA107R', win: 'win-555', value: 'JA107R', number: 1 },
+			// 	{ text: '11air-JA008D1', win: 'win-2221', value: 'JA0081D', number: 0 },
+			// 	{ text: '11air-JA009D2', win: 'win-3332', value: 'JA009D2', number: 1 },
+			// 	{ text: '11air-JA107D3', win: 'win-4443', value: 'JA010D3', number: 1 },
+			// 	{ text: '11air-JA107R4', win: 'win-5554', value: 'JA107R4', number: 1 },
+			// 	{ text: '11air-JA008D5', win: 'win-2225', value: 'JA008D5', number: 0 },
+			// 	{ text: 'air-JA009D8', win: 'win-3336', value: 'JA009D6', number: 1 },
+			// 	{ text: 'air-JA107D6', win: 'win-4447', value: 'JA010D7', number: 1 },
+			// 	{ text: 'air-JA107R7', win: 'win-5558', value: 'JA107R8', number: 1 },
+			// 	{ text: 'air-JA107Y9', win: 'win-6669', value: 'JA107Y9', number: 1 },
+			// ],
 			groups: [
 				{
-					groupName: 'AAL',
+					groupName: 'Airlines',
 					options: [
-						{ text: 'air-JA107Y9', win: 'win-6669', value: 'JA107Y9', number: 1 },
-						{ text: 'air-JA107D6', win: 'win-4447', value: 'JA010D7', number: 1 },
-						{ text: 'air-JA107R7', win: 'win-5558', value: 'JA107R8', number: 1 },
+						{
+							text: 'AAL',
+							win: 'AAL',
+							value: 'AAL',
+							number: 1,
+						},
+						{
+							text: 'ACA',
+							win: 'ACA',
+							value: 'ACA',
+							number: 1,
+						},
+						{
+							text: 'GNR',
+							win: 'GNR',
+							value: 'GNR',
+							number: 1,
+						},
+						{
+							text: 'ZZT',
+							win: 'ZZT',
+							value: 'ZZT',
+							number: 1,
+						},
+						{
+							text: 'JAL',
+							win: 'JAL',
+							value: 'JAL',
+							number: 1,
+						},
+						{
+							text: 'WOR',
+							win: 'WOR',
+							value: 'WOR',
+							number: 1,
+						},
 					],
 				},
 				{
-					groupName: 'DAL',
+					groupName: 'Other',
 					options: [
-						{ text: '11air-JA107D3', win: 'win-4443', value: 'JA010D3', number: 1 },
-						{ text: '11air-JA009D2', win: 'win-3332', value: 'JA009D2', number: 1 },
-						{ text: '11air-JA107R4', win: 'win-5554', value: 'JA107R4', number: 1 },
-					],
-				},
-				{
-					groupName: 'WAR',
-					options: [
-						{ text: '1air-JA008D', win: 'win-222', value: 'JA008D', number: 0 },
-						{ text: '1air-JA007D', win: 'win-111', value: 'JA007D', number: 0 },
-						{ text: '1air-JA009D', win: 'win-333', value: 'JA009D', number: 1 },
+						{
+							text: 'T-Mobile',
+							win: 'T-Mobile',
+							value: 'T-Mobile',
+							number: 1,
+						},
+						{
+							text: 'Startek',
+							win: 'Startek',
+							value: 'Startek',
+							number: 1,
+						},
+						{
+							text: 'Airtech',
+							win: 'Airtech',
+							value: 'Airtech',
+							number: 1,
+						},
+						{
+							text: 'SkyPartner',
+							win: 'SkyPartner',
+							value: 'SkyPartner',
+							number: 1,
+						},
 					],
 				},
 			],
 			selectedValue: { text: 'air-JA007D', win: 'win-111', value: 'JA007D' },
+			selectedGroupVals: ['AAL', 'GNR', 'T-Mobile', 'Startek'],
 		};
 	}
 
@@ -136,6 +183,7 @@ export default class Demo extends Component {
 					<br />
 					<br />
 					<div style={{ position: 'relative' }}>
+						{/*
 						{
 							<ComboSelect
 								type="select"
@@ -193,6 +241,7 @@ export default class Demo extends Component {
 								required
 							/>
 						}
+					*/}
 
 						{
 							<ComboSelect
@@ -204,13 +253,12 @@ export default class Demo extends Component {
 								iconSelectActive="fa fa-check"
 								search="smart"
 								sort="string"
-								value={this.state.groups[0]}
+								value={this.state.selectedGroupVals}
 								disabled={false}
 								onChange={this.fakeFunction}
 								map={{ text: this.getText, value: this.getValue }}
 								onToggle={this.fakeToggle}
-								defaultText="Select damn group"
-								required
+								defaultText="Select Partner"
 							/>
 						}
 					</div>
