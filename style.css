@@ -174,7 +174,13 @@
 	box-sizing: border-box;
 	cursor: pointer;
 	background-color: white;
+	/* NOTE: Remove font family rule */
 	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.combo-select .combo-select-body .combo-select-group__wrapper {
+	display: flex;
+	flex-direction: column;
 }
 
 .combo-select .combo-select-body .combo-select-group h4 {

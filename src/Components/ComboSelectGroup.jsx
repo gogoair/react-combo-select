@@ -1,3 +1,4 @@
+/* eslint-disable  */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
@@ -19,8 +20,8 @@ export default class ComboSelectGroup extends Component {
 
 		return (
 			<div className="combo-select-group">
-				<div style={{ display: 'flex', flexDirection: 'column' }}>
-					<h4>{groupName}</h4>
+				<h4>{groupName}</h4>
+				<div className="combo-select-group__wrapper">
 					{data &&
 						data.map((option, i) => {
 							return (
@@ -28,7 +29,7 @@ export default class ComboSelectGroup extends Component {
 									key={option.text}
 									onClick={() => this.props.selectItem(option)}
 									className={'combo-select-group__item' + (option.selected ? ' selected' : '')}
-									onMouseEnter={() => this.props.focusItem(index * 5 + i)}
+									onMouseEnter={() => this.props.focusItem(i)}
 								>
 									{generateInput(option.selected, type, iconSelectActive, iconSelectInactive)}
 									{option.text}

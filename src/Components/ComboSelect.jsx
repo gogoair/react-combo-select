@@ -171,11 +171,13 @@ export default class ComboSelect extends Component {
 			let i = 0;
 			let outside = true;
 			let elementHeight;
+			let data;
 
-			let data = this.state.data.length;
 			if (!this.props.groups) {
+				data = this.state.data.length;
 				elementHeight = this.comboSelectRef.getElementsByClassName('combo-select-item')[0].clientHeight;
 			} else {
+				data = this.state.data.reduce((acc, curr) => acc + curr.data.length, 0);
 				elementHeight = this.comboSelectRef.getElementsByClassName('combo-select-group__item')[0].clientHeight;
 			}
 			let menuHeight = this.scrollRef.clientHeight;
@@ -183,6 +185,8 @@ export default class ComboSelect extends Component {
 			let potentialScrollBottom =
 				this.comboSelectRef.getElementsByClassName(specialClass)[0].scrollTop + menuHeight + event.deltaY;
 			let maximumScroll = data * elementHeight;
+
+			console.log(maximumScroll, potentialScrollBottom);
 
 			if (
 				potentialScrollBottom <= maximumScroll &&
@@ -237,6 +241,12 @@ export default class ComboSelect extends Component {
 					target.className.indexOf('combo-select-item') > -1
 				) {
 					// nothing
+				} else if (
+					target.className &&
+					typeof target.className == 'string' &&
+					target.className.indexOf('combo-select-group__item') > -1
+				) {
+					// nothing
 				} else {
 					event.preventDefault();
 					this.toggleMenu();
@@ -251,7 +261,7 @@ export default class ComboSelect extends Component {
 	 * @param target
 	 * @returns {boolean}
 	 */
-	checkParentElement = target => target.parentElement != null;
+	checkParentElement = target => !!target.parentElement;
 
 	/**
 	 * Generate head (texts)
@@ -618,7 +628,6 @@ export default class ComboSelect extends Component {
 						const options = group.data.sort(
 							(a, b) => (a.text.toString() > b.text.toString() ? 1 : b.text.toString() > a.text.toString() ? -1 : 0)
 						);
-
 						return { ...group, data: options };
 					}
 				});
@@ -1019,6 +1028,8 @@ export default class ComboSelect extends Component {
 
 		paddingTop = paddingTop > -1 ? paddingTop : 0;
 		paddingBottom = paddingBottom > -1 ? paddingBottom : 0;
+
+		console.log('focusedItem', focusedItem);
 
 		let windowHeight = comboSelectBody.clientHeight - paddingTop - paddingBottom;
 		let elementHeight = focusedItem.clientHeight;
