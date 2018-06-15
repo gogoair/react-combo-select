@@ -29,7 +29,7 @@ export default class ComboSelectGroup extends Component {
 									key={option.text}
 									onClick={() => this.props.selectItem(option)}
 									className={'combo-select-group__item' + (option.selected ? ' selected' : '')}
-									onMouseEnter={() => this.props.focusItem(i)}
+									onMouseEnter={() => this.props.focusItem(i + index)}
 								>
 									{generateInput(option.selected, type, iconSelectActive, iconSelectInactive)}
 									{option.text}

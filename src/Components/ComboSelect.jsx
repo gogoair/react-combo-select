@@ -172,21 +172,20 @@ export default class ComboSelect extends Component {
 			let outside = true;
 			let elementHeight;
 			let data;
+			let maximumScroll;
 
 			if (!this.props.groups) {
 				data = this.state.data.length;
 				elementHeight = this.comboSelectRef.getElementsByClassName('combo-select-item')[0].clientHeight;
+				maximumScroll = data * elementHeight;
 			} else {
-				data = this.state.data.reduce((acc, curr) => acc + curr.data.length, 0);
+				data = this.state.data.reduce((acc, curr) => acc + curr.data.length + 1, 0);
 				elementHeight = this.comboSelectRef.getElementsByClassName('combo-select-group__item')[0].clientHeight;
+				maximumScroll = data * elementHeight * 2;
 			}
 			let menuHeight = this.scrollRef.clientHeight;
-
 			let potentialScrollBottom =
 				this.comboSelectRef.getElementsByClassName(specialClass)[0].scrollTop + menuHeight + event.deltaY;
-			let maximumScroll = data * elementHeight;
-
-			console.log(maximumScroll, potentialScrollBottom);
 
 			if (
 				potentialScrollBottom <= maximumScroll &&
@@ -367,6 +366,14 @@ export default class ComboSelect extends Component {
 	_generateBody = () => {
 		let style = this.calculateMetric();
 		let body = '';
+		const startIndex = (i, groups) => {
+			return groups.reduce((acc, currValue, currIndex) => {
+				if (i > currIndex) {
+					return acc + currValue.data.length;
+				}
+				return acc;
+			}, 0);
+		};
 
 		if (Array.isArray(this.state.data)) {
 			body = this.state.data.map((item, i) => {
@@ -393,7 +400,7 @@ export default class ComboSelect extends Component {
 						key={item.groupName}
 						{...transformDataAttributes(this.listItemDataTransformer, item)}
 						item={item}
-						index={i}
+						index={startIndex(i, this.state.data)}
 						focused={focused}
 						focusItem={this.focusItem.bind(this)}
 						selectItem={this.selectItem.bind(this)}
