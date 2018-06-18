@@ -427,7 +427,7 @@ export default class ComboSelect extends Component {
 						event.stopPropagation();
 					}
 				}}
-				onChange={() => throttle(this.filterBySearch(this.mappedData, this.searchInputRef.value), 200)}
+				onChange={() => throttle(this.filterBySearch(), 200)}
 			/>
 		) : (
 			''
@@ -683,44 +683,53 @@ export default class ComboSelect extends Component {
 	};
 
 	/**
-	 * Filter data to match searched term
+	 * Filter group data to match searched term
 	 */
-	filterGroupsBySearch = (data, filterBy) =>
-		data.map(group => {
-			console.log(group);
-			group.data = group.data.filter(item => {
-				if (
-					item.text
-						.toString()
-						.toLowerCase()
-						.indexOf(filterBy) > -1
-				) {
-					return item;
+	filterGroupsBySearch = filter => {
+		const data = [];
+
+		for (let group in this.mappedData) {
+			if (this.mappedData.hasOwnProperty(group)) {
+				data.push({
+					groupName: this.mappedData[group].groupName,
+					data: [],
+				});
+
+				for (const item of this.mappedData[group].data) {
+					if (
+						item.text
+							.toString()
+							.toLowerCase()
+							.indexOf(filter) > -1
+					) {
+						data[group].data.push(item);
+					}
 				}
-			});
-			return group;
-		});
+			}
+		}
+		return this.setState({ data });
+	};
 
 	/**
 	 * Filter data to match searched term
 	 */
-	filterBySearch = (dataToFilter, value) => {
-		if (!value) return;
-
-		let filter = value.toLowerCase();
+	filterBySearch = () => {
+		if (!this.searchInputRef) return;
+		let filter = this.searchInputRef.value.toLowerCase();
 		let data = [];
 
 		if (this.props.groups) {
-			data = this.filterGroupsBySearch(dataToFilter, filter);
+			return this.filterGroupsBySearch(filter);
 		} else {
-			for (let i in dataToFilter) {
+			console.log('!!!');
+			for (let i in this.mappedData) {
 				if (
-					dataToFilter[i].text
+					this.mappedData[i].text
 						.toString()
 						.toLowerCase()
 						.indexOf(filter) > -1
 				) {
-					data.push(dataToFilter[i]);
+					data.push(this.mappedData[i]);
 				}
 			}
 		}
@@ -1203,6 +1212,8 @@ export default class ComboSelect extends Component {
 	render() {
 		let head = this._generateHead();
 		let body = this._generateBody();
+
+		console.log('STATE IN RENDER', this.state);
 
 		return (
 			<div
