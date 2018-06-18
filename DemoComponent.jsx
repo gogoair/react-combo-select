@@ -66,6 +66,58 @@ export default class Demo extends Component {
 					],
 				},
 				{
+					groupName: 'OEM',
+					options: [
+						{
+							text: 'OEM1',
+							win: 'OEM1',
+							value: 'OEM1',
+							number: 1,
+						},
+						{
+							text: 'OEM Provider',
+							win: 'OEM Provider',
+							value: 'OEM Provider',
+							number: 1,
+						},
+						{
+							text: 'OEM2',
+							win: 'OEM2',
+							value: 'OEM2',
+							number: 1,
+						},
+					],
+				},
+				{
+					groupName: 'IFC Provider',
+					options: [
+						{
+							text: 'IFC Provider 1',
+							win: 'IFC Provider 1',
+							value: 'IFC Provider 1',
+							number: 1,
+						},
+						{
+							text: 'IFC Provider 2',
+							win: 'IFC Provider 2',
+							value: 'IFC Provider 2',
+							number: 1,
+						},
+						{
+							text: 'IFC Provider 76',
+							win: 'IFC Provider 76',
+							value: 'IFC Provider 76',
+							number: 1,
+						},
+						{
+							text: 'SkyPartner',
+							win: 'SkyPartner',
+							value: 'SkyPartner',
+							number: 1,
+						},
+					],
+				},
+				{
 					groupName: 'Other',
 					options: [
 						{
@@ -78,18 +130,6 @@ export default class Demo extends Component {
 							text: 'Startek',
 							win: 'Startek',
 							value: 'Startek',
-							number: 1,
-						},
-						{
-							text: 'Airtech',
-							win: 'Airtech',
-							value: 'Airtech',
-							number: 1,
-						},
-						{
-							text: 'SkyPartner',
-							win: 'SkyPartner',
-							value: 'SkyPartner',
 							number: 1,
 						},
 					],
