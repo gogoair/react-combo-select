@@ -3,11 +3,11 @@
 import React from 'react';
 import ComboSelect from '../src/Components/ComboSelect';
 
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import sinon from 'sinon';
 import { expect } from 'chai';
 
-describe('Placeholder updates', () => {
+describe('Option groups', () => {
 	beforeEach(() => {
 		sinon.spy(ComboSelect.prototype, 'componentDidMount');
 	});
@@ -28,33 +28,49 @@ describe('Placeholder updates', () => {
 						number: 1,
 					},
 					{
-						text: 'ACA',
-						win: 'ACA',
-						value: 'ACA',
-						number: 1,
-					},
-					{
 						text: 'GNR',
 						win: 'GNR',
 						value: 'GNR',
 						number: 1,
 					},
+				],
+			},
+			{
+				groupName: 'OEM',
+				options: [
 					{
-						text: 'ZZT',
-						win: 'ZZT',
-						value: 'ZZT',
+						text: 'OEM1',
+						win: 'OEM1',
+						value: 'OEM1',
 						number: 1,
 					},
 					{
-						text: 'JAL',
-						win: 'JAL',
-						value: 'JAL',
+						text: 'OEM Provider',
+						win: 'OEM Provider',
+						value: 'OEM Provider',
+						number: 1,
+					},
+				],
+			},
+			{
+				groupName: 'IFC Provider',
+				options: [
+					{
+						text: 'IFC Provider 1',
+						win: 'IFC Provider 1',
+						value: 'IFC Provider 1',
 						number: 1,
 					},
 					{
-						text: 'WOR',
-						win: 'WOR',
-						value: 'WOR',
+						text: 'IFC Provider 2',
+						win: 'IFC Provider 2',
+						value: 'IFC Provider 2',
+						number: 1,
+					},
+					{
+						text: 'IFC Provider 76',
+						win: 'IFC Provider 76',
+						value: 'IFC Provider 76',
 						number: 1,
 					},
 				],
@@ -74,48 +90,55 @@ describe('Placeholder updates', () => {
 						value: 'Startek',
 						number: 1,
 					},
-					{
-						text: 'Airtech',
-						win: 'Airtech',
-						value: 'Airtech',
-						number: 1,
-					},
-					{
-						text: 'SkyPartner',
-						win: 'SkyPartner',
-						value: 'SkyPartner',
-						number: 1,
-					},
 				],
 			},
 		],
 		selectedValue: { text: 'air-JA007D', win: 'win-111', value: 'JA007D' },
 		selectedGroupVals: ['AAL', 'GNR', 'T-Mobile', 'Startek'],
+		data: [
+			{ text: '1air-JA007D', win: 'win-111', value: 'JA007D', number: 0 },
+			{ text: '1air-JA008D', win: 'win-222', value: 'JA008D', number: 0 },
+			{ text: '1air-JA009D', win: 'win-333', value: 'JA009D', number: 1 },
+			{ text: '111air-JA107D', win: 'win-444', value: 'JA010D', number: 1 },
+		],
 	};
 
 	it('should render group items', () => {
-		const wrapper = mount(<ComboSelect data={data.groups} groups multiselect sort="string" />);
-
-		expect(wrapper.find('.combo-select-head').text()).to.equal(comboPlaceholder);
+		const wrapper = mount(<ComboSelect data={data.groups} groups multiselect />);
+		expect(wrapper.find('.combo-select-group')).to.have.length(data.groups.length);
 	});
 
-	it('component updates placeholder when prop defaultText changes', () => {
-		const comboPlaceholder = 'First Placeholder';
-		const wrapper = mount(
-			<ComboSelect data={data} text={comboPlaceholder} map={{ text: 'text', value: true }} sort="string" />
-		);
-		expect(wrapper.find('.combo-select-head').text()).to.equal(comboPlaceholder);
-
-		const comboPlaceholder2 = 'Second Placeholder';
-		wrapper.setProps({ defaultText: comboPlaceholder2, text: null });
-		expect(wrapper.find('.combo-select-head').text()).to.equal(comboPlaceholder2);
-
-		const comboPlaceholder3 = 'Third Placeholder';
-		wrapper.setProps({ text: comboPlaceholder3, defaultText: null });
-		expect(wrapper.find('.combo-select-head').text()).to.equal(comboPlaceholder3);
-
-		const comboPlaceholder4 = 'Fourth Placeholder';
-		wrapper.setProps({ text: comboPlaceholder4, defaultText: 'Select' });
-		expect(wrapper.find('.combo-select-head').text()).to.equal(comboPlaceholder4);
+	it('should not render group items if groups prop is not provided', () => {
+		const wrapper = mount(<ComboSelect data={data.data} multiselect />);
+		expect(wrapper.find('.combo-select-group')).to.have.length(0);
 	});
+
+	it('should correctly render group item', () => {
+		const wrapper = mount(<ComboSelect data={data.groups} groups multiselect />);
+		expect(
+			wrapper
+				.find('.combo-select-group')
+				.first()
+				.find('.combo-select-group__item')
+		).to.have.length(data.groups[0].options.length);
+	});
+
+	it('should transform input values to be usable by groups', () => {
+		data.groups[0].options[0] = { text: '1air-JA007D', win: 'win-111', value: 'JA007D', number: 0 };
+		const wrapper = mount(<ComboSelect data={data.groups} groups multiselect />);
+
+		expect(wrapper.state().data[0].data[0]).to.deep.equal({
+			text: '1air-JA007D',
+			value: 'JA007D',
+			selected: false,
+			parent: 'Airlines',
+		});
+	});
+
+	// it('should display items as selected if they are selected in incoming data', () => {
+	// 	const wrapper = shallow(<ComboSelect data={data.groups} groups multiselect />);
+	// 	const findSelectedGroupItems = wrapper.instance().findSelectedGroupItems();
+
+	// 	// console.log(findSelectedGroupItems);
+	// });
 });

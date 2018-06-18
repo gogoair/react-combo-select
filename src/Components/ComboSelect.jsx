@@ -533,7 +533,6 @@ export default class ComboSelect extends Component {
 	 * @returns {boolean}
 	 */
 	findSelectedByKey = (item, keyData, key) => {
-		// console.log('ARGS', { item, keyData, key });
 		let selected;
 
 		if (Array.isArray(keyData)) {
@@ -721,7 +720,6 @@ export default class ComboSelect extends Component {
 		if (this.props.groups) {
 			return this.filterGroupsBySearch(filter);
 		} else {
-			console.log('!!!');
 			for (let i in this.mappedData) {
 				if (
 					this.mappedData[i].text
@@ -1060,8 +1058,6 @@ export default class ComboSelect extends Component {
 		paddingTop = paddingTop > -1 ? paddingTop : 0;
 		paddingBottom = paddingBottom > -1 ? paddingBottom : 0;
 
-		console.log('focusedItem', focusedItem);
-
 		let windowHeight = comboSelectBody.clientHeight - paddingTop - paddingBottom;
 		let elementHeight = focusedItem.clientHeight;
 		let elementOffsetTop = focusedItem.offsetTop - paddingTop;
@@ -1212,8 +1208,6 @@ export default class ComboSelect extends Component {
 	render() {
 		let head = this._generateHead();
 		let body = this._generateBody();
-
-		console.log('STATE IN RENDER', this.state);
 
 		return (
 			<div
