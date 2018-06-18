@@ -252,6 +252,7 @@ export default class Demo extends Component {
 								scrollHeight={270}
 								preferredDirection="down"
 								sort="string"
+								search="smart"
 								value={this.state.selectedGroupVals}
 								disabled={false}
 								onChange={this.fakeFunction}

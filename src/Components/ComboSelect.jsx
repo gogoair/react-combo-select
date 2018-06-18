@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import ComboSelectItem from './ComboSelectItem';
 import ComboSelectGroup from './ComboSelectGroup';
-import { transformDataAttributes } from '../helpers';
+import { transformDataAttributes, throttle } from '../helpers';
 import DropDownIcon from './svg/DropDownIcon';
 
 // TODO: move to this.specialClass
@@ -427,12 +427,7 @@ export default class ComboSelect extends Component {
 						event.stopPropagation();
 					}
 				}}
-				onChange={() => {
-					if (this.searchTimeout) {
-						clearTimeout(this.searchTimeout);
-					}
-					this.searchTimeout = setTimeout(this.filterBySearch.bind(this), 200);
-				}}
+				onChange={() => throttle(this.filterBySearch(this.mappedData, this.searchInputRef.value), 200)}
 			/>
 		) : (
 			''
@@ -690,26 +685,46 @@ export default class ComboSelect extends Component {
 	/**
 	 * Filter data to match searched term
 	 */
-	filterBySearch = () => {
-		if (!this.searchInputRef) return;
+	filterGroupsBySearch = (data, filterBy) =>
+		data.map(group => {
+			console.log(group);
+			group.data = group.data.filter(item => {
+				if (
+					item.text
+						.toString()
+						.toLowerCase()
+						.indexOf(filterBy) > -1
+				) {
+					return item;
+				}
+			});
+			return group;
+		});
 
-		let filter = this.searchInputRef.value.toLowerCase();
+	/**
+	 * Filter data to match searched term
+	 */
+	filterBySearch = (dataToFilter, value) => {
+		if (!value) return;
+
+		let filter = value.toLowerCase();
 		let data = [];
 
-		for (let i in this.mappedData) {
-			if (
-				this.mappedData[i].text
-					.toString()
-					.toLowerCase()
-					.indexOf(filter) > -1
-			) {
-				data.push(this.mappedData[i]);
+		if (this.props.groups) {
+			data = this.filterGroupsBySearch(dataToFilter, filter);
+		} else {
+			for (let i in dataToFilter) {
+				if (
+					dataToFilter[i].text
+						.toString()
+						.toLowerCase()
+						.indexOf(filter) > -1
+				) {
+					data.push(dataToFilter[i]);
+				}
 			}
 		}
-
-		this.setState({
-			data,
-		});
+		return this.setState({ data });
 	};
 
 	/**
