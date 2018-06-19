@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import ComboSelectItem from './ComboSelectItem';
-import { transformDataAttributes } from '../helpers';
+import ComboSelectGroup from './ComboSelectGroup';
+import { transformDataAttributes, throttle } from '../helpers';
 import DropDownIcon from './svg/DropDownIcon';
 
 // TODO: move to this.specialClass
@@ -169,14 +170,22 @@ export default class ComboSelect extends Component {
 			// Safety fuse
 			let i = 0;
 			let outside = true;
+			let elementHeight;
+			let data;
+			let maximumScroll;
 
-			let data = this.state.data.length;
-			let elementHeight = this.comboSelectRef.getElementsByClassName('combo-select-item')[0].clientHeight;
+			if (!this.props.groups) {
+				data = this.state.data.length;
+				elementHeight = this.comboSelectRef.getElementsByClassName('combo-select-item')[0].clientHeight;
+				maximumScroll = data * elementHeight;
+			} else {
+				data = this.state.data.reduce((acc, curr) => acc + curr.data.length + 1, 0);
+				elementHeight = this.comboSelectRef.getElementsByClassName('combo-select-group__item')[0].clientHeight;
+				maximumScroll = data * elementHeight * 2;
+			}
 			let menuHeight = this.scrollRef.clientHeight;
-
 			let potentialScrollBottom =
 				this.comboSelectRef.getElementsByClassName(specialClass)[0].scrollTop + menuHeight + event.deltaY;
-			let maximumScroll = data * elementHeight;
 
 			if (
 				potentialScrollBottom <= maximumScroll &&
@@ -231,6 +240,12 @@ export default class ComboSelect extends Component {
 					target.className.indexOf('combo-select-item') > -1
 				) {
 					// nothing
+				} else if (
+					target.className &&
+					typeof target.className == 'string' &&
+					target.className.indexOf('combo-select-group__item') > -1
+				) {
+					// nothing
 				} else {
 					event.preventDefault();
 					this.toggleMenu();
@@ -245,7 +260,7 @@ export default class ComboSelect extends Component {
 	 * @param target
 	 * @returns {boolean}
 	 */
-	checkParentElement = target => target.parentElement != null;
+	checkParentElement = target => !!target.parentElement;
 
 	/**
 	 * Generate head (texts)
@@ -347,16 +362,25 @@ export default class ComboSelect extends Component {
 	 * Generate body (menu)
 	 * @returns {XML}
 	 */
+
 	_generateBody = () => {
 		let style = this.calculateMetric();
 		let body = '';
+		const startIndex = (i, groups) => {
+			return groups.reduce((acc, currValue, currIndex) => {
+				if (i > currIndex) {
+					return acc + currValue.data.length;
+				}
+				return acc;
+			}, 0);
+		};
 
 		if (Array.isArray(this.state.data)) {
 			body = this.state.data.map((item, i) => {
 				let focused = false;
 				this.focus == i ? (focused = true) : '';
 
-				return (
+				return !this.props.groups ? (
 					<div key={i}>
 						<ComboSelectItem
 							{...transformDataAttributes(this.listItemDataTransformer, item)}
@@ -371,6 +395,18 @@ export default class ComboSelect extends Component {
 							iconSelectInactive={this.iconSelectInactive}
 						/>
 					</div>
+				) : (
+					<ComboSelectGroup
+						key={item.groupName}
+						{...transformDataAttributes(this.listItemDataTransformer, item)}
+						item={item}
+						index={startIndex(i, this.state.data)}
+						focused={focused}
+						focusItem={this.focusItem.bind(this)}
+						selectItem={this.selectItem.bind(this)}
+						iconSelectActive={this.iconSelectActive}
+						iconSelectInactive={this.iconSelectInactive}
+					/>
 				);
 			});
 		}
@@ -391,12 +427,7 @@ export default class ComboSelect extends Component {
 						event.stopPropagation();
 					}
 				}}
-				onChange={() => {
-					if (this.searchTimeout) {
-						clearTimeout(this.searchTimeout);
-					}
-					this.searchTimeout = setTimeout(this.filterBySearch.bind(this), 200);
-				}}
+				onChange={() => throttle(this.filterBySearch(), 200)}
 			/>
 		) : (
 			''
@@ -426,6 +457,26 @@ export default class ComboSelect extends Component {
 		);
 	};
 
+	findSelectedGroupItems = (data, values = []) => {
+		const selectedItems = {
+			text: [],
+			value: [],
+		};
+
+		data.forEach(group => {
+			if (group.data) {
+				group.data.forEach(groupItem => {
+					if (groupItem.selected) {
+						selectedItems.text.push(groupItem.text);
+						selectedItems.value.push(groupItem.value);
+					}
+				});
+			}
+		});
+
+		return selectedItems;
+	};
+
 	/**
 	 * Connect text and value if component received only one of them
 	 * @param data
@@ -438,12 +489,17 @@ export default class ComboSelect extends Component {
 			value: [],
 		};
 
-		data.forEach(item => {
-			if (this.findSelectedItem(item, text, value)) {
-				selectedItems.text.push(item.text);
-				selectedItems.value.push(item.value);
-			}
-		});
+		if (this.props.groups) {
+			selectedItems = this.findSelectedGroupItems(data);
+		} else {
+			data.forEach(item => {
+				if (this.findSelectedItem(item, text, value)) {
+					selectedItems.text.push(item.text);
+					selectedItems.value.push(item.value);
+				}
+			});
+		}
+
 		return selectedItems;
 	};
 
@@ -478,6 +534,7 @@ export default class ComboSelect extends Component {
 	 */
 	findSelectedByKey = (item, keyData, key) => {
 		let selected;
+
 		if (Array.isArray(keyData)) {
 			for (let i in keyData) {
 				if (item[key] == keyData[i]) {
@@ -559,6 +616,36 @@ export default class ComboSelect extends Component {
 		return ar;
 	};
 
+	sortGroupData = (data, sortMethod) => {
+		let sortedData = [];
+
+		if (data) {
+			let sort = sortMethod ? sortMethod : 'string';
+			// No alphanum sort for groups right now
+
+			if (sort == 'string') {
+				sortedData = data.map(group => {
+					if (group.data.length) {
+						const options = group.data.sort(
+							(a, b) => (a.text.toString() > b.text.toString() ? 1 : b.text.toString() > a.text.toString() ? -1 : 0)
+						);
+						return { ...group, data: options };
+					}
+				});
+			} else if (sort == 'number') {
+				sortedData = data.map(group => {
+					if (group.data.length) {
+						const options = group.data.sort((a, b) => a.text - b.text);
+						return { ...group, data: options };
+					}
+				});
+			}
+		}
+
+		this.focus = -1;
+		return sortedData;
+	};
+
 	/**
 	 * Sort data alphabetically or numerically
 	 * @param data
@@ -568,22 +655,25 @@ export default class ComboSelect extends Component {
 		if (this.props.sort === false || this.props.sort === 'off') {
 			return data;
 		}
-
 		let sortedData = [];
 
-		if (data && data[0]) {
-			let sort = this.props.sort ? this.props.sort : 'alphanum';
+		if (this.props.groups) {
+			sortedData = this.sortGroupData(data, this.props.sort);
+		} else {
+			if (data && data[0]) {
+				let sort = this.props.sort ? this.props.sort : 'alphanum';
 
-			if (sort == 'string') {
-				sortedData = data.sort(function(a, b) {
-					return a.text.toString() > b.text.toString() ? 1 : b.text.toString() > a.text.toString() ? -1 : 0;
-				});
-			} else if (sort == 'number') {
-				sortedData = data.sort(function(a, b) {
-					return a.text - b.text;
-				});
-			} else {
-				sortedData = this.alphanumSort(data);
+				if (sort == 'string') {
+					sortedData = data.sort(function(a, b) {
+						return a.text.toString() > b.text.toString() ? 1 : b.text.toString() > a.text.toString() ? -1 : 0;
+					});
+				} else if (sort == 'number') {
+					sortedData = data.sort(function(a, b) {
+						return a.text - b.text;
+					});
+				} else {
+					sortedData = this.alphanumSort(data);
+				}
 			}
 		}
 
@@ -592,28 +682,56 @@ export default class ComboSelect extends Component {
 	};
 
 	/**
+	 * Filter group data to match searched term
+	 */
+	filterGroupsBySearch = filter => {
+		const data = [];
+
+		for (let group in this.mappedData) {
+			if (this.mappedData.hasOwnProperty(group)) {
+				data.push({
+					groupName: this.mappedData[group].groupName,
+					data: [],
+				});
+
+				for (const item of this.mappedData[group].data) {
+					if (
+						item.text
+							.toString()
+							.toLowerCase()
+							.indexOf(filter) > -1
+					) {
+						data[group].data.push(item);
+					}
+				}
+			}
+		}
+		return this.setState({ data });
+	};
+
+	/**
 	 * Filter data to match searched term
 	 */
 	filterBySearch = () => {
 		if (!this.searchInputRef) return;
-
 		let filter = this.searchInputRef.value.toLowerCase();
 		let data = [];
 
-		for (let i in this.mappedData) {
-			if (
-				this.mappedData[i].text
-					.toString()
-					.toLowerCase()
-					.indexOf(filter) > -1
-			) {
-				data.push(this.mappedData[i]);
+		if (this.props.groups) {
+			return this.filterGroupsBySearch(filter);
+		} else {
+			for (let i in this.mappedData) {
+				if (
+					this.mappedData[i].text
+						.toString()
+						.toLowerCase()
+						.indexOf(filter) > -1
+				) {
+					data.push(this.mappedData[i]);
+				}
 			}
 		}
-
-		this.setState({
-			data,
-		});
+		return this.setState({ data });
 	};
 
 	/**
@@ -714,15 +832,16 @@ export default class ComboSelect extends Component {
 	 */
 	focusItem = focus => {
 		if (this.state.data && this.state.data.length > 0) {
-			const items = this.comboSelectRef.getElementsByClassName('combo-select-item');
-
-			if (items && this.focus >= 0 && items[this.focus]) {
-				items[this.focus].style.backgroundColor = '';
+			if (!this.props.groups) {
+				const items = this.comboSelectRef.getElementsByClassName('combo-select-item');
+				if (items && this.focus >= 0 && items[this.focus]) {
+					items[this.focus].style.backgroundColor = '';
+				}
+				items[focus].style.backgroundColor = '#f7f7f7';
+				this.focus = focus;
+			} else {
+				this.focus = focus;
 			}
-
-			items[focus].style.backgroundColor = '#f7f7f7';
-
-			this.focus = focus;
 		}
 	};
 
@@ -812,6 +931,52 @@ export default class ComboSelect extends Component {
 		return style;
 	};
 
+	selectGroupItem = item => {
+		const { text, value, selected, parent } = item;
+		const updatedData = [...this.state.data];
+		// Because of this names of the items and names of the partners should be unique
+		const partnerData = updatedData.filter(group => group.groupName === parent);
+		const itemData = partnerData[0].data.filter(datum => datum.value === value)[0];
+
+		itemData.selected = !itemData.selected;
+
+		if (!this.state.text) {
+			return this.setState(
+				{
+					data: updatedData,
+					text: [text],
+					value: [value],
+				},
+				() => {
+					this.props.onChange ? this.props.onChange([...value], text) : '';
+				}
+			);
+		}
+
+		let index = this.state.text.findIndex(txtItem => text === txtItem);
+		let texts = [...this.state.text];
+		let values = [...this.state.value];
+
+		if (index !== -1) {
+			texts.splice(index, 1);
+			values.splice(index, 1);
+		} else {
+			texts.push(text);
+			values.push(value);
+		}
+
+		return this.setState(
+			{
+				data: updatedData,
+				text: texts,
+				value: values,
+			},
+			() => {
+				this.props.onChange ? this.props.onChange(values, texts) : '';
+			}
+		);
+	};
+
 	/**
 	 * Logic for selecting item(s) in select vs multiselect
 	 * @param item
@@ -819,8 +984,9 @@ export default class ComboSelect extends Component {
 	selectItem = item => {
 		if (!item) return;
 
-		let text = item.text;
-		let value = item.value;
+		if (this.props.groups) return this.selectGroupItem(item);
+
+		let { text, value } = item;
 
 		if (this.state.type === 'select') {
 			this.setState({ text: text, value: value }, () => {
@@ -877,8 +1043,13 @@ export default class ComboSelect extends Component {
 	 * Control scrolling within open menu with arrowZ
 	 */
 	controlScrolling = () => {
+		let focusedItem;
 		const comboSelectBody = this.bodyRef;
-		const focusedItem = this.comboSelectRef.getElementsByClassName('combo-select-item')[this.focus];
+		if (this.props.groups) {
+			focusedItem = this.comboSelectRef.getElementsByClassName('combo-select-group__item')[this.focus];
+		} else {
+			focusedItem = this.comboSelectRef.getElementsByClassName('combo-select-item')[this.focus];
+		}
 		const specialClassElement = this.comboSelectRef.getElementsByClassName(specialClass)[0];
 
 		let paddingTop = parseInt(comboSelectBody.style.paddingTop);
@@ -970,18 +1141,14 @@ export default class ComboSelect extends Component {
 
 	mapAllData = data => {
 		let mappedData = [];
-
-		if (data)
-			mappedData = data.map(
-				function(item) {
-					return this.mapSingleData(item);
-				}.bind(this)
-			);
-
+		if (data) {
+			if (this.props.groups) mappedData = data.map(group => this.mapGroupData(group));
+			else mappedData = data.map(item => this.mapSingleData(item));
+		}
 		return mappedData;
 	};
 
-	mapSingleData = item => {
+	mapSingleData = (item, parent) => {
 		let text = '';
 		let value = '';
 
@@ -1012,7 +1179,30 @@ export default class ComboSelect extends Component {
 			value = item;
 		}
 
-		return { text: text, value: value };
+		if (parent && this.props.groups) {
+			// Transform item here, check for groups, check if item is in incoming data of selected values ,
+			// and mark it as { selected: true } if it is
+			const groupItem = {
+				text,
+				value,
+				selected: false,
+				parent,
+			};
+			if (this.props.value) {
+				if (this.props.value.includes(item.text)) {
+					groupItem.selected = true;
+				}
+			}
+			return groupItem;
+		} else return { text, value };
+	};
+
+	mapGroupData = group => {
+		const partnerName = group.groupName;
+		if (group.options.length) {
+			const data = group.options.map(option => this.mapSingleData(option, partnerName));
+			return { groupName: partnerName, data };
+		}
 	};
 
 	render() {

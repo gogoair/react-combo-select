@@ -23,7 +23,120 @@ export default class Demo extends Component {
 				{ text: 'air-JA107R7', win: 'win-5558', value: 'JA107R8', number: 1 },
 				{ text: 'air-JA107Y9', win: 'win-6669', value: 'JA107Y9', number: 1 },
 			],
+			groups: [
+				{
+					groupName: 'Airlines',
+					options: [
+						{
+							text: 'AAL',
+							win: 'AAL',
+							value: 'AAL',
+							number: 1,
+						},
+						{
+							text: 'ACA',
+							win: 'ACA',
+							value: 'ACA',
+							number: 1,
+						},
+						{
+							text: 'GNR',
+							win: 'GNR',
+							value: 'GNR',
+							number: 1,
+						},
+						{
+							text: 'ZZT',
+							win: 'ZZT',
+							value: 'ZZT',
+							number: 1,
+						},
+						{
+							text: 'JAL',
+							win: 'JAL',
+							value: 'JAL',
+							number: 1,
+						},
+						{
+							text: 'WOR',
+							win: 'WOR',
+							value: 'WOR',
+							number: 1,
+						},
+					],
+				},
+				{
+					groupName: 'OEM',
+					options: [
+						{
+							text: 'OEM1',
+							win: 'OEM1',
+							value: 'OEM1',
+							number: 1,
+						},
+						{
+							text: 'OEM Provider',
+							win: 'OEM Provider',
+							value: 'OEM Provider',
+							number: 1,
+						},
+						{
+							text: 'OEM2',
+							win: 'OEM2',
+							value: 'OEM2',
+							number: 1,
+						},
+					],
+				},
+				{
+					groupName: 'IFC Provider',
+					options: [
+						{
+							text: 'IFC Provider 1',
+							win: 'IFC Provider 1',
+							value: 'IFC Provider 1',
+							number: 1,
+						},
+						{
+							text: 'IFC Provider 2',
+							win: 'IFC Provider 2',
+							value: 'IFC Provider 2',
+							number: 1,
+						},
+						{
+							text: 'IFC Provider 76',
+							win: 'IFC Provider 76',
+							value: 'IFC Provider 76',
+							number: 1,
+						},
+						{
+							text: 'SkyPartner',
+							win: 'SkyPartner',
+							value: 'SkyPartner',
+							number: 1,
+						},
+					],
+				},
+				{
+					groupName: 'Other',
+					options: [
+						{
+							text: 'T-Mobile',
+							win: 'T-Mobile',
+							value: 'T-Mobile',
+							number: 1,
+						},
+						{
+							text: 'Startek',
+							win: 'Startek',
+							value: 'Startek',
+							number: 1,
+						},
+					],
+				},
+			],
 			selectedValue: { text: 'air-JA007D', win: 'win-111', value: 'JA007D' },
+			selectedGroupVals: ['AAL', 'GNR', 'T-Mobile', 'Startek'],
 		};
 	}
 
@@ -99,129 +212,94 @@ export default class Demo extends Component {
 		// ];
 
 		return (
-			<div>
-				<form action="">
-					<input type="text" required />
-					<br />
-					<br />
-					<br />
-					<br />
-					<br />
-					<br />
-					<br />
-					<div style={{ position: 'relative' }}>
-						{
-							<ComboSelect
-								type="select"
-								data={this.state.data}
-								sort="number"
-								search="smart"
-								disabled={false}
-								onChange={this.fakeFunction}
-								map={{ text: 'text', value: true }}
-								onToggle={this.fakeToggle}
-								required
-                            />
-						}
+			<form action="">
+				<input type="text" required />
 
-						{
-							<ComboSelect
-								type="multiselect"
-								data={this.state.data}
-								sort="number"
-								search="smart"
-								disabled={false}
-								onChange={this.fakeFunction}
-								map={{ text: 'text', value: true }}
-								onToggle={this.fakeToggle}
-								dataAttr={{
-									wrapper: {
-										automation: 'ComboSelect',
-									},
-									dropDownHeader: {
-										automation: 'ComboSelectHeader',
-									},
-									listItem: {
-										automation: item => item && 'ComboSelectItem_' + item.text,
-									},
-								}}
-								required
-							/>
-						}
+				{
+					<ComboSelect
+						type="select"
+						data={this.state.data}
+						sort="number"
+						search="smart"
+						disabled={false}
+						onChange={this.fakeFunction}
+						map={{ text: 'text', value: true }}
+						onToggle={this.fakeToggle}
+						required
+					/>
+				}
 
-						{
-							<ComboSelect
-								type="multiselect"
-								data={this.state.data}
-								icon="fa fa-chevron-down"
-								iconSelectInactive="fa fa-circle-thin"
-								iconSelectActive="fa fa-check"
-								search="smart"
-								value={this.state.data[1]}
-								sort="alphanum"
-								disabled={false}
-								onChange={this.fakeFunction}
-								map={{ text: this.getText, value: this.getValue }}
-								onToggle={this.fakeToggle}
-								defaultText="Select more than one"
-                                required
-							/>
-						}
-					</div>
+				{
+					<ComboSelect
+						type="multiselect"
+						data={this.state.data}
+						sort="number"
+						search="smart"
+						disabled={false}
+						onChange={this.fakeFunction}
+						map={{ text: 'text', value: true }}
+						onToggle={this.fakeToggle}
+						dataAttr={{
+							wrapper: {
+								automation: 'ComboSelect',
+							},
+							dropDownHeader: {
+								automation: 'ComboSelectHeader',
+							},
+							listItem: {
+								automation: item => item && 'ComboSelectItem_' + item.text,
+							},
+						}}
+						required
+					/>
+				}
 
-					<div style={{ position: 'relative', marginTop: '20px' }}>
-						{/*<ComboSelect data={this.state.data}
-						 icon="fa fa-chevron-circle-down" search="smart" value={this.state.data[1]}
-						 sort="off"
-						 disabled={false} onChange={this.fakeFunction} map={{text: 'win', value: 'value'}}
-						 onToggle={this.fakeToggle} borderActive="red" required/>*/}
-					</div>
+				{
+					<ComboSelect
+						type="multiselect"
+						data={this.state.data}
+						icon="fa fa-chevron-down"
+						iconSelectInactive="fa fa-circle-thin"
+						iconSelectActive="fa fa-check"
+						search="smart"
+						value={this.state.data[1]}
+						sort="alphanum"
+						disabled={false}
+						onChange={this.fakeFunction}
+						map={{ text: this.getText, value: this.getValue }}
+						onToggle={this.fakeToggle}
+						defaultText="Select more than one"
+						required
+					/>
+				}
 
-					<br />
-					<br />
-					<input type="text" required />
-					<br />
-					<br />
-					<input type="text" required />
-					<br />
-					<br />
-					<input type="submit" />
-				</form>
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-			</div>
+				{
+					<ComboSelect
+						type="multiselect"
+						groups
+						data={this.state.groups}
+						icon="fa fa-chevron-down"
+						iconSelectInactive="fa fa-circle-thin"
+						iconSelectActive="fa fa-check"
+						scrollHeight={270}
+						preferredDirection="down"
+						sort="string"
+						search="smart"
+						value={this.state.selectedGroupVals}
+						disabled={false}
+						onChange={this.fakeFunction}
+						map={{ text: this.getText, value: this.getValue }}
+						onToggle={this.fakeToggle}
+						defaultText="Select Partner"
+					/>
+				}
+
+				<input type="text" required />
+
+				<input type="text" required />
+
+				<input type="submit" />
+			</form>
 		);
 	}
 }

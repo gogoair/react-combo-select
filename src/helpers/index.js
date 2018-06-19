@@ -1,3 +1,10 @@
+import React from 'react';
+
+import CircleIcon from '../Components/svg/CircleIcon';
+import CircleIconChecked from '../Components/svg/CircleIconChecked';
+import SquareIcon from '../Components/svg/SquareIcon';
+import SquareIconChecked from '../Components/svg/SquareIconChecked';
+
 // if stringOrFunction is string result will be that string
 // if stringOrFunction is function result will be stringOrFunction(data)
 const transformOneDataAttribute = (stringOrFunction, data) => {
@@ -39,4 +46,69 @@ export const formatLength = numberOrString => {
 		return numberOrString + 'px';
 	}
 	return numberOrString;
+};
+
+export const generateInput = (selected, type, iconSelectActive, iconSelectInactive) => {
+	let input;
+
+	if (type == 'select') {
+		if (selected) {
+			if (iconSelectActive === true || iconSelectActive === undefined || iconSelectActive === null) {
+				input = <CircleIconChecked />;
+			} else if (iconSelectActive === false || iconSelectActive === 'off') {
+				input = '';
+			} else {
+				input = <i className={iconSelectActive} />;
+			}
+		} else {
+			if (iconSelectInactive === true || iconSelectActive === undefined || iconSelectActive === null) {
+				input = <CircleIcon />;
+			} else if (iconSelectInactive === false || iconSelectInactive === 'off') {
+				input = '';
+			} else {
+				input = <i className={iconSelectInactive} />;
+			}
+		}
+	} else {
+		// multiselect
+		if (selected) {
+			if (iconSelectActive === true || iconSelectActive === undefined || iconSelectActive === null) {
+				input = <SquareIconChecked />;
+			} else if (iconSelectActive === false || iconSelectActive === 'off') {
+				input = '';
+			} else {
+				input = <i className={iconSelectActive} />;
+			}
+		} else {
+			if (iconSelectInactive === true || iconSelectActive === undefined || iconSelectActive === null) {
+				input = <SquareIcon />;
+			} else if (iconSelectInactive === false || iconSelectInactive === 'off') {
+				input = '';
+			} else {
+				input = <i className={iconSelectInactive} />;
+			}
+		}
+	}
+	return input;
+};
+
+export const throttle = (func, limit) => {
+	let lastFunc;
+	let lastRan;
+	return function() {
+		const context = this;
+		const args = arguments;
+		if (!lastRan) {
+			func.apply(context, args);
+			lastRan = Date.now();
+		} else {
+			clearTimeout(lastFunc);
+			lastFunc = setTimeout(function() {
+				if (Date.now() - lastRan >= limit) {
+					func.apply(context, args);
+					lastRan = Date.now();
+				}
+			}, limit - (Date.now() - lastRan));
+		}
+	};
 };

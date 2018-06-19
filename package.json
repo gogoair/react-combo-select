@@ -5,7 +5,7 @@
   "description": "React select component that can be used as a single select, multiselect, search",
   "main": "./lib/Components/ComboSelect.js",
   "scripts": {
-    "start": "./node_modules/.bin/webpack-dev-server --config webpack.config.js  --hot --progress --colors --port 8080 --open",
+    "start": "./node_modules/.bin/webpack-dev-server --config webpack.config.js  --hot --progress --colors --port 8085 --open",
     "test": "mocha -r mock-local-storage --compilers js:babel-core/register --require ./test/test.js \"test/**/*@(.js|.jsx)\"",
     "prepublish": "rm -rf lib && mkdir lib && ./node_modules/babel-cli/bin/babel.js src --out-dir lib"
   },
@@ -44,7 +44,9 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
-    "prop-types": "^15.6.0"
+    "prop-types": "^15.6.0",
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0"
   },
   "peerDependencies": {
     "react": "*",
