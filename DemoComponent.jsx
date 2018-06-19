@@ -166,7 +166,7 @@ export default class Demo extends Component {
 	}
 
 	fakeFunction(value, text) {
-		console.log(value, text);
+		// console.log(value, text);
 	}
 
 	fakeToggle(open, value, text) {
@@ -212,150 +212,94 @@ export default class Demo extends Component {
 		// ];
 
 		return (
-			<div>
-				<form action="">
-					<input type="text" required />
-					<br />
-					<br />
-					<br />
-					<br />
-					<br />
-					<br />
-					<br />
-					<div style={{ position: 'relative' }}>
-						{
-							<ComboSelect
-								type="select"
-								data={this.state.data}
-								sort="number"
-								search="smart"
-								disabled={false}
-								onChange={this.fakeFunction}
-								map={{ text: 'text', value: true }}
-								onToggle={this.fakeToggle}
-								required
-							/>
-						}
+			<form action="">
+				<input type="text" required />
 
-						{
-							<ComboSelect
-								type="multiselect"
-								data={this.state.data}
-								sort="number"
-								search="smart"
-								disabled={false}
-								onChange={this.fakeFunction}
-								map={{ text: 'text', value: true }}
-								onToggle={this.fakeToggle}
-								dataAttr={{
-									wrapper: {
-										automation: 'ComboSelect',
-									},
-									dropDownHeader: {
-										automation: 'ComboSelectHeader',
-									},
-									listItem: {
-										automation: item => item && 'ComboSelectItem_' + item.text,
-									},
-								}}
-								required
-							/>
-						}
+				{
+					<ComboSelect
+						type="select"
+						data={this.state.data}
+						sort="number"
+						search="smart"
+						disabled={false}
+						onChange={this.fakeFunction}
+						map={{ text: 'text', value: true }}
+						onToggle={this.fakeToggle}
+						required
+					/>
+				}
 
-						{
-							<ComboSelect
-								type="multiselect"
-								data={this.state.data}
-								icon="fa fa-chevron-down"
-								iconSelectInactive="fa fa-circle-thin"
-								iconSelectActive="fa fa-check"
-								search="smart"
-								value={this.state.data[1]}
-								sort="alphanum"
-								disabled={false}
-								onChange={this.fakeFunction}
-								map={{ text: this.getText, value: this.getValue }}
-								onToggle={this.fakeToggle}
-								defaultText="Select more than one"
-								required
-							/>
-						}
+				{
+					<ComboSelect
+						type="multiselect"
+						data={this.state.data}
+						sort="number"
+						search="smart"
+						disabled={false}
+						onChange={this.fakeFunction}
+						map={{ text: 'text', value: true }}
+						onToggle={this.fakeToggle}
+						dataAttr={{
+							wrapper: {
+								automation: 'ComboSelect',
+							},
+							dropDownHeader: {
+								automation: 'ComboSelectHeader',
+							},
+							listItem: {
+								automation: item => item && 'ComboSelectItem_' + item.text,
+							},
+						}}
+						required
+					/>
+				}
 
-						{
-							<ComboSelect
-								type="multiselect"
-								groups
-								data={this.state.groups}
-								icon="fa fa-chevron-down"
-								iconSelectInactive="fa fa-circle-thin"
-								iconSelectActive="fa fa-check"
-								scrollHeight={270}
-								preferredDirection="down"
-								sort="string"
-								search="smart"
-								value={this.state.selectedGroupVals}
-								disabled={false}
-								onChange={this.fakeFunction}
-								map={{ text: this.getText, value: this.getValue }}
-								onToggle={this.fakeToggle}
-								defaultText="Select Partner"
-							/>
-						}
-					</div>
+				{
+					<ComboSelect
+						type="multiselect"
+						data={this.state.data}
+						icon="fa fa-chevron-down"
+						iconSelectInactive="fa fa-circle-thin"
+						iconSelectActive="fa fa-check"
+						search="smart"
+						value={this.state.data[1]}
+						sort="alphanum"
+						disabled={false}
+						onChange={this.fakeFunction}
+						map={{ text: this.getText, value: this.getValue }}
+						onToggle={this.fakeToggle}
+						defaultText="Select more than one"
+						required
+					/>
+				}
 
-					<div style={{ position: 'relative', marginTop: '20px' }}>
-						{/*<ComboSelect data={this.state.data}
-						 icon="fa fa-chevron-circle-down" search="smart" value={this.state.data[1]}
-						 sort="off"
-						 disabled={false} onChange={this.fakeFunction} map={{text: 'win', value: 'value'}}
-						 onToggle={this.fakeToggle} borderActive="red" required/>*/}
-					</div>
+				{
+					<ComboSelect
+						type="multiselect"
+						groups
+						data={this.state.groups}
+						icon="fa fa-chevron-down"
+						iconSelectInactive="fa fa-circle-thin"
+						iconSelectActive="fa fa-check"
+						scrollHeight={270}
+						preferredDirection="down"
+						sort="string"
+						search="smart"
+						value={this.state.selectedGroupVals}
+						disabled={false}
+						onChange={this.fakeFunction}
+						map={{ text: this.getText, value: this.getValue }}
+						onToggle={this.fakeToggle}
+						defaultText="Select Partner"
+					/>
+				}
 
-					<br />
-					<br />
-					<input type="text" required />
-					<br />
-					<br />
-					<input type="text" required />
-					<br />
-					<br />
-					<input type="submit" />
-				</form>
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-				<br />
-			</div>
+				<input type="text" required />
+
+				<input type="text" required />
+
+				<input type="submit" />
+			</form>
 		);
 	}
 }

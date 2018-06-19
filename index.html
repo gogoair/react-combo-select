@@ -7,125 +7,50 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<style>
-		#react {
-			width: 400px;
-			float: left;
+		body {
+			display: flex;
+			background: #40b4e5;
+			width: 100%;
+			height: 100%;
 		}
 
-		.normal {
-			width: 600px;
-			float: right;
+		#react {
+			/* width: 400px; */
+			display: flex;
+			width: 100%;
+			height: 100%;
+			flex: 1;
+			justify-content: center;
+			align-items: center;
+			padding: 2rem;
+		}
+
+		#react form {
+			width: 450px;
+			padding: 1rem;
+			display: flex;
+			flex-direction: column;
+			align-items: stretch;
+			justify-content: center;
+		}
+
+		#react form>* {
+			margin-bottom: 1rem;
+		}
+
+		#react form>input[type="text"],
+		#react form>input[type="submit"] {
+			text-align: center;
+			height: 20px;
+			width: 50%;
+			margin: 1rem auto;
 		}
 	</style>
 </head>
 
 <body>
 	<section id="react"></section>
-	<section class="normal">
-		<!--I need this to test scrolling and menu positioning-->
-		<select style="float: right">
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-			<option value="win">win</option>
-		</select>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-	</section>
+
 	<script src="bundle.js"></script>
 
 </body>
