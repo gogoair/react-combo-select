@@ -26,7 +26,7 @@ export default class ComboSelectGroup extends Component {
 						data.map((option, i) => {
 							return (
 								<span
-									key={option.text}
+									key={option.value}
 									onClick={() => this.props.selectItem(option)}
 									className={'combo-select-group__item' + (option.selected ? ' selected' : '')}
 									onMouseEnter={() => this.props.focusItem(i + index)}
