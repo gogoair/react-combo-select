@@ -1189,7 +1189,7 @@ export default class ComboSelect extends Component {
 				parent,
 			};
 			if (this.props.value) {
-				if (this.props.value.includes(item.text)) {
+				if (this.props.value.includes(item.value)) {
 					groupItem.selected = true;
 				}
 			}
