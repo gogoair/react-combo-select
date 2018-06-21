@@ -1198,10 +1198,9 @@ export default class ComboSelect extends Component {
 	};
 
 	mapGroupData = group => {
-		const partnerName = group.groupName;
 		if (group.options.length) {
-			const data = group.options.map(option => this.mapSingleData(option, partnerName));
-			return { groupName: partnerName.replace('_', ' '), data };
+			const data = group.options.map(option => this.mapSingleData(option, group.groupName));
+			return { groupName: group.groupName, data };
 		}
 	};
 
