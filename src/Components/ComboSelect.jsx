@@ -643,7 +643,7 @@ export default class ComboSelect extends Component {
 		}
 
 		this.focus = -1;
-		return sortedData;
+		return sortedData.sort((a, b) => a.groupName.localeCompare(b.groupName));
 	};
 
 	/**

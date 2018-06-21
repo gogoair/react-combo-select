@@ -276,7 +276,7 @@ export default class Demo extends Component {
 				{
 					<ComboSelect
 						type="multiselect"
-						groups
+						groups="enabled"
 						data={this.state.groups}
 						icon="fa fa-chevron-down"
 						iconSelectInactive="fa fa-circle-thin"
