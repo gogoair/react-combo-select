@@ -89,7 +89,7 @@ export default class Demo extends Component {
 					],
 				},
 				{
-					groupName: 'IFC Provider',
+					groupName: 'IFC_Provider',
 					options: [
 						{
 							text: 'IFC Provider 1',
