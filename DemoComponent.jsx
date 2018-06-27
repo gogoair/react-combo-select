@@ -25,24 +25,24 @@ export default class Demo extends Component {
 			],
 			groups: [
 				{
-					groupName: 'Airlines',
+					groupName: 'Group 1',
 					options: [
 						{
-							text: 'AAL',
-							win: 'AAL',
-							value: 'AAL',
+							text: 'AGP',
+							win: 'AGP',
+							value: 'AGP',
 							number: 1,
 						},
 						{
-							text: 'ACA',
-							win: 'ACA',
-							value: 'ACA',
+							text: 'COM',
+							win: 'COM',
+							value: 'COM',
 							number: 1,
 						},
 						{
-							text: 'GNR',
-							win: 'GNR',
-							value: 'GNR',
+							text: 'XSS',
+							win: 'XSS',
+							value: 'XSS',
 							number: 1,
 						},
 						{
@@ -66,59 +66,59 @@ export default class Demo extends Component {
 					],
 				},
 				{
-					groupName: 'OEM',
+					groupName: 'Group 2',
 					options: [
 						{
-							text: 'OEM1',
-							win: 'OEM1',
-							value: 'OEM1',
+							text: 'virtual',
+							win: 'virtual',
+							value: 'virtual',
 							number: 1,
 						},
 						{
-							text: 'OEM Provider',
-							win: 'OEM Provider',
-							value: 'OEM Provider',
+							text: 'wireless',
+							win: 'wireless',
+							value: 'wireless',
 							number: 1,
 						},
 						{
-							text: 'OEM2',
-							win: 'OEM2',
-							value: 'OEM2',
+							text: 'primary',
+							win: 'primary',
+							value: 'primary',
 							number: 1,
 						},
 					],
 				},
 				{
-					groupName: 'IFC_Provider',
+					groupName: 'Group 3',
 					options: [
 						{
-							text: 'IFC Provider 1',
-							win: 'IFC Provider 1',
-							value: 'IFC Provider 1',
+							text: 'Champlin LLC',
+							win: 'Champlin LLC',
+							value: 'Champlin LLC',
 							number: 1,
 						},
 						{
-							text: 'IFC Provider 2',
-							win: 'IFC Provider 2',
-							value: 'IFC Provider 2',
+							text: 'Erdman Inc',
+							win: 'Erdman Inc',
+							value: 'Erdman Inc',
 							number: 1,
 						},
 						{
-							text: 'IFC Provider 76',
-							win: 'IFC Provider 76',
-							value: 'IFC Provider 76',
+							text: 'Bergnaum and Sons',
+							win: 'Bergnaum and Sons',
+							value: 'Bergnaum and Sons',
 							number: 1,
 						},
 						{
-							text: 'SkyPartner',
-							win: 'SkyPartner',
-							value: 'SkyPartner',
+							text: 'Yundt LLC',
+							win: 'Yundt LLC',
+							value: 'Yundt LLC',
 							number: 1,
 						},
 					],
 				},
 				{
-					groupName: 'Other',
+					groupName: 'Group 4',
 					options: [
 						{
 							text: 'T-Mobile',
@@ -137,6 +137,7 @@ export default class Demo extends Component {
 			],
 			selectedValue: { text: 'air-JA007D', win: 'win-111', value: 'JA007D' },
 			selectedGroupVals: ['AAL', 'GNR', 'T-Mobile', 'Startek'],
+			selectedSingleGroupVal: ['WOR'],
 		};
 	}
 
@@ -281,12 +282,26 @@ export default class Demo extends Component {
 						icon="fa fa-chevron-down"
 						iconSelectInactive="fa fa-circle-thin"
 						iconSelectActive="fa fa-check"
-						scrollHeight={270}
 						preferredDirection="down"
+						scrollMaxHeight={250}
 						sort="string"
 						search="smart"
 						value={this.state.selectedGroupVals}
 						disabled={false}
+						onChange={this.fakeFunction}
+						map={{ text: this.getText, value: this.getValue }}
+						onToggle={this.fakeToggle}
+						defaultText="Select Partner"
+					/>
+				}
+
+				{
+					<ComboSelect
+						groups="enabled"
+						data={this.state.groups}
+						iconSelectInactive={false}
+						iconSelectActive={false}
+						value={this.state.selectedSingleGroupVal}
 						onChange={this.fakeFunction}
 						map={{ text: this.getText, value: this.getValue }}
 						onToggle={this.fakeToggle}
