@@ -955,13 +955,13 @@ export default class ComboSelect extends Component {
 
 			style.body.top = 41;
 			style.body.paddingTop = this.ifSearch(style) ? 45 : 0;
+
 			style.body.paddingBottom = this.props.controls && this.state.type == 'multiselect' ? 45 : 0;
 
 			style.search.top = 48;
 
 			style.controls.top = elasticHeight + style.body.paddingTop + style.body.paddingBottom;
 		}
-
 		return style;
 	};
 

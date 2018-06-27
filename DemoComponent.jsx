@@ -283,7 +283,6 @@ export default class Demo extends Component {
 						iconSelectInactive="fa fa-circle-thin"
 						iconSelectActive="fa fa-check"
 						preferredDirection="down"
-						scrollMaxHeight={250}
 						sort="string"
 						search="smart"
 						value={this.state.selectedGroupVals}
