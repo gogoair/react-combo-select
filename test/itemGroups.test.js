@@ -24,7 +24,11 @@ describe('Option groups', () => {
 	});
 
 	it('should render group items', () => {
+<<<<<<< HEAD
 		const wrapper = mount(<ComboSelect data={data.groups} groups="enabled" type="multiselect" />);
+=======
+		const wrapper = mount(<ComboSelect data={data.groups} groups type="multiselect" />);
+>>>>>>> upstream/master
 		expect(wrapper.find('.combo-select-group')).to.have.length(data.groups.length);
 	});
 
@@ -34,7 +38,11 @@ describe('Option groups', () => {
 	});
 
 	it('should correctly render group item', () => {
+<<<<<<< HEAD
 		const wrapper = mount(<ComboSelect data={data.groups} groups="enabled" type="multiselect" />);
+=======
+		const wrapper = mount(<ComboSelect data={data.groups} groups type="multiselect" />);
+>>>>>>> upstream/master
 		expect(
 			wrapper
 				.find('.combo-select-group')
@@ -43,10 +51,27 @@ describe('Option groups', () => {
 		).to.have.length(data.groups[0].options.length);
 	});
 
+<<<<<<< HEAD
 	it('should display items as selected if they are selected in incoming data', () => {
 		const wrapper = mount(
 			<ComboSelect data={data.groups} groups="enabled" type="multiselect" value={data.selectedGroupVals} />
 		);
+=======
+	it('should transform input values to be usable by groups', () => {
+		data.groups[0].options[0] = { text: '1air-JA007D', win: 'win-111', value: 'JA007D', number: 0 };
+		const wrapper = mount(<ComboSelect data={data.groups} groups type="multiselect" />);
+
+		expect(wrapper.state().data[0].data[0]).to.deep.equal({
+			text: '1air-JA007D',
+			value: 'JA007D',
+			selected: false,
+			parent: 'Airlines',
+		});
+	});
+
+	it('should display items as selected if they are selected in incoming data', () => {
+		const wrapper = mount(<ComboSelect data={data.groups} groups type="multiselect" value={data.selectedGroupVals} />);
+>>>>>>> upstream/master
 		const mapAllData = wrapper.instance().mapAllData(data.groups);
 		const sortData = wrapper.instance().sortData(mapAllData);
 		const findSelectedGroupItems = wrapper.instance().findSelectedGroupItems(sortData);

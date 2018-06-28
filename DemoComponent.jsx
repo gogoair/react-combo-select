@@ -143,6 +143,26 @@ export default class Demo extends Component {
 				{
 					<ComboSelect
 						type="multiselect"
+						groups="enabled"
+						data={this.state.groups}
+						icon="fa fa-chevron-down"
+						iconSelectInactive="fa fa-circle-thin"
+						iconSelectActive="fa fa-check"
+						preferredDirection="down"
+						sort="string"
+						search="smart"
+						value={this.state.selectedGroupVals}
+						disabled={false}
+						onChange={this.fakeFunction}
+						map={{ text: this.getText, value: this.getValue }}
+						onToggle={this.fakeToggle}
+						defaultText="Select Partner"
+					/>
+				}
+
+				{
+					<ComboSelect
+						type="multiselect"
 						data={this.state.data}
 						sort="number"
 						search="smart"
