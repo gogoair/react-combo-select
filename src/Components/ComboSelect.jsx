@@ -397,6 +397,7 @@ export default class ComboSelect extends Component {
 					</div>
 				) : (
 					<ComboSelectGroup
+						type={this.state.type}
 						key={item.groupName}
 						{...transformDataAttributes(this.listItemDataTransformer, item)}
 						item={item}
@@ -457,7 +458,14 @@ export default class ComboSelect extends Component {
 		);
 	};
 
-	findSelectedGroupItems = (data, values = []) => {
+	/**
+	 * @data: array of groups
+	 * @deselectMode: boolean
+	 *
+	 * Deselect mode's purpose is to deselect all selected groups while in 'select' type
+	 * it returns groups array with all groups items selected: false. Used in this.selectGroupItem()
+	 */
+	findSelectedGroupItems = (data, deselectMode) => {
 		const selectedItems = {
 			text: [],
 			value: [],
@@ -466,14 +474,20 @@ export default class ComboSelect extends Component {
 		data.forEach(group => {
 			if (group.data) {
 				group.data.forEach(groupItem => {
-					if (groupItem.selected) {
-						selectedItems.text.push(groupItem.text);
-						selectedItems.value.push(groupItem.value);
+					if (deselectMode) {
+						if (groupItem.selected) {
+							groupItem.selected = false;
+						}
+					} else {
+						if (groupItem.selected) {
+							selectedItems.text.push(groupItem.text);
+							selectedItems.value.push(groupItem.value);
+						}
 					}
 				});
 			}
 		});
-
+		if (deselectMode) return data;
 		return selectedItems;
 	};
 
@@ -852,6 +866,8 @@ export default class ComboSelect extends Component {
 	 */
 	calculateMetric = () => {
 		if (this.comboSelectRef) {
+			// add minimum distance from top or bottom
+			const buffer = 100;
 			let comboSelect = this.comboSelectRef;
 			let viewportOffset = comboSelect.getBoundingClientRect();
 			let top = viewportOffset.top;
@@ -861,18 +877,26 @@ export default class ComboSelect extends Component {
 			let bottom = windowHeight - (top + elementHeight);
 			let overflow = true;
 			let maxHeight = null;
+			let direction;
+			let height;
 
-			let direction, height;
-
-			if (bottom + 100 > top) {
+			if (bottom > top) {
 				direction = 'down';
-				height = bottom - 15 - 77;
+				height = bottom - buffer;
 			} else {
 				direction = 'top';
-				height = top - 15 - 77;
+				height = top - buffer;
 			}
 
-			if (elementHeight * this.state.data.length < height) {
+			if (this.props.groups) {
+				const groupItemsLength = this.state.data.reduce((acc, curr) => acc + curr.data.length, 0);
+				if (elementHeight * groupItemsLength < height) {
+					height = 'auto';
+					overflow = false;
+				}
+			}
+
+			if (!this.props.groups && elementHeight * this.state.data.length < height) {
 				height = 'auto';
 				overflow = false;
 			}
@@ -916,65 +940,95 @@ export default class ComboSelect extends Component {
 
 			style.controls.top = -(height + style.body.paddingTop + style.body.paddingBottom);
 		} else {
-			let elasticHeight =
-				height && height != 'auto' ? height : elementHeight * (this.state.data.length > 0 ? this.state.data.length : 1);
+			let elasticHeight;
+
+			if (this.props.groups) {
+				const groupItemsLength = this.state.data.reduce((acc, curr) => acc + curr.data.length, 0);
+				elasticHeight =
+					height && height != 'auto' ? height : elementHeight * (groupItemsLength > 0 ? groupItemsLength : 1);
+			} else {
+				elasticHeight =
+					height && height != 'auto'
+						? height
+						: elementHeight * (this.state.data.length > 0 ? this.state.data.length : 1);
+			}
 
 			style.body.top = 41;
 			style.body.paddingTop = this.ifSearch(style) ? 45 : 0;
+
 			style.body.paddingBottom = this.props.controls && this.state.type == 'multiselect' ? 45 : 0;
 
 			style.search.top = 48;
 
 			style.controls.top = elasticHeight + style.body.paddingTop + style.body.paddingBottom;
 		}
-
 		return style;
 	};
 
 	selectGroupItem = item => {
 		const { text, value, selected, parent } = item;
-		const updatedData = [...this.state.data];
+		let updatedData = [...this.state.data];
 		// Because of this names of the items and names of the partners should be unique
 		const partnerData = updatedData.filter(group => group.groupName === parent);
 		const itemData = partnerData[0].data.filter(datum => datum.value === value)[0];
 
-		itemData.selected = !itemData.selected;
+		if (this.state.type === 'select') {
+			updatedData = this.findSelectedGroupItems(updatedData, true);
+			itemData.selected = !itemData.selected;
+			if (!this.state.text) {
+				return this.setState(
+					{
+						data: updatedData,
+						text,
+						value,
+					},
+					() => (this.props.onChange ? this.props.onChange(value, text) : '')
+				);
+			}
 
-		if (!this.state.text) {
+			return this.setState({ data: updatedData, text: text, value: value }, () => {
+				this.toggleMenu();
+				this.props.onChange ? this.props.onChange(value, text) : '';
+			});
+		} else {
+			itemData.selected = !itemData.selected;
+
+			if (!this.state.text) {
+				return this.setState(
+					{
+						data: updatedData,
+						text: [text],
+						value: [value],
+					},
+					() => {
+						this.props.onChange ? this.props.onChange([...value], text) : '';
+					}
+				);
+			}
+
+			let index = this.state.text.findIndex(txtItem => text === txtItem);
+			let texts = [...this.state.text];
+			let values = [...this.state.value];
+
+			if (index !== -1) {
+				texts.splice(index, 1);
+				values.splice(index, 1);
+			} else {
+				texts.push(text);
+				values.push(value);
+			}
+
 			return this.setState(
 				{
 					data: updatedData,
-					text: [text],
-					value: [value],
+					text: texts,
+					value: values,
 				},
 				() => {
-					this.props.onChange ? this.props.onChange([...value], text) : '';
+					this.props.onChange ? this.props.onChange(values, texts) : '';
 				}
 			);
 		}
-
-		let index = this.state.text.findIndex(txtItem => text === txtItem);
-		let texts = [...this.state.text];
-		let values = [...this.state.value];
-
-		if (index !== -1) {
-			texts.splice(index, 1);
-			values.splice(index, 1);
-		} else {
-			texts.push(text);
-			values.push(value);
-		}
-
-		return this.setState(
-			{
-				data: updatedData,
-				text: texts,
-				value: values,
-			},
-			() => {
-				this.props.onChange ? this.props.onChange(values, texts) : '';
-			}
-		);
 	};
 
 	/**

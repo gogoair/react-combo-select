@@ -26,7 +26,7 @@
 }
 
 .combo-select .combo-select-head path {
-	fill: #40b4e5;
+	fill: #595959;
 }
 
 .combo-select .combo-select-head.disabled path {
@@ -100,7 +100,7 @@
 }
 
 .combo-select .combo-select-body .combo-select-item.selected path {
-	fill: #40b4e5;
+	fill: #595959;
 }
 
 .combo-select .combo-select-body .combo-select-item:hover,
@@ -133,7 +133,7 @@
 	position: absolute;
 	right: 18px;
 	top: 12px;
-	color: #40b4e5;
+	color: #595959;
 }
 
 .combo-select .combo-select-body .combo-select-item i {
@@ -168,14 +168,11 @@
 .combo-select .combo-select-body .combo-select-group {
 	position: relative;
 	width: 100%;
-	padding-left: 19px;
 	text-align: left;
 	outline: none;
 	box-sizing: border-box;
 	cursor: pointer;
 	background-color: white;
-	/* NOTE: Remove font family rule */
-	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
 .combo-select .combo-select-body .combo-select-group__wrapper {
@@ -184,12 +181,15 @@
 }
 
 .combo-select .combo-select-body .combo-select-group h4 {
-	margin: 5px;
-	margin-left: 0;
+	margin: 0;
+	padding: 8px 0;
+	padding-left: 20px;
 }
 
 .combo-select .combo-select-body .combo-select-group .combo-select-group__item {
-	margin: 5px;
+	padding: 7px 0 7px 25px;
+	display: flex;
+	align-items: center;
 }
 
 .combo-select-body .combo-select-group .combo-select-group__item:hover,
@@ -208,7 +208,7 @@
 }
 
 .combo-select .combo-select-group .combo-select-group__item.selected path {
-	fill: #40b4e5;
+	fill: #595959;
 }
 
 .combo-select .combo-select-group .combo-select-group__item.selected.no-icon {

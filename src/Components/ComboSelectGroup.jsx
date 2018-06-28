@@ -32,6 +32,7 @@ export default class ComboSelectGroup extends Component {
 									onMouseEnter={() => this.props.focusItem(i + index)}
 								>
 									{generateInput(option.selected, type, iconSelectActive, iconSelectInactive)}
+									<span style={{ margin: '0 3px' }} />
 									{option.text}
 								</span>
 							);
