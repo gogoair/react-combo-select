@@ -47,7 +47,7 @@ export default class Demo extends Component {
 	}
 
 	fakeFunction(value, text) {
-		// console.log(value, text);
+		console.log('val:', value, 'txt:', text);
 	}
 
 	fakeToggle(open, value, text) {
@@ -113,29 +113,6 @@ export default class Demo extends Component {
 						required
 						ref={el => {
 							this.ComboRef1 = el;
-						}}
-					/>
-				}
-
-				{
-					<ComboSelect
-						type="multiselect"
-						groups="enabled"
-						data={this.state.groups}
-						icon="fa fa-chevron-down"
-						iconSelectInactive="fa fa-circle-thin"
-						iconSelectActive="fa fa-check"
-						preferredDirection="down"
-						sort="string"
-						search="smart"
-						value={this.state.selectedGroupVals}
-						disabled={false}
-						onChange={this.fakeFunction}
-						map={{ text: this.getText, value: this.getValue }}
-						onToggle={this.fakeToggle}
-						defaultText="Select Partner"
-						ref={el => {
-							this.ComboRef2 = el;
 						}}
 					/>
 				}

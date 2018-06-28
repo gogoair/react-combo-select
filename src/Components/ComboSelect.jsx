@@ -120,12 +120,18 @@ export default class ComboSelect extends Component {
 	resetValues = () => {
 		let data = [...this.state.data];
 		if (this.props.groups) data = this.findSelectedGroupItems(this.state.data, true);
+		this.focusItem(this.focus, true);
 
-		return this.setState({
-			data,
-			text: '',
-			value: '',
-		});
+		return this.setState(
+			{
+				data,
+				text: '',
+				value: '',
+			},
+			() => {
+				this.props.onChange ? this.props.onChange('', '') : '';
+			}
+		);
 	};
 
 	processDataAttributes = newProps => {
@@ -400,8 +406,8 @@ export default class ComboSelect extends Component {
 							index={i}
 							focused={focused}
 							type={this.state.type}
-							selectItem={this.selectItem.bind(this)}
-							focusItem={this.focusItem.bind(this)}
+							selectItem={this.selectItem}
+							focusItem={this.focusItem}
 							iconSelectActive={this.iconSelectActive}
 							iconSelectInactive={this.iconSelectInactive}
 						/>
@@ -414,8 +420,8 @@ export default class ComboSelect extends Component {
 						item={item}
 						index={startIndex(i, this.state.data)}
 						focused={focused}
-						focusItem={this.focusItem.bind(this)}
-						selectItem={this.selectItem.bind(this)}
+						focusItem={this.focusItem}
+						selectItem={this.selectItem}
 						iconSelectActive={this.iconSelectActive}
 						iconSelectInactive={this.iconSelectInactive}
 					/>
@@ -855,8 +861,14 @@ export default class ComboSelect extends Component {
 	 * Push state for focus on mouseover/keyboard control
 	 * @param focus
 	 */
-	focusItem = focus => {
-		if (this.state.data && this.state.data.length > 0) {
+	focusItem = (focus, deFocus) => {
+		if (deFocus) {
+			const items = this.comboSelectRef.getElementsByClassName('combo-select-item');
+			if (items && this.focus >= 0 && items[this.focus]) {
+				items[this.focus].style.backgroundColor = '';
+				this.focus = -1;
+			}
+		} else if (this.state.data && this.state.data.length > 0) {
 			if (!this.props.groups) {
 				const items = this.comboSelectRef.getElementsByClassName('combo-select-item');
 				if (items && this.focus >= 0 && items[this.focus]) {
@@ -864,6 +876,7 @@ export default class ComboSelect extends Component {
 				}
 				items[focus].style.backgroundColor = '#f7f7f7';
 				this.focus = focus;
+				console.log(focus);
 			} else {
 				this.focus = focus;
 			}
@@ -1062,11 +1075,11 @@ export default class ComboSelect extends Component {
 			if (typeof this.state.text === 'string') {
 				this.setState(
 					{
-						text: [...text],
-						value: [...value],
+						text: [text],
+						value: [value],
 					},
 					() => {
-						this.props.onChange ? this.props.onChange([...value], text) : '';
+						this.props.onChange ? this.props.onChange([value], text) : '';
 					}
 				);
 			} else {
