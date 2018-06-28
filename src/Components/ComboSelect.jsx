@@ -866,6 +866,8 @@ export default class ComboSelect extends Component {
 	 */
 	calculateMetric = () => {
 		if (this.comboSelectRef) {
+			// add minimum distance from top or bottom
+			const buffer = 100;
 			let comboSelect = this.comboSelectRef;
 			let viewportOffset = comboSelect.getBoundingClientRect();
 			let top = viewportOffset.top;
@@ -875,20 +877,19 @@ export default class ComboSelect extends Component {
 			let bottom = windowHeight - (top + elementHeight);
 			let overflow = true;
 			let maxHeight = null;
+			let direction;
+			let height;
 
-			let direction, height;
-
-			if (bottom + 100 > top) {
+			if (bottom > top) {
 				direction = 'down';
-				height = bottom - 15 - 77;
+				height = bottom - buffer;
 			} else {
 				direction = 'top';
-				height = top - 15 - 77;
+				height = top - buffer;
 			}
 
 			if (this.props.groups) {
-				const groupItemsLength =
-					this.state.data.reduce((acc, curr) => acc + curr.data.length, 0) + this.state.data.length;
+				const groupItemsLength = this.state.data.reduce((acc, curr) => acc + curr.data.length, 0);
 				if (elementHeight * groupItemsLength < height) {
 					height = 'auto';
 					overflow = false;
@@ -942,8 +943,7 @@ export default class ComboSelect extends Component {
 			let elasticHeight;
 
 			if (this.props.groups) {
-				const groupItemsLength =
-					this.state.data.reduce((acc, curr) => acc + curr.data.length, 0) + this.state.data.length;
+				const groupItemsLength = this.state.data.reduce((acc, curr) => acc + curr.data.length, 0);
 				elasticHeight =
 					height && height != 'auto' ? height : elementHeight * (groupItemsLength > 0 ? groupItemsLength : 1);
 			} else {

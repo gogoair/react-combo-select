@@ -103,17 +103,17 @@ describe('Option groups', () => {
 	});
 
 	it('should render group items', () => {
-		const wrapper = mount(<ComboSelect data={data.groups} groups multiselect />);
+		const wrapper = mount(<ComboSelect data={data.groups} groups type="multiselect" />);
 		expect(wrapper.find('.combo-select-group')).to.have.length(data.groups.length);
 	});
 
 	it('should not render group items if groups prop is not provided', () => {
-		const wrapper = mount(<ComboSelect data={data.data} multiselect />);
+		const wrapper = mount(<ComboSelect data={data.data} type="multiselect" />);
 		expect(wrapper.find('.combo-select-group')).to.have.length(0);
 	});
 
 	it('should correctly render group item', () => {
-		const wrapper = mount(<ComboSelect data={data.groups} groups multiselect />);
+		const wrapper = mount(<ComboSelect data={data.groups} groups type="multiselect" />);
 		expect(
 			wrapper
 				.find('.combo-select-group')
@@ -124,7 +124,7 @@ describe('Option groups', () => {
 
 	it('should transform input values to be usable by groups', () => {
 		data.groups[0].options[0] = { text: '1air-JA007D', win: 'win-111', value: 'JA007D', number: 0 };
-		const wrapper = mount(<ComboSelect data={data.groups} groups multiselect />);
+		const wrapper = mount(<ComboSelect data={data.groups} groups type="multiselect" />);
 
 		expect(wrapper.state().data[0].data[0]).to.deep.equal({
 			text: '1air-JA007D',
@@ -135,7 +135,7 @@ describe('Option groups', () => {
 	});
 
 	it('should display items as selected if they are selected in incoming data', () => {
-		const wrapper = mount(<ComboSelect data={data.groups} groups multiselect value={data.selectedGroupVals} />);
+		const wrapper = mount(<ComboSelect data={data.groups} groups type="multiselect" value={data.selectedGroupVals} />);
 		const mapAllData = wrapper.instance().mapAllData(data.groups);
 		const sortData = wrapper.instance().sortData(mapAllData);
 		const findSelectedGroupItems = wrapper.instance().findSelectedGroupItems(sortData);
