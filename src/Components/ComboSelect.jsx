@@ -117,6 +117,17 @@ export default class ComboSelect extends Component {
 		this.defaultText = newProps.text ? newProps.text : newProps.defaultText ? newProps.defaultText : 'Select';
 	}
 
+	resetValues = () => {
+		let data = [...this.state.data];
+		if (this.props.groups) data = this.findSelectedGroupItems(this.state.data, true);
+
+		return this.setState({
+			data,
+			text: '',
+			value: '',
+		});
+	};
+
 	processDataAttributes = newProps => {
 		const props = newProps || this.props;
 		const allowedKeys = ['wrapper', 'dropDownHeader', 'listItem'];
