@@ -4,6 +4,11 @@ import ComboSelect from './src/Components/ComboSelect';
 export default class Demo extends Component {
 	constructor(props) {
 		super(props);
+		this.ComboRef1 = null;
+		this.ComboRef2 = null;
+		this.ComboRef3 = null;
+		this.ComboRef4 = null;
+		this.ComboRef5 = null;
 
 		this.state = {
 			text: '-Select me-',
@@ -182,6 +187,10 @@ export default class Demo extends Component {
 		return item.win;
 	}
 
+	onReset = () => {
+		return this.ComboRef1.resetValues();
+	};
+
 	render() {
 		// var standardArray = ["DDD", "CCC", "BBB", "AAA"];
 		// var standardArray = [3, 1, 11, 111, 21, 33, 14, 32, 442];
@@ -227,6 +236,9 @@ export default class Demo extends Component {
 						map={{ text: 'text', value: true }}
 						onToggle={this.fakeToggle}
 						required
+						ref={el => {
+							this.ComboRef1 = el;
+						}}
 					/>
 				}
 
@@ -247,6 +259,9 @@ export default class Demo extends Component {
 						map={{ text: this.getText, value: this.getValue }}
 						onToggle={this.fakeToggle}
 						defaultText="Select Partner"
+						ref={el => {
+							this.ComboRef2 = el;
+						}}
 					/>
 				}
 
@@ -272,6 +287,9 @@ export default class Demo extends Component {
 							},
 						}}
 						required
+						ref={el => {
+							this.ComboRef3 = el;
+						}}
 					/>
 				}
 
@@ -291,6 +309,9 @@ export default class Demo extends Component {
 						onToggle={this.fakeToggle}
 						defaultText="Select more than one"
 						required
+						ref={el => {
+							this.ComboRef4 = el;
+						}}
 					/>
 				}
 
@@ -305,8 +326,15 @@ export default class Demo extends Component {
 						map={{ text: this.getText, value: this.getValue }}
 						onToggle={this.fakeToggle}
 						defaultText="Select Partner"
+						ref={el => {
+							this.ComboRef5 = el;
+						}}
 					/>
 				}
+
+				<button type="reset" style={{ width: '50%', margin: '0 auto' }} onClick={this.onReset}>
+					Reset Values
+				</button>
 
 				<input type="text" required />
 
