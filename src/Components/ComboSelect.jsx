@@ -876,7 +876,6 @@ export default class ComboSelect extends Component {
 				}
 				items[focus].style.backgroundColor = '#f7f7f7';
 				this.focus = focus;
-				console.log(focus);
 			} else {
 				this.focus = focus;
 			}
