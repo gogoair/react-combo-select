@@ -1,140 +1,20 @@
 import React, { Component } from 'react';
 import ComboSelect from './src/Components/ComboSelect';
+import { demoData } from './test/fixtures';
 
 export default class Demo extends Component {
 	constructor(props) {
 		super(props);
+		this.ComboRef1 = null;
+		this.ComboRef2 = null;
+		this.ComboRef3 = null;
+		this.ComboRef4 = null;
+		this.ComboRef5 = null;
 
 		this.state = {
 			text: '-Select me-',
-			data: [
-				{ text: '1air-JA007D', win: 'win-111', value: 'JA007D', number: 0 },
-				{ text: '1air-JA008D', win: 'win-222', value: 'JA008D', number: 0 },
-				{ text: '1air-JA009D', win: 'win-333', value: 'JA009D', number: 1 },
-				{ text: '111air-JA107D', win: 'win-444', value: 'JA010D', number: 1 },
-				{ text: '111air-JA107R', win: 'win-555', value: 'JA107R', number: 1 },
-				{ text: '11air-JA008D1', win: 'win-2221', value: 'JA0081D', number: 0 },
-				{ text: '11air-JA009D2', win: 'win-3332', value: 'JA009D2', number: 1 },
-				{ text: '11air-JA107D3', win: 'win-4443', value: 'JA010D3', number: 1 },
-				{ text: '11air-JA107R4', win: 'win-5554', value: 'JA107R4', number: 1 },
-				{ text: '11air-JA008D5', win: 'win-2225', value: 'JA008D5', number: 0 },
-				{ text: 'air-JA009D8', win: 'win-3336', value: 'JA009D6', number: 1 },
-				{ text: 'air-JA107D6', win: 'win-4447', value: 'JA010D7', number: 1 },
-				{ text: 'air-JA107R7', win: 'win-5558', value: 'JA107R8', number: 1 },
-				{ text: 'air-JA107Y9', win: 'win-6669', value: 'JA107Y9', number: 1 },
-			],
-			groups: [
-				{
-					groupName: 'Group 1',
-					options: [
-						{
-							text: 'AGP',
-							win: 'AGP',
-							value: 'AGP',
-							number: 1,
-						},
-						{
-							text: 'COM',
-							win: 'COM',
-							value: 'COM',
-							number: 1,
-						},
-						{
-							text: 'XSS',
-							win: 'XSS',
-							value: 'XSS',
-							number: 1,
-						},
-						{
-							text: 'ZZT',
-							win: 'ZZT',
-							value: 'ZZT',
-							number: 1,
-						},
-						{
-							text: 'JAL',
-							win: 'JAL',
-							value: 'JAL',
-							number: 1,
-						},
-						{
-							text: 'WOR',
-							win: 'WOR',
-							value: 'WOR',
-							number: 1,
-						},
-					],
-				},
-				{
-					groupName: 'Group 2',
-					options: [
-						{
-							text: 'virtual',
-							win: 'virtual',
-							value: 'virtual',
-							number: 1,
-						},
-						{
-							text: 'wireless',
-							win: 'wireless',
-							value: 'wireless',
-							number: 1,
-						},
-						{
-							text: 'primary',
-							win: 'primary',
-							value: 'primary',
-							number: 1,
-						},
-					],
-				},
-				{
-					groupName: 'Group 3',
-					options: [
-						{
-							text: 'Champlin LLC',
-							win: 'Champlin LLC',
-							value: 'Champlin LLC',
-							number: 1,
-						},
-						{
-							text: 'Erdman Inc',
-							win: 'Erdman Inc',
-							value: 'Erdman Inc',
-							number: 1,
-						},
-						{
-							text: 'Bergnaum and Sons',
-							win: 'Bergnaum and Sons',
-							value: 'Bergnaum and Sons',
-							number: 1,
-						},
-						{
-							text: 'Yundt LLC',
-							win: 'Yundt LLC',
-							value: 'Yundt LLC',
-							number: 1,
-						},
-					],
-				},
-				{
-					groupName: 'Group 4',
-					options: [
-						{
-							text: 'T-Mobile',
-							win: 'T-Mobile',
-							value: 'T-Mobile',
-							number: 1,
-						},
-						{
-							text: 'Startek',
-							win: 'Startek',
-							value: 'Startek',
-							number: 1,
-						},
-					],
-				},
-			],
+			data: demoData.data,
+			groups: demoData.groups,
 			selectedValue: { text: 'air-JA007D', win: 'win-111', value: 'JA007D' },
 			selectedGroupVals: ['AAL', 'GNR', 'T-Mobile', 'Startek'],
 			selectedSingleGroupVal: ['WOR'],
@@ -167,7 +47,7 @@ export default class Demo extends Component {
 	}
 
 	fakeFunction(value, text) {
-		// console.log(value, text);
+		console.log('val:', value, 'txt:', text);
 	}
 
 	fakeToggle(open, value, text) {
@@ -181,6 +61,10 @@ export default class Demo extends Component {
 	getValue(item) {
 		return item.win;
 	}
+
+	onReset = () => {
+		return this.ComboRef1.resetValues();
+	};
 
 	render() {
 		// var standardArray = ["DDD", "CCC", "BBB", "AAA"];
@@ -227,6 +111,9 @@ export default class Demo extends Component {
 						map={{ text: 'text', value: true }}
 						onToggle={this.fakeToggle}
 						required
+						ref={el => {
+							this.ComboRef1 = el;
+						}}
 					/>
 				}
 
@@ -272,6 +159,9 @@ export default class Demo extends Component {
 							},
 						}}
 						required
+						ref={el => {
+							this.ComboRef3 = el;
+						}}
 					/>
 				}
 
@@ -291,6 +181,9 @@ export default class Demo extends Component {
 						onToggle={this.fakeToggle}
 						defaultText="Select more than one"
 						required
+						ref={el => {
+							this.ComboRef4 = el;
+						}}
 					/>
 				}
 
@@ -305,8 +198,15 @@ export default class Demo extends Component {
 						map={{ text: this.getText, value: this.getValue }}
 						onToggle={this.fakeToggle}
 						defaultText="Select Partner"
+						ref={el => {
+							this.ComboRef5 = el;
+						}}
 					/>
 				}
+
+				<button type="reset" style={{ width: '50%', margin: '0 auto' }} onClick={this.onReset}>
+					Reset Values
+				</button>
 
 				<input type="text" required />
 

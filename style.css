@@ -95,17 +95,18 @@
 	margin-bottom: -0.2em;
 }
 
+.combo-select .combo-select-body .combo-select-item:hover,
+.combo-select .combo-select-body .combo-select-item:focus,
+.combo-select .combo-select-body .combo-select-item.selected {
+	background: #f7f7f7;
+}
+
 .combo-select .combo-select-body .combo-select-item.selected.no-icon {
 	background: #e1f3f3;
 }
 
 .combo-select .combo-select-body .combo-select-item.selected path {
 	fill: #595959;
-}
-
-.combo-select .combo-select-body .combo-select-item:hover,
-.combo-select .combo-select-body .combo-select-item.active {
-	background: #f7f7f7;
 }
 
 .combo-select .combo-select-required-select {

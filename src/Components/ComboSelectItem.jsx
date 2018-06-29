@@ -30,18 +30,13 @@ export default class ComboSelectItem extends Component {
 		return (
 			<div
 				{...restProps}
-				key={id ? id : this.props.index}
-				className={
-					'combo-select-item' +
-					(this.props.focused ? ' active' : '') +
-					(this.props.selected ? ' selected' : '') +
-					(input == '' ? ' no-icon' : '')
-				}
-				onClick={() => this.props.selectItem(this.props.item)}
-				onMouseEnter={() => this.props.focusItem(this.props.index)}
+				key={id ? id : index}
+				className={'combo-select-item' + (selected || focused ? ' selected' : '') + (input == '' ? ' no-icon' : '')}
+				onClick={() => selectItem(item)}
+				onMouseEnter={() => focusItem(index)}
 			>
 				{input}
-				{this.props.item.text}
+				{item.text}
 			</div>
 		);
 	}
