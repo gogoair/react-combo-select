@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
@@ -89,32 +90,29 @@ export default class ComboSelect extends Component {
 		this.selectRef.removeEventListener('focusout', this.deSelectFocus);
 	}
 
-	// TODO: Remove this, switch to gdsfp
+	// static getDerivedStateFromProps(nextProps, prevState) {
+	// 	return {
+
+	// 	};
+
+	// 	return null;
+	//   }
+
 	componentWillReceiveProps(newProps) {
-		const dataChanged = newProps.data !== this.props.data;
-		const stateUpdate = {};
-		let changed = false;
+		if (newProps.data && newProps.value !== this.props.value) {
+			const mappedData = this.sortData(this.mapAllData(newProps.data));
+			const selectedItems = this.findSelectedItems(this.mappedData, newProps.text, newProps.value);
+			this.processDataAttributes(newProps);
 
-		if (dataChanged) {
-			this.mappedData = this.sortData(this.mapAllData(newProps.data));
-			stateUpdate.data = this.mappedData;
-			changed = true;
+			return this.setState({
+				data: mappedData,
+				text: selectedItems.text,
+				value: selectedItems.value,
+			});
 		}
-
-		this.processDataAttributes(newProps);
-
-		if (dataChanged || newProps.text !== this.props.text || newProps.value !== this.props.value) {
-			let selectedItems = this.findSelectedItems(this.mappedData, newProps.text, newProps.value);
-			stateUpdate.text = selectedItems.text;
-			stateUpdate.value = selectedItems.value;
-			changed = true;
+		if (newProps.text !== this.props.text) {
+			this.defaultText = newProps.text ? newProps.text : newProps.defaultText ? newProps.defaultText : 'Select';
 		}
-
-		if (changed) {
-			this.setState(stateUpdate);
-		}
-
-		this.defaultText = newProps.text ? newProps.text : newProps.defaultText ? newProps.defaultText : 'Select';
 	}
 
 	resetValues = () => {
@@ -497,14 +495,21 @@ export default class ComboSelect extends Component {
 						}
 					} else {
 						if (groupItem.selected) {
-							selectedItems.text.push(groupItem.text);
-							selectedItems.value.push(groupItem.value);
+							if (this.props.type === 'select') {
+								selectedItems.text = groupItem.text;
+								selectedItems.value = groupItem.value;
+							} else {
+								selectedItems.text.push(groupItem.text);
+								selectedItems.value.push(groupItem.value);
+							}
 						}
 					}
 				});
 			}
 		});
+
 		if (deselectMode) return data;
+
 		return selectedItems;
 	};
 
@@ -670,10 +675,14 @@ export default class ComboSelect extends Component {
 						return { ...group, data: options };
 					}
 				});
+			} else {
+				console.warn("WIP ** Groups mode can't use other sort methods than 'string' or 'number'.");
+				sortedData = data;
 			}
 		}
 
 		this.focus = -1;
+		// NOTE: Sort groups by names externally?
 		return sortedData.sort((a, b) => a.groupName.localeCompare(b.groupName));
 	};
 
@@ -886,6 +895,7 @@ export default class ComboSelect extends Component {
 	 * Calculates metric for opening menu
 	 * @returns {{}}
 	 * TODO: currently opens menu 'maximum as possible', make this open so that you cannot see next element
+	 * NOTE: There be dragons
 	 */
 	calculateMetric = () => {
 		if (this.comboSelectRef) {
@@ -991,13 +1001,14 @@ export default class ComboSelect extends Component {
 	selectGroupItem = item => {
 		const { text, value, selected, parent } = item;
 		let updatedData = [...this.state.data];
-		// Because of this names of the items and names of the partners should be unique
-		const partnerData = updatedData.filter(group => group.groupName === parent);
-		const itemData = partnerData[0].data.filter(datum => datum.value === value)[0];
+		// Because of this names of the groups should be unique, because we're using only the first result when we isolate group by it's name
+		const groupData = updatedData.filter(group => group.groupName === parent);
+		const itemData = groupData[0].data.filter(datum => datum.value === value)[0];
 
 		if (this.state.type === 'select') {
 			updatedData = this.findSelectedGroupItems(updatedData, true);
 			itemData.selected = !itemData.selected;
+
 			if (!this.state.text) {
 				return this.setState(
 					{
@@ -1005,13 +1016,17 @@ export default class ComboSelect extends Component {
 						text,
 						value,
 					},
-					() => (this.props.onChange ? this.props.onChange(value, text) : '')
+					() => {
+						if (this.selectRef) this.selectRef.value = text;
+						return this.props.onChange ? this.props.onChange(value, text) : '';
+					}
 				);
 			}
 
 			return this.setState({ data: updatedData, text: text, value: value }, () => {
 				this.toggleMenu();
-				this.props.onChange ? this.props.onChange(value, text) : '';
+				if (this.selectRef) this.selectRef.value = text;
+				return this.props.onChange ? this.props.onChange(value, text) : '';
 			});
 		} else {
 			itemData.selected = !itemData.selected;
@@ -1024,7 +1039,8 @@ export default class ComboSelect extends Component {
 						value: [value],
 					},
 					() => {
-						this.props.onChange ? this.props.onChange([...value], text) : '';
+						if (this.selectRef) this.selectRef.value = text;
+						return this.props.onChange ? this.props.onChange([...value], text) : '';
 					}
 				);
 			}
@@ -1048,7 +1064,8 @@ export default class ComboSelect extends Component {
 					value: values,
 				},
 				() => {
-					this.props.onChange ? this.props.onChange(values, texts) : '';
+					if (this.selectRef) this.selectRef.value = text;
+					return this.props.onChange ? this.props.onChange(values, texts) : '';
 				}
 			);
 		}
@@ -1084,7 +1101,7 @@ export default class ComboSelect extends Component {
 			} else {
 				let splice;
 
-				this.state.text.map(function(textItem, i) {
+				this.state.text.map((textItem, i) => {
 					if (text == textItem) {
 						splice = i;
 					}
@@ -1266,8 +1283,14 @@ export default class ComboSelect extends Component {
 				parent,
 			};
 			if (this.props.value) {
-				if (this.props.value.includes(item.value)) {
-					groupItem.selected = true;
+				if (this.props.type === 'multiselect') {
+					if (this.props.value.includes(item.value)) {
+						groupItem.selected = true;
+					}
+				} else {
+					if (this.props.value === item.value) {
+						groupItem.selected = true;
+					}
 				}
 			}
 			return groupItem;
