@@ -99,9 +99,13 @@ export default class ComboSelect extends Component {
 	//   }
 
 	componentWillReceiveProps(newProps) {
-		if (newProps.data && newProps.value !== this.props.value) {
+		if (newProps.text !== this.props.text || newProps.defaultText !== this.props.defaultText) {
+			this.defaultText = newProps.text ? newProps.text : newProps.defaultText ? newProps.defaultText : 'Select';
+		}
+
+		if (newProps.data && newProps.value !== this.state.value) {
 			const mappedData = this.sortData(this.mapAllData(newProps.data));
-			const selectedItems = this.findSelectedItems(this.mappedData, newProps.text, newProps.value);
+			const selectedItems = this.findSelectedItems(mappedData, newProps.text, newProps.value);
 			this.processDataAttributes(newProps);
 
 			return this.setState({
@@ -109,9 +113,6 @@ export default class ComboSelect extends Component {
 				text: selectedItems.text,
 				value: selectedItems.value,
 			});
-		}
-		if (newProps.text !== this.props.text) {
-			this.defaultText = newProps.text ? newProps.text : newProps.defaultText ? newProps.defaultText : 'Select';
 		}
 	}
 

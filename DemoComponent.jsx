@@ -128,12 +128,13 @@ export default class Demo extends Component {
 						preferredDirection="down"
 						sort="string"
 						search="smart"
+						text="Select Items"
+						defaultText="Select Item"
 						value={this.state.selectedGroupVals}
 						disabled={false}
 						onChange={this.fakeFunction}
 						map={{ text: this.getText, value: this.getValue }}
 						onToggle={this.fakeToggle}
-						defaultText="Select Partner"
 					/>
 				}
 
