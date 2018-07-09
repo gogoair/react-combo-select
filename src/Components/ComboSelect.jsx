@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
@@ -90,15 +89,7 @@ export default class ComboSelect extends Component {
 		this.selectRef.removeEventListener('focusout', this.deSelectFocus);
 	}
 
-	// static getDerivedStateFromProps(nextProps, prevState) {
-	// 	return {
-
-	// 	};
-
-	// 	return null;
-	//   }
-
-	componentWillReceiveProps(newProps) {
+	UNSAFE_componentWillReceiveProps(newProps) {
 		if (newProps.text !== this.props.text || newProps.defaultText !== this.props.defaultText) {
 			this.defaultText = newProps.text ? newProps.text : newProps.defaultText ? newProps.defaultText : 'Select';
 		}
