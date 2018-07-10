@@ -241,9 +241,15 @@ Out of the box ComboSelect is using custom SVG icons that can be overriden by sp
 <ComboSelect icon="fa fa-chevron-down" iconSelectInactive="fa fa-circle-thin" iconSelectActive="fa fa-check" />
 ```
 
+### `resetValues` method
+
+Resets values in currently selected ComboSelect instance. You have an example og how to set it up in `DemoComponent.jsx`.
+
 ### Option groups
 
-Groups can be enabled by adding `groups` prop to the ComboSelect.
+Groups can be enabled by adding `groups` prop to the ComboSelect. They will work both in single select and in multiselect mode.
+
+> NOTE: For now, groups are only working with 'string' and 'number' sorting.
 
 ```javascript
 <ComboSelect type="multiselect" groups data={this.state.groups} />
@@ -252,8 +258,7 @@ Groups can be enabled by adding `groups` prop to the ComboSelect.
 Groups have to be passed down to component in specific format so that it can render properly. Initial data should look like this:
 
 ```js
-{
-{
+{ 
 	// Mandatory group name
 	groupName: 'Other',
 	// and array of options

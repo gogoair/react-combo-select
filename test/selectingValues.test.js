@@ -78,6 +78,7 @@ describe('Selecting values', () => {
 			map: { text: 'text', value: 'win' },
 			sort: 'alphanum',
 		});
+
 		expect(wrapper.state().text[0]).to.equal('11');
 	});
 });
