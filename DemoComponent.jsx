@@ -15,9 +15,14 @@ export default class Demo extends Component {
 			text: '-Select me-',
 			data: demoData.data,
 			groups: demoData.groups,
-			selectedValue: { text: 'air-JA007D', win: 'win-111', value: 'JA007D' },
-			selectedGroupVals: ['AAL', 'GNR', 'T-Mobile', 'Startek'],
+			selectedValue: { text: '1air-JA007D', win: 'win-111', value: 'JA007D', number: 0 },
+			selectedValues: [
+				{ text: 'air-JA007D', win: 'win-111', value: 'JA007D' },
+				{ text: '11air-JA008D1', win: 'win-2221', value: 'JA0081D', number: 0 },
+				{ text: 'air-JA107D6', win: 'win-4447', value: 'JA010D7', number: 1 },
+			],
 			selectedSingleGroupVal: ['WOR'],
+			selectedGroupVals: ['AAL', 'GNR', 'T-Mobile', 'Startek'],
 		};
 	}
 
@@ -50,6 +55,7 @@ export default class Demo extends Component {
 					<ComboSelect
 						type="select"
 						data={this.state.data}
+						value={this.state.selectedValue}
 						sort="number"
 						search="smart"
 						disabled={false}
@@ -88,6 +94,7 @@ export default class Demo extends Component {
 					<ComboSelect
 						type="multiselect"
 						data={this.state.data}
+						value={[this.state.data[1], this.state.data[2]]}
 						sort="number"
 						search="smart"
 						disabled={false}
@@ -120,7 +127,6 @@ export default class Demo extends Component {
 						iconSelectInactive="fa fa-circle-thin"
 						iconSelectActive="fa fa-check"
 						search="smart"
-						value={this.state.data[1]}
 						sort="alphanum"
 						disabled={false}
 						onChange={this.fakeFunction}
