@@ -52,6 +52,8 @@ export default class Demo extends Component {
 				<input type="text" required />
 
 				{
+
+				<div>
 					<ComboSelect
 						type="select"
 						data={this.state.data}
@@ -67,6 +69,13 @@ export default class Demo extends Component {
 							this.ComboRef1 = el;
 						}}
 					/>
+
+					<div style={{ display: 'flex', flexDirection: 'column' ,alignItems: 'center' }}>
+						<button type="reset" style={{ width: '50%' }} onClick={this.onReset}>
+							Reset Values
+						</button>
+					</div>
+				</div>
 				}
 
 				{
@@ -156,10 +165,6 @@ export default class Demo extends Component {
 						}}
 					/>
 				}
-
-				<button type="reset" style={{ width: '50%', margin: '0 auto' }} onClick={this.onReset}>
-					Reset Values
-				</button>
 
 				<input type="text" required />
 
