@@ -99,6 +99,8 @@ export default class ComboSelect extends Component {
 			const selectedItems = this.findSelectedItems(mappedData, newProps.text, newProps.value);
 			this.processDataAttributes(newProps);
 
+			this.mappedData = mappedData;
+
 			return this.setState({
 				data: mappedData,
 				text: selectedItems.text,
