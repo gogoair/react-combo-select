@@ -993,6 +993,8 @@ export default class ComboSelect extends Component {
 	};
 
 	selectGroupItem = item => {
+		if (!item && !Array.isArray(item)) return null;
+
 		const { text, value, selected, parent } = item;
 		let updatedData = [...this.state.data];
 		// Because of this names of the groups should be unique, because we're using only the first result when we isolate group by it's name
@@ -1227,12 +1229,14 @@ export default class ComboSelect extends Component {
 		}
 	};
 
-	mapAllData = data => {
+	mapAllData = (data = []) => {
 		let mappedData = [];
-		if (data) {
+
+		if (Array.isArray(data)) {
 			if (this.props.groups) mappedData = data.map(group => this.mapGroupData(group));
 			else mappedData = data.map(item => this.mapSingleData(item));
 		}
+
 		return mappedData;
 	};
 
