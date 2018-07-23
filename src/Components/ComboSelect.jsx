@@ -46,6 +46,7 @@ export default class ComboSelect extends Component {
 		this.holderRef = null;
 
 		this.state = {
+			totalGroupItems: 0,
 			data: this.mappedData,
 			text: this.selectedItems.text,
 			value: this.selectedItems.value,
@@ -72,6 +73,15 @@ export default class ComboSelect extends Component {
 		this.selectRef.addEventListener('focus', this.selectFocus);
 		this.selectRef.addEventListener('focusout', this.deSelectFocus);
 
+		if (this.props.groups === 'enabled') {
+			const totalGroupItems = this.state.data.reduce((acc, currValue, currIndex) => {
+				if (!currValue.data) {
+					return acc;
+				}
+				return acc + currValue.data.length;
+			}, 0);
+			this.setState({ totalGroupItems });
+		}
 		/**
 		 * Inner scroll, scroll to top
 		 * @type {number}
@@ -410,6 +420,7 @@ export default class ComboSelect extends Component {
 						item={item}
 						index={startIndex(i, this.state.data)}
 						focused={focused}
+						focus={this.focus}
 						focusItem={this.focusItem}
 						selectItem={this.selectItem}
 						iconSelectActive={this.iconSelectActive}
@@ -1165,67 +1176,75 @@ export default class ComboSelect extends Component {
 	 */
 	globalKeyDown = event => {
 		if (this.open) {
-			switch (event.keyCode) {
-				case 38:
-					// Up
-					event.preventDefault();
-					if (this.state.data && this.state.data.length > 0) {
-						if (this.focus > this.state.data.length) {
-							this.focusItem(0);
-						} else {
-							this.focusItem(this.focus < 1 ? this.state.data.length - 1 : this.focus - 1);
+			if (this.props.groups === 'enabled') {
+				console.log('TEST globalKeyDown');
+				console.log(this.focus);
+				this.focus = 10;
+			} else {
+				switch (event.keyCode) {
+					case 38:
+						// Up
+						event.preventDefault();
+						if (this.state.data && this.state.data.length > 0) {
+							if (this.focus > this.state.data.length) {
+								this.focusItem(0);
+							} else {
+								this.focusItem(this.focus < 1 ? this.state.data.length - 1 : this.focus - 1);
+							}
+							this.controlScrolling();
 						}
-						this.controlScrolling();
-					}
-					break;
-				case 40:
-					// Down
-					event.preventDefault();
-					if (this.state.data && this.state.data.length > 0) {
-						if (this.focus > this.state.data.length) {
-							this.focusItem(0);
-						} else {
-							this.focusItem(this.focus == this.state.data.length - 1 ? (this.focus = 0) : this.focus + 1);
+						break;
+					case 40:
+						// Down
+						event.preventDefault();
+						if (this.state.data && this.state.data.length > 0) {
+							if (this.focus > this.state.data.length) {
+								this.focusItem(0);
+							} else {
+								this.focusItem(this.focus == this.state.data.length - 1 ? (this.focus = 0) : this.focus + 1);
+							}
+							this.controlScrolling();
 						}
-						this.controlScrolling();
-					}
-					break;
-				case 37:
-					// Left
-					event.preventDefault();
-					break;
-				case 39:
-					// Right
-					event.preventDefault();
-					break;
-				case 32:
-					// Space
-					event.preventDefault();
-					if (this.state.data[this.focus]) {
-						this.selectItem(this.state.data[this.focus]);
-					}
-					break;
-				case 13:
-					// Enter
-					event.preventDefault();
-					if (this.state.data && this.state.data.length > 0 && this.focus > -1) {
-						this.selectItem(this.state.data[this.focus]);
-					}
-					break;
-				case 9:
-					// Tab
-					event.preventDefault();
-					break;
-				case 27:
-					// Escape
-					event.preventDefault();
-					this.toggleMenu();
-					break;
+						break;
+					case 37:
+						// Left
+						event.preventDefault();
+						break;
+					case 39:
+						// Right
+						event.preventDefault();
+						break;
+					case 32:
+						// Space
+						event.preventDefault();
+						if (this.state.data[this.focus]) {
+							this.selectItem(this.state.data[this.focus]);
+						}
+						break;
+					case 13:
+						// Enter
+						event.preventDefault();
+						if (this.state.data && this.state.data.length > 0 && this.focus > -1) {
+							this.selectItem(this.state.data[this.focus]);
+						}
+						break;
+					case 9:
+						// Tab
+						event.preventDefault();
+						break;
+					case 27:
+						// Escape
+						event.preventDefault();
+						this.toggleMenu();
+						break;
+				}
 			}
 		}
 	};
 
 	mapAllData = data => {
+		if (!data) return [];
+		
 		let mappedData = [];
 		if (data) {
 			if (this.props.groups) mappedData = data.map(group => this.mapGroupData(group));
@@ -1299,6 +1318,7 @@ export default class ComboSelect extends Component {
 	render() {
 		let head = this._generateHead();
 		let body = this._generateBody();
+		console.log('STATE', this.state);
 
 		return (
 			<div

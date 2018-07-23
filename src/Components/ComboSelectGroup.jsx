@@ -11,6 +11,7 @@ export default class ComboSelectGroup extends Component {
 			item: { data, groupName },
 			selected,
 			index,
+			focus,
 			type,
 			selectItem,
 			iconSelectActive,
@@ -18,9 +19,11 @@ export default class ComboSelectGroup extends Component {
 			...restProps
 		} = this.props;
 
+		console.log(this.props);
+
 		return (
 			<div className="combo-select-group">
-				<h4>{groupName}</h4>
+				<h4 tabIndex="-1">{groupName}</h4>
 				<div className="combo-select-group__wrapper">
 					{data &&
 						data.map((option, i) => {
@@ -28,7 +31,7 @@ export default class ComboSelectGroup extends Component {
 								<span
 									key={option.value}
 									onClick={() => this.props.selectItem(option)}
-									className={'combo-select-group__item' + (option.selected ? ' selected' : '')}
+									className={'combo-select-group__item' + (option.selected || focus === index ? ' selected' : '')}
 									onMouseEnter={() => this.props.focusItem(i + index)}
 								>
 									{generateInput(option.selected, type, iconSelectActive, iconSelectInactive)}
