@@ -94,18 +94,26 @@ export default class ComboSelect extends Component {
 			this.defaultText = newProps.text ? newProps.text : newProps.defaultText ? newProps.defaultText : 'Select';
 		}
 
-		if (newProps.value !== this.state.value && newProps.data.length) {
-			const mappedData = this.sortData(this.mapAllData(newProps.data));
-			const selectedItems = this.findSelectedItems(mappedData, newProps.text, newProps.value);
-			this.processDataAttributes(newProps);
+		if (newProps.value !== this.state.value) {
+			if (newProps.data.length) {
+				const mappedData = this.sortData(this.mapAllData(newProps.data));
+				const selectedItems = this.findSelectedItems(mappedData, newProps.text, newProps.value);
+				this.processDataAttributes(newProps);
 
-			this.mappedData = mappedData;
+				this.mappedData = mappedData;
 
-			return this.setState({
-				data: mappedData,
-				text: selectedItems.text,
-				value: selectedItems.value,
-			});
+				return this.setState({
+					data: mappedData,
+					text: selectedItems.text,
+					value: selectedItems.value,
+				});
+			} else {
+				return this.setState({
+					data: [],
+					text: [],
+					value: [],
+				});
+			}
 		}
 	}
 
