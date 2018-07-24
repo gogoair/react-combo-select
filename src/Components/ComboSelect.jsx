@@ -890,7 +890,7 @@ export default class ComboSelect extends Component {
 				items[this.focus].style.backgroundColor = '';
 				this.focus = -1;
 			}
-		} else if (this.state.data && this.state.data.length > 0) {
+		} else if (this.state.data.length > 0) {
 			if (!this.props.groups) {
 				const items = this.comboSelectRef.getElementsByClassName('combo-select-item');
 				if (items && this.focus >= 0 && items[this.focus]) {
@@ -899,6 +899,12 @@ export default class ComboSelect extends Component {
 				items[focus].style.backgroundColor = '#f7f7f7';
 				this.focus = focus;
 			} else {
+				const items = this.comboSelectRef.getElementsByClassName('combo-select-group__item');
+				if (items && this.focus >= 0 && items[this.focus]) {
+					items[this.focus].style.backgroundColor = '';
+				}
+				console.log(focus);
+				items[focus].style.backgroundColor = '#f7f7f7';
 				this.focus = focus;
 			}
 		}
@@ -1188,16 +1194,22 @@ export default class ComboSelect extends Component {
 	 */
 	globalKeyDown = event => {
 		if (this.open) {
-			if (this.props.groups === 'enabled') {
-				console.log('TEST globalKeyDown');
-				console.log(this.focus);
-				this.focus = 10;
-			} else {
-				switch (event.keyCode) {
-					case 38:
-						// Up
-						event.preventDefault();
-						if (this.state.data && this.state.data.length > 0) {
+			switch (event.keyCode) {
+				case 38:
+					// Up
+					event.preventDefault();
+
+					if (this.props.groups === 'enabled') {
+						if (this.state.totalGroupItems > 0) {
+							if (this.focus > this.state.totalGroupItems) {
+								this.focusItem(0);
+							} else {
+								this.focusItem(this.focus < 1 ? this.state.totalGroupItems - 1 : this.focus - 1);
+							}
+							this.controlScrolling();
+						}
+					} else {
+						if (this.state.data.length > 0) {
 							if (this.focus > this.state.data.length) {
 								this.focusItem(0);
 							} else {
@@ -1205,11 +1217,23 @@ export default class ComboSelect extends Component {
 							}
 							this.controlScrolling();
 						}
-						break;
-					case 40:
-						// Down
-						event.preventDefault();
-						if (this.state.data && this.state.data.length > 0) {
+					}
+					break;
+				case 40:
+					// Down
+					event.preventDefault();
+
+					if (this.props.groups === 'enabled') {
+						if (this.state.totalGroupItems > 0) {
+							if (this.focus > this.state.totalGroupItems) {
+								this.focusItem(0);
+							} else {
+								this.focusItem(this.focus == this.state.totalGroupItems - 1 ? (this.focus = 0) : this.focus + 1);
+							}
+							this.controlScrolling();
+						}
+					} else {
+						if (this.state.data.length > 0) {
 							if (this.focus > this.state.data.length) {
 								this.focusItem(0);
 							} else {
@@ -1217,39 +1241,39 @@ export default class ComboSelect extends Component {
 							}
 							this.controlScrolling();
 						}
-						break;
-					case 37:
-						// Left
-						event.preventDefault();
-						break;
-					case 39:
-						// Right
-						event.preventDefault();
-						break;
-					case 32:
-						// Space
-						event.preventDefault();
-						if (this.state.data[this.focus]) {
-							this.selectItem(this.state.data[this.focus]);
-						}
-						break;
-					case 13:
-						// Enter
-						event.preventDefault();
-						if (this.state.data && this.state.data.length > 0 && this.focus > -1) {
-							this.selectItem(this.state.data[this.focus]);
-						}
-						break;
-					case 9:
-						// Tab
-						event.preventDefault();
-						break;
-					case 27:
-						// Escape
-						event.preventDefault();
-						this.toggleMenu();
-						break;
-				}
+					}
+					break;
+				case 37:
+					// Left
+					event.preventDefault();
+					break;
+				case 39:
+					// Right
+					event.preventDefault();
+					break;
+				case 32:
+					// Space
+					event.preventDefault();
+					if (this.state.data[this.focus]) {
+						this.selectItem(this.state.data[this.focus]);
+					}
+					break;
+				case 13:
+					// Enter
+					event.preventDefault();
+					if (this.state.data && this.state.data.length > 0 && this.focus > -1) {
+						this.selectItem(this.state.data[this.focus]);
+					}
+					break;
+				case 9:
+					// Tab
+					event.preventDefault();
+					break;
+				case 27:
+					// Escape
+					event.preventDefault();
+					this.toggleMenu();
+					break;
 			}
 		}
 	};

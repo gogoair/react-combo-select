@@ -19,8 +19,6 @@ export default class ComboSelectGroup extends Component {
 			...restProps
 		} = this.props;
 
-		console.log(this.props);
-
 		return (
 			<div className="combo-select-group">
 				<h4 tabIndex="-1">{groupName}</h4>
