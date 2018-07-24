@@ -104,16 +104,26 @@ export default class ComboSelect extends Component {
 			this.defaultText = newProps.text ? newProps.text : newProps.defaultText ? newProps.defaultText : 'Select';
 		}
 
-		if (newProps.value !== this.state.value && newProps.data.length) {
-			const mappedData = this.sortData(this.mapAllData(newProps.data));
-			const selectedItems = this.findSelectedItems(mappedData, newProps.text, newProps.value);
-			this.processDataAttributes(newProps);
+		if (newProps.value !== this.state.value) {
+			if (newProps.data.length) {
+				const mappedData = this.sortData(this.mapAllData(newProps.data));
+				const selectedItems = this.findSelectedItems(mappedData, newProps.text, newProps.value);
+				this.processDataAttributes(newProps);
 
-			return this.setState({
-				data: mappedData,
-				text: selectedItems.text,
-				value: selectedItems.value,
-			});
+				this.mappedData = mappedData;
+
+				return this.setState({
+					data: mappedData,
+					text: selectedItems.text,
+					value: selectedItems.value,
+				});
+			} else {
+				return this.setState({
+					data: [],
+					text: [],
+					value: [],
+				});
+			}
 		}
 	}
 
@@ -1002,6 +1012,8 @@ export default class ComboSelect extends Component {
 	};
 
 	selectGroupItem = item => {
+		if (!item && !Array.isArray(item)) return null;
+
 		const { text, value, selected, parent } = item;
 		let updatedData = [...this.state.data];
 		// Because of this names of the groups should be unique, because we're using only the first result when we isolate group by it's name
@@ -1242,14 +1254,14 @@ export default class ComboSelect extends Component {
 		}
 	};
 
-	mapAllData = data => {
-		if (!data) return [];
-		
+	mapAllData = (data = []) => {
 		let mappedData = [];
-		if (data) {
+
+		if (Array.isArray(data)) {
 			if (this.props.groups) mappedData = data.map(group => this.mapGroupData(group));
 			else mappedData = data.map(item => this.mapSingleData(item));
 		}
+
 		return mappedData;
 	};
 
