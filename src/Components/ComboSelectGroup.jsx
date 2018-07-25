@@ -22,12 +22,13 @@ export default class ComboSelectGroup extends Component {
 		return (
 			<div className="combo-select-group">
 				<h4 tabIndex="-1">{groupName}</h4>
-				<div className="combo-select-group__wrapper">
+				<div className="combo-select-group__wrapper" role="list">
 					{data &&
 						data.map((option, i) => {
 							return (
 								<span
 									key={option.value}
+									role="option"
 									onClick={() => this.props.selectItem(option)}
 									onKeyDown={e => console.log(e)}
 									className={'combo-select-group__item' + (option.selected || focus === index ? ' selected' : '')}

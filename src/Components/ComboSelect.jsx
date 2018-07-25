@@ -77,13 +77,7 @@ export default class ComboSelect extends Component {
 
 		// Get the total number of all items inside groups
 		if (this.props.groups === 'enabled') {
-			const totalGroupItems = this.state.data.reduce((acc, currValue, currIndex) => {
-				if (!currValue.data) {
-					return acc;
-				}
-				return acc + currValue.data.length;
-			}, 0);
-			this.setState({ totalGroupItems });
+			this.getNumberOfItems();
 		}
 
 		/**
@@ -94,6 +88,9 @@ export default class ComboSelect extends Component {
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
+		if (this.state.data !== prevState.data) {
+			this.getNumberOfItems();
+		}
 		// Add all option data from groups to an array so that options can be selected with enter/space
 		if (this.props.groups === 'enabled' && this.state.data.length > 0 && this.state.totalGroupItems > 0) {
 			const groupItems = [];
@@ -148,6 +145,25 @@ export default class ComboSelect extends Component {
 		}
 	}
 
+	/**
+	 * Calculate number of items across all groups
+	 * Used for selecting/deselecting group items via keyboard
+	 * @memberof ComboSelect
+	 */
+	getNumberOfItems = () => {
+		const totalGroupItems = this.state.data.reduce((acc, currValue, currIndex) => {
+			if (!currValue.data) return acc;
+
+			return acc + currValue.data.length;
+		}, 0);
+
+		return this.setState({ totalGroupItems });
+	};
+
+	/**
+	 * Resets value of Combo Select via ref
+	 * @memberof ComboSelect
+	 */
 	resetValues = () => {
 		let data = [...this.state.data];
 		if (this.props.groups) data = this.findSelectedGroupItems(this.state.data, true);
@@ -410,7 +426,6 @@ export default class ComboSelect extends Component {
 	 * Generate body (menu)
 	 * @returns {XML}
 	 */
-
 	_generateBody = () => {
 		let style = this.calculateMetric();
 		let body = '';
@@ -434,6 +449,7 @@ export default class ComboSelect extends Component {
 							{...transformDataAttributes(this.listItemDataTransformer, item)}
 							item={item}
 							selected={this.findSelectedByKey(item, this.state.text, 'text')}
+							role="listbox"
 							index={i}
 							focused={focused}
 							type={this.state.type}
@@ -447,6 +463,7 @@ export default class ComboSelect extends Component {
 					<ComboSelectGroup
 						type={this.state.type}
 						key={item.groupName}
+						role="listbox"
 						{...transformDataAttributes(this.listItemDataTransformer, item)}
 						item={item}
 						index={startIndex(i, this.state.data)}
@@ -465,6 +482,7 @@ export default class ComboSelect extends Component {
 			<input
 				type="text"
 				style={style ? style.search : {}}
+				aria-label="search text"
 				ref={el => {
 					this.searchInputRef = el;
 				}}
@@ -686,6 +704,10 @@ export default class ComboSelect extends Component {
 		return ar;
 	};
 
+	/**
+	 * Sorts group data, only string and numeric sort for now
+	 * @memberof ComboSelect
+	 */
 	sortGroupData = (data, sortMethod) => {
 		let sortedData = [];
 
@@ -710,6 +732,7 @@ export default class ComboSelect extends Component {
 					}
 				});
 			} else {
+				// eslint-disable-next-line
 				console.warn("WIP ** Groups mode can't use other sort methods than 'string' or 'number'.");
 				sortedData = data;
 			}
@@ -1401,6 +1424,7 @@ export default class ComboSelect extends Component {
 }
 
 ComboSelect.propTypes = {
+	groups: PropTypes.string,
 	text: PropTypes.any,
 	search: PropTypes.string,
 	type: PropTypes.string,

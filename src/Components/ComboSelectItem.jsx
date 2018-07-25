@@ -34,6 +34,7 @@ export default class ComboSelectItem extends Component {
 				className={'combo-select-item' + (selected || focused ? ' selected' : '') + (input == '' ? ' no-icon' : '')}
 				onClick={() => selectItem(item)}
 				onMouseEnter={() => focusItem(index)}
+				role="option"
 			>
 				{input}
 				{item.text}
