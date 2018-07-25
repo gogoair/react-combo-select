@@ -47,6 +47,7 @@ export default class ComboSelect extends Component {
 
 		this.state = {
 			totalGroupItems: 0,
+			tempGroupItem: {},
 			data: this.mappedData,
 			text: this.selectedItems.text,
 			value: this.selectedItems.value,
@@ -1018,6 +1019,7 @@ export default class ComboSelect extends Component {
 	};
 
 	selectGroupItem = item => {
+		console.log(item);
 		if (!item && !Array.isArray(item)) return null;
 
 		const { text, value, selected, parent } = item;
@@ -1025,6 +1027,9 @@ export default class ComboSelect extends Component {
 		// Because of this names of the groups should be unique, because we're using only the first result when we isolate group by it's name
 		const groupData = updatedData.filter(group => group.groupName === parent);
 		const itemData = groupData[0].data.filter(datum => datum.value === value)[0];
+
+		console.log('groupData', groupData);
+		console.log('itemData', itemData);
 
 		if (this.state.type === 'select') {
 			updatedData = this.findSelectedGroupItems(updatedData, true);
@@ -1196,7 +1201,9 @@ export default class ComboSelect extends Component {
 		if (this.open) {
 			switch (event.keyCode) {
 				case 38:
-					// Up
+				// Up
+				case event.shiftKey && 9:
+					// Shift + Tab
 					event.preventDefault();
 
 					if (this.props.groups === 'enabled') {
@@ -1220,7 +1227,9 @@ export default class ComboSelect extends Component {
 					}
 					break;
 				case 40:
-					// Down
+				// Down
+				case 9:
+					// Tab
 					event.preventDefault();
 
 					if (this.props.groups === 'enabled') {
@@ -1261,13 +1270,15 @@ export default class ComboSelect extends Component {
 				case 13:
 					// Enter
 					event.preventDefault();
-					if (this.state.data && this.state.data.length > 0 && this.focus > -1) {
-						this.selectItem(this.state.data[this.focus]);
+					if (this.props.groups === 'enabled') {
+						if (this.state.data.length > 0 && this.focus > -1) {
+							this.selectItem(this.state.data[this.focus]);
+						}
+					} else {
+						if (this.state.data && this.state.data.length > 0 && this.focus > -1) {
+							this.selectItem(this.state.data[this.focus]);
+						}
 					}
-					break;
-				case 9:
-					// Tab
-					event.preventDefault();
 					break;
 				case 27:
 					// Escape

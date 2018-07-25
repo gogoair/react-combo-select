@@ -5,6 +5,14 @@ import PropTypes from 'prop-types';
 import { generateInput } from '../helpers';
 
 export default class ComboSelectGroup extends Component {
+	onKeyDown = (e, option) => {
+		debugger;
+		if (e.keyCode === 13) {
+			console.log('option', option);
+			this.props.selectItem(option);
+		}
+	};
+
 	render() {
 		let id = this.props.item && this.props.item.value && this.props.item.value.id ? this.props.item.value.id : null;
 		const {
@@ -19,6 +27,8 @@ export default class ComboSelectGroup extends Component {
 			...restProps
 		} = this.props;
 
+		console.log(this.props);
+
 		return (
 			<div className="combo-select-group">
 				<h4 tabIndex="-1">{groupName}</h4>
@@ -29,6 +39,7 @@ export default class ComboSelectGroup extends Component {
 								<span
 									key={option.value}
 									onClick={() => this.props.selectItem(option)}
+									onKeyDown={e => this.onKeyDown(e, option)}
 									className={'combo-select-group__item' + (option.selected || focus === index ? ' selected' : '')}
 									onMouseEnter={() => this.props.focusItem(i + index)}
 								>
