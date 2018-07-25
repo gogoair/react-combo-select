@@ -47,14 +47,15 @@ export default class ComboSelect extends Component {
 
 		this.state = {
 			totalGroupItems: 0,
-			tempGroupItem: {},
+			groupItems: [],
 			data: this.mappedData,
 			text: this.selectedItems.text,
 			value: this.selectedItems.value,
 			type: props.type && (props.type == 'select' || props.type == 'multiselect') ? props.type : 'select',
 			selected: -1,
 			search:
-				this.props.search && (this.props.search === 'on' || this.props.search == 'smart' || this.props.search === 'off')
+				this.props.search &&
+				(this.props.search === 'on' || this.props.search === 'smart' || this.props.search === 'off')
 					? this.props.search
 					: 'off',
 		};
@@ -66,14 +67,15 @@ export default class ComboSelect extends Component {
 		/**
 		 * Binding events
 		 */
-		window.addEventListener('keydown', this.globalKeyDown);
-		window.addEventListener('click', this.globalMouseClick);
-		window.addEventListener('touchstart', this.globalMouseClick);
-		window.addEventListener('wheel', this.globalWheel);
+		this.comboSelectRef.addEventListener('keydown', this.globalKeyDown);
+		this.comboSelectRef.addEventListener('click', this.globalMouseClick);
+		this.comboSelectRef.addEventListener('touchstart', this.globalMouseClick);
+		this.comboSelectRef.addEventListener('wheel', this.globalWheel);
 		this.selectRef.addEventListener('keydown', this.requiredSelectKeydown);
 		this.selectRef.addEventListener('focus', this.selectFocus);
 		this.selectRef.addEventListener('focusout', this.deSelectFocus);
 
+		// Get the total number of all items inside groups
 		if (this.props.groups === 'enabled') {
 			const totalGroupItems = this.state.data.reduce((acc, currValue, currIndex) => {
 				if (!currValue.data) {
@@ -83,6 +85,7 @@ export default class ComboSelect extends Component {
 			}, 0);
 			this.setState({ totalGroupItems });
 		}
+
 		/**
 		 * Inner scroll, scroll to top
 		 * @type {number}
@@ -90,11 +93,28 @@ export default class ComboSelect extends Component {
 		this.comboSelectRef.getElementsByClassName(specialClass).scrollTop = 0;
 	}
 
+	componentDidUpdate = (prevProps, prevState) => {
+		// Add all option data from groups to an array so that options can be selected with enter/space
+		if (this.props.groups === 'enabled' && this.state.data.length > 0 && this.state.totalGroupItems > 0) {
+			const groupItems = [];
+			this.state.data.forEach(group => {
+				if (group.data) {
+					groupItems.push(...group.data);
+				}
+			});
+			if (groupItems.length !== prevState.groupItems.length) {
+				this.setState({ groupItems });
+			}
+		} else if (this.props.groups === 'enabled' && !this.state.data.length > 0 && this.state.totalGroupItems === 0) {
+			this.setState({ groupItems: [] });
+		}
+	};
+
 	componentWillUnmount() {
-		window.removeEventListener('keydown', this.globalKeyDown);
-		window.removeEventListener('click', this.globalMouseClick);
-		window.removeEventListener('touchstart', this.globalMouseClick);
-		window.removeEventListener('wheel', this.globalWheel);
+		this.comboSelectRef.removeEventListener('keydown', this.globalKeyDown);
+		this.comboSelectRef.removeEventListener('click', this.globalMouseClick);
+		this.comboSelectRef.removeEventListener('touchstart', this.globalMouseClick);
+		this.comboSelectRef.removeEventListener('wheel', this.globalWheel);
 		this.selectRef.removeEventListener('keydown', this.requiredSelectKeydown);
 		this.selectRef.removeEventListener('focus', this.selectFocus);
 		this.selectRef.removeEventListener('focusout', this.deSelectFocus);
@@ -904,7 +924,6 @@ export default class ComboSelect extends Component {
 				if (items && this.focus >= 0 && items[this.focus]) {
 					items[this.focus].style.backgroundColor = '';
 				}
-				console.log(focus);
 				items[focus].style.backgroundColor = '#f7f7f7';
 				this.focus = focus;
 			}
@@ -1019,7 +1038,6 @@ export default class ComboSelect extends Component {
 	};
 
 	selectGroupItem = item => {
-		console.log(item);
 		if (!item && !Array.isArray(item)) return null;
 
 		const { text, value, selected, parent } = item;
@@ -1027,9 +1045,6 @@ export default class ComboSelect extends Component {
 		// Because of this names of the groups should be unique, because we're using only the first result when we isolate group by it's name
 		const groupData = updatedData.filter(group => group.groupName === parent);
 		const itemData = groupData[0].data.filter(datum => datum.value === value)[0];
-
-		console.log('groupData', groupData);
-		console.log('itemData', itemData);
 
 		if (this.state.type === 'select') {
 			updatedData = this.findSelectedGroupItems(updatedData, true);
@@ -1260,19 +1275,15 @@ export default class ComboSelect extends Component {
 					// Right
 					event.preventDefault();
 					break;
+
 				case 32:
-					// Space
-					event.preventDefault();
-					if (this.state.data[this.focus]) {
-						this.selectItem(this.state.data[this.focus]);
-					}
-					break;
+				// Space
 				case 13:
 					// Enter
 					event.preventDefault();
 					if (this.props.groups === 'enabled') {
-						if (this.state.data.length > 0 && this.focus > -1) {
-							this.selectItem(this.state.data[this.focus]);
+						if (this.state.totalGroupItems > 0 && this.focus > -1) {
+							this.selectItem(this.state.groupItems[this.focus]);
 						}
 					} else {
 						if (this.state.data && this.state.data.length > 0 && this.focus > -1) {
@@ -1365,7 +1376,6 @@ export default class ComboSelect extends Component {
 	render() {
 		let head = this._generateHead();
 		let body = this._generateBody();
-		console.log('STATE', this.state);
 
 		return (
 			<div
