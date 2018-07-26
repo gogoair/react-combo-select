@@ -265,11 +265,11 @@ Groups have to be passed down to component in specific format so that it can ren
 	options: [
 		{
 			text: 'Option 1 Text',
-			value: 'Option 1 Text',
+			value: 'Option 1 Value',
 		},
 		{
 			text: 'Option 2 Text',
-			value: 'Option 2 Text',
+			value: 'Option 2 Value',
 		},
 	],
 },
