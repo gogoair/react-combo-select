@@ -52,30 +52,29 @@ export default class Demo extends Component {
 				<input type="text" required />
 
 				{
+					<div>
+						<ComboSelect
+							type="select"
+							data={this.state.data}
+							value={this.state.selectedValue}
+							sort="number"
+							search="smart"
+							disabled={false}
+							onChange={this.fakeFunction}
+							map={{ text: 'text', value: true }}
+							onToggle={this.fakeToggle}
+							required
+							ref={el => {
+								this.ComboRef1 = el;
+							}}
+						/>
 
-				<div>
-					<ComboSelect
-						type="select"
-						data={this.state.data}
-						value={this.state.selectedValue}
-						sort="number"
-						search="smart"
-						disabled={false}
-						onChange={this.fakeFunction}
-						map={{ text: 'text', value: true }}
-						onToggle={this.fakeToggle}
-						required
-						ref={el => {
-							this.ComboRef1 = el;
-						}}
-					/>
-
-					<div style={{ display: 'flex', flexDirection: 'column' ,alignItems: 'center' }}>
-						<button type="reset" style={{ width: '50%' }} onClick={this.onReset}>
-							Reset Values
-						</button>
+						<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+							<button type="reset" style={{ width: '50%', marginTop: '1rem' }} onClick={this.onReset}>
+								Reset Values
+							</button>
+						</div>
 					</div>
-				</div>
 				}
 
 				{

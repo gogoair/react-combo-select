@@ -46,13 +46,16 @@ export default class ComboSelect extends Component {
 		this.holderRef = null;
 
 		this.state = {
+			totalGroupItems: 0,
+			groupItems: [],
 			data: this.mappedData,
 			text: this.selectedItems.text,
 			value: this.selectedItems.value,
 			type: props.type && (props.type == 'select' || props.type == 'multiselect') ? props.type : 'select',
 			selected: -1,
 			search:
-				this.props.search && (this.props.search === 'on' || this.props.search == 'smart' || this.props.search === 'off')
+				this.props.search &&
+				(this.props.search === 'on' || this.props.search === 'smart' || this.props.search === 'off')
 					? this.props.search
 					: 'off',
 		};
@@ -64,13 +67,18 @@ export default class ComboSelect extends Component {
 		/**
 		 * Binding events
 		 */
-		window.addEventListener('keydown', this.globalKeyDown);
-		window.addEventListener('click', this.globalMouseClick);
-		window.addEventListener('touchstart', this.globalMouseClick);
-		window.addEventListener('wheel', this.globalWheel);
+		this.comboSelectRef.addEventListener('keydown', this.globalKeyDown);
+		this.comboSelectRef.addEventListener('click', this.globalMouseClick);
+		this.comboSelectRef.addEventListener('touchstart', this.globalMouseClick);
+		this.comboSelectRef.addEventListener('wheel', this.globalWheel);
 		this.selectRef.addEventListener('keydown', this.requiredSelectKeydown);
 		this.selectRef.addEventListener('focus', this.selectFocus);
 		this.selectRef.addEventListener('focusout', this.deSelectFocus);
+
+		// Get the total number of all items inside groups
+		if (this.props.groups === 'enabled') {
+			this.getNumberOfItems();
+		}
 
 		/**
 		 * Inner scroll, scroll to top
@@ -79,11 +87,31 @@ export default class ComboSelect extends Component {
 		this.comboSelectRef.getElementsByClassName(specialClass).scrollTop = 0;
 	}
 
+	componentDidUpdate = (prevProps, prevState) => {
+		if (this.state.data !== prevState.data) {
+			this.getNumberOfItems();
+		}
+		// Add all option data from groups to an array so that options can be selected with enter/space
+		if (this.props.groups === 'enabled' && this.state.data.length > 0 && this.state.totalGroupItems > 0) {
+			const groupItems = [];
+			this.state.data.forEach(group => {
+				if (group.data) {
+					groupItems.push(...group.data);
+				}
+			});
+			if (groupItems.length !== prevState.groupItems.length) {
+				this.setState({ groupItems });
+			}
+		} else if (this.props.groups === 'enabled' && !this.state.data.length > 0 && this.state.totalGroupItems === 0) {
+			this.setState({ groupItems: [] });
+		}
+	};
+
 	componentWillUnmount() {
-		window.removeEventListener('keydown', this.globalKeyDown);
-		window.removeEventListener('click', this.globalMouseClick);
-		window.removeEventListener('touchstart', this.globalMouseClick);
-		window.removeEventListener('wheel', this.globalWheel);
+		this.comboSelectRef.removeEventListener('keydown', this.globalKeyDown);
+		this.comboSelectRef.removeEventListener('click', this.globalMouseClick);
+		this.comboSelectRef.removeEventListener('touchstart', this.globalMouseClick);
+		this.comboSelectRef.removeEventListener('wheel', this.globalWheel);
 		this.selectRef.removeEventListener('keydown', this.requiredSelectKeydown);
 		this.selectRef.removeEventListener('focus', this.selectFocus);
 		this.selectRef.removeEventListener('focusout', this.deSelectFocus);
@@ -117,6 +145,25 @@ export default class ComboSelect extends Component {
 		}
 	}
 
+	/**
+	 * Calculate number of items across all groups
+	 * Used for selecting/deselecting group items via keyboard
+	 * @memberof ComboSelect
+	 */
+	getNumberOfItems = () => {
+		const totalGroupItems = this.state.data.reduce((acc, currValue, currIndex) => {
+			if (!currValue.data) return acc;
+
+			return acc + currValue.data.length;
+		}, 0);
+
+		return this.setState({ totalGroupItems });
+	};
+
+	/**
+	 * Resets value of Combo Select via ref
+	 * @memberof ComboSelect
+	 */
 	resetValues = () => {
 		let data = [...this.state.data];
 		if (this.props.groups) data = this.findSelectedGroupItems(this.state.data, true);
@@ -379,7 +426,6 @@ export default class ComboSelect extends Component {
 	 * Generate body (menu)
 	 * @returns {XML}
 	 */
-
 	_generateBody = () => {
 		let style = this.calculateMetric();
 		let body = '';
@@ -403,6 +449,7 @@ export default class ComboSelect extends Component {
 							{...transformDataAttributes(this.listItemDataTransformer, item)}
 							item={item}
 							selected={this.findSelectedByKey(item, this.state.text, 'text')}
+							role="listbox"
 							index={i}
 							focused={focused}
 							type={this.state.type}
@@ -416,10 +463,12 @@ export default class ComboSelect extends Component {
 					<ComboSelectGroup
 						type={this.state.type}
 						key={item.groupName}
+						role="listbox"
 						{...transformDataAttributes(this.listItemDataTransformer, item)}
 						item={item}
 						index={startIndex(i, this.state.data)}
 						focused={focused}
+						focus={this.focus}
 						focusItem={this.focusItem}
 						selectItem={this.selectItem}
 						iconSelectActive={this.iconSelectActive}
@@ -433,6 +482,7 @@ export default class ComboSelect extends Component {
 			<input
 				type="text"
 				style={style ? style.search : {}}
+				aria-label="search text"
 				ref={el => {
 					this.searchInputRef = el;
 				}}
@@ -654,6 +704,10 @@ export default class ComboSelect extends Component {
 		return ar;
 	};
 
+	/**
+	 * Sorts group data, only string and numeric sort for now
+	 * @memberof ComboSelect
+	 */
 	sortGroupData = (data, sortMethod) => {
 		let sortedData = [];
 
@@ -678,6 +732,7 @@ export default class ComboSelect extends Component {
 					}
 				});
 			} else {
+				// eslint-disable-next-line
 				console.warn("WIP ** Groups mode can't use other sort methods than 'string' or 'number'.");
 				sortedData = data;
 			}
@@ -879,7 +934,7 @@ export default class ComboSelect extends Component {
 				items[this.focus].style.backgroundColor = '';
 				this.focus = -1;
 			}
-		} else if (this.state.data && this.state.data.length > 0) {
+		} else if (this.state.data.length > 0) {
 			if (!this.props.groups) {
 				const items = this.comboSelectRef.getElementsByClassName('combo-select-item');
 				if (items && this.focus >= 0 && items[this.focus]) {
@@ -888,6 +943,11 @@ export default class ComboSelect extends Component {
 				items[focus].style.backgroundColor = '#f7f7f7';
 				this.focus = focus;
 			} else {
+				const items = this.comboSelectRef.getElementsByClassName('combo-select-group__item');
+				if (items && this.focus >= 0 && items[this.focus]) {
+					items[this.focus].style.backgroundColor = '';
+				}
+				items[focus].style.backgroundColor = '#f7f7f7';
 				this.focus = focus;
 			}
 		}
@@ -1179,27 +1239,55 @@ export default class ComboSelect extends Component {
 		if (this.open) {
 			switch (event.keyCode) {
 				case 38:
-					// Up
+				// Up
+				case event.shiftKey && 9:
+					// Shift + Tab
 					event.preventDefault();
-					if (this.state.data && this.state.data.length > 0) {
-						if (this.focus > this.state.data.length) {
-							this.focusItem(0);
-						} else {
-							this.focusItem(this.focus < 1 ? this.state.data.length - 1 : this.focus - 1);
+
+					if (this.props.groups === 'enabled') {
+						if (this.state.totalGroupItems > 0) {
+							if (this.focus > this.state.totalGroupItems) {
+								this.focusItem(0);
+							} else {
+								this.focusItem(this.focus < 1 ? this.state.totalGroupItems - 1 : this.focus - 1);
+							}
+							this.controlScrolling();
 						}
-						this.controlScrolling();
+					} else {
+						if (this.state.data.length > 0) {
+							if (this.focus > this.state.data.length) {
+								this.focusItem(0);
+							} else {
+								this.focusItem(this.focus < 1 ? this.state.data.length - 1 : this.focus - 1);
+							}
+							this.controlScrolling();
+						}
 					}
 					break;
 				case 40:
-					// Down
+				// Down
+				case 9:
+					// Tab
 					event.preventDefault();
-					if (this.state.data && this.state.data.length > 0) {
-						if (this.focus > this.state.data.length) {
-							this.focusItem(0);
-						} else {
-							this.focusItem(this.focus == this.state.data.length - 1 ? (this.focus = 0) : this.focus + 1);
+
+					if (this.props.groups === 'enabled') {
+						if (this.state.totalGroupItems > 0) {
+							if (this.focus > this.state.totalGroupItems) {
+								this.focusItem(0);
+							} else {
+								this.focusItem(this.focus == this.state.totalGroupItems - 1 ? (this.focus = 0) : this.focus + 1);
+							}
+							this.controlScrolling();
 						}
-						this.controlScrolling();
+					} else {
+						if (this.state.data.length > 0) {
+							if (this.focus > this.state.data.length) {
+								this.focusItem(0);
+							} else {
+								this.focusItem(this.focus == this.state.data.length - 1 ? (this.focus = 0) : this.focus + 1);
+							}
+							this.controlScrolling();
+						}
 					}
 					break;
 				case 37:
@@ -1210,23 +1298,21 @@ export default class ComboSelect extends Component {
 					// Right
 					event.preventDefault();
 					break;
+
 				case 32:
-					// Space
-					event.preventDefault();
-					if (this.state.data[this.focus]) {
-						this.selectItem(this.state.data[this.focus]);
-					}
-					break;
+				// Space
 				case 13:
 					// Enter
 					event.preventDefault();
-					if (this.state.data && this.state.data.length > 0 && this.focus > -1) {
-						this.selectItem(this.state.data[this.focus]);
+					if (this.props.groups === 'enabled') {
+						if (this.state.totalGroupItems > 0 && this.focus > -1) {
+							this.selectItem(this.state.groupItems[this.focus]);
+						}
+					} else {
+						if (this.state.data && this.state.data.length > 0 && this.focus > -1) {
+							this.selectItem(this.state.data[this.focus]);
+						}
 					}
-					break;
-				case 9:
-					// Tab
-					event.preventDefault();
 					break;
 				case 27:
 					// Escape
@@ -1338,6 +1424,7 @@ export default class ComboSelect extends Component {
 }
 
 ComboSelect.propTypes = {
+	groups: PropTypes.string,
 	text: PropTypes.any,
 	search: PropTypes.string,
 	type: PropTypes.string,
