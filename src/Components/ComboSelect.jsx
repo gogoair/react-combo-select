@@ -67,10 +67,10 @@ export default class ComboSelect extends Component {
 		/**
 		 * Binding events
 		 */
-		this.comboSelectRef.addEventListener('keydown', this.globalKeyDown);
-		this.comboSelectRef.addEventListener('click', this.globalMouseClick);
-		this.comboSelectRef.addEventListener('touchstart', this.globalMouseClick);
-		this.comboSelectRef.addEventListener('wheel', this.globalWheel);
+		window.addEventListener('keydown', this.globalKeyDown);
+		window.addEventListener('click', this.globalMouseClick);
+		window.addEventListener('touchstart', this.globalMouseClick);
+		window.addEventListener('wheel', this.globalWheel);
 		this.selectRef.addEventListener('keydown', this.requiredSelectKeydown);
 		this.selectRef.addEventListener('focus', this.selectFocus);
 		this.selectRef.addEventListener('focusout', this.deSelectFocus);
@@ -108,10 +108,10 @@ export default class ComboSelect extends Component {
 	};
 
 	componentWillUnmount() {
-		this.comboSelectRef.removeEventListener('keydown', this.globalKeyDown);
-		this.comboSelectRef.removeEventListener('click', this.globalMouseClick);
-		this.comboSelectRef.removeEventListener('touchstart', this.globalMouseClick);
-		this.comboSelectRef.removeEventListener('wheel', this.globalWheel);
+		window.removeEventListener('keydown', this.globalKeyDown);
+		window.removeEventListener('click', this.globalMouseClick);
+		window.removeEventListener('touchstart', this.globalMouseClick);
+		window.removeEventListener('wheel', this.globalWheel);
 		this.selectRef.removeEventListener('keydown', this.requiredSelectKeydown);
 		this.selectRef.removeEventListener('focus', this.selectFocus);
 		this.selectRef.removeEventListener('focusout', this.deSelectFocus);
