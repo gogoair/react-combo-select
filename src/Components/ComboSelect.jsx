@@ -123,7 +123,7 @@ export default class ComboSelect extends Component {
 		}
 
 		if (newProps.value !== this.state.value) {
-			if (newProps.data.length) {
+			if (Array.isArray(newProps.data) && newProps.data.length) {
 				const mappedData = this.sortData(this.mapAllData(newProps.data));
 				const selectedItems = this.findSelectedItems(mappedData, newProps.text, newProps.value);
 				this.processDataAttributes(newProps);
