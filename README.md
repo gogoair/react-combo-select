@@ -111,7 +111,7 @@ let standardArray = ["JA007D", "JA008D", "JA009D", "JA010D", "JA219J", "JA302J",
 
 ### map
 
-If you want to display data from objects, use map! You need to define object with properties text and value. Text will be the one you display as a text, and value is returning in a onChange function as the first argument. If you want to return the whole object, put value=true (boolean). Default is `map={text: 'text', value: 'value'}`, which means you will have collection of objects, and on select value will be returned and text will be shown in select.
+If you want to display data from objects, use map! You need to define object with properties text and value. Text will be the one you display as a text, and value is returning in a onChange function as the first argument. If you want to return the whole object, put value=true (boolean). Default is `map={{text: 'text', value: 'value'}}`, which means you will have collection of objects, and on select value will be returned and text will be shown in select.
 
 ```javascript
 let arrayWithObjects = [
@@ -133,7 +133,7 @@ fakeFunctionObject(value, text) {
     console.log(value, text) // this will display {text: "air-JA007D", win: "win-JA007D", value: "JA007D"} and key object with text will be shown in tn select.
 }
 
-<ComboSelect data={arrayWithObjects} map={text: 'text', value: true} onChange={this.fakeFunctionObject}/>
+<ComboSelect data={arrayWithObjects} map={{text: 'text', value: true}} onChange={this.fakeFunctionObject}/>
 
 
 // Map through function, you allways get item, and have to return value
@@ -146,7 +146,7 @@ fakeFunctionObject(value, text) {
     console.log(value, text) // this will display {text: "air-JA007D", win: "win-JA007D", value: "JA007D"} and key object with text will be shown in tn select.
 }
 
-<ComboSelect data={arrayWithObjects} map={text: this.selectText, value: true} onChange={this.fakeFunctionObject}/>
+<ComboSelect data={arrayWithObjects} map={{text: this.selectText, value: true}} onChange={this.fakeFunctionObject}/>
 ```
 
 ### sort
