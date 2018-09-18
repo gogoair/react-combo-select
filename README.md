@@ -126,7 +126,7 @@ fakeFunction(value, text) {
     console.log(value, text) // this will display key object win and key object with text will be shown in tn select.
 }
 
-<ComboSelect data={arrayWithObjects} map={text: 'text', value: 'win'} onChange={this.fakeFunction}/>
+<ComboSelect data={arrayWithObjects} map={{text: 'text', value: 'win'}} onChange={this.fakeFunction}/>
 
 // Whole object
 fakeFunctionObject(value, text) {
