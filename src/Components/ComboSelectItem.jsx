@@ -7,13 +7,15 @@ import { generateInput } from '../helpers';
 
 export default class ComboSelectItem extends Component {
 	render() {
-		let input = generateInput(
-			this.props.selected,
-			this.props.type,
-			this.props.iconSelectActive,
-			this.props.iconSelectInactive
-		);
-		let id = this.props.item && this.props.item.value && this.props.item.value.id ? this.props.item.value.id : null;
+		// TODO: Refactor this
+		const input = generateInput({
+			selected: this.props.selected,
+			type: this.props.type,
+			iconSelectActive: this.props.iconSelectActive,
+			iconSelectInactive: this.props.iconSelectInactive,
+			handleClick: () => {},
+		});
+		const id = this.props.item && this.props.item.value && this.props.item.value.id ? this.props.item.value.id : null;
 		const {
 			item,
 			selected,
@@ -36,7 +38,13 @@ export default class ComboSelectItem extends Component {
 				onMouseEnter={() => focusItem(index)}
 				role="option"
 			>
-				{input}
+				{generateInput({
+					selected: this.props.selected,
+					type: this.props.type,
+					iconSelectActive: this.props.iconSelectActive,
+					iconSelectInactive: this.props.iconSelectInactive,
+					handleClick: () => selectItem(item),
+				})}
 				{item.text}
 			</div>
 		);
