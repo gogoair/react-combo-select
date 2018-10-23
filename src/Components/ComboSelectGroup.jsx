@@ -6,7 +6,6 @@ import { generateInput } from '../helpers';
 
 export default class ComboSelectGroup extends Component {
 	render() {
-		let id = this.props.item && this.props.item.value && this.props.item.value.id ? this.props.item.value.id : null;
 		const {
 			item: { data, groupName },
 			selected,
@@ -14,6 +13,7 @@ export default class ComboSelectGroup extends Component {
 			focus,
 			type,
 			selectItem,
+			focusItem,
 			iconSelectActive,
 			iconSelectInactive,
 			...restProps
@@ -29,12 +29,18 @@ export default class ComboSelectGroup extends Component {
 								<span
 									key={option.value}
 									role="option"
-									onClick={() => this.props.selectItem(option)}
+									onClick={() => selectItem(option)}
 									onKeyDown={e => console.log(e)}
 									className={'combo-select-group__item' + (option.selected || focus === index ? ' selected' : '')}
-									onMouseEnter={() => this.props.focusItem(i + index)}
+									onMouseEnter={() => focusItem(i + index)}
 								>
-									{generateInput(option.selected, type, iconSelectActive, iconSelectInactive)}
+									{generateInput({
+										selected: option.selected,
+										type,
+										iconSelectActive,
+										iconSelectInactive,
+										handleClick: () => selectItem(option),
+									})}
 									<span style={{ margin: '0 3px' }} />
 									{option.text}
 								</span>
