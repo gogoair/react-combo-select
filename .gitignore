@@ -5,6 +5,7 @@ npm-debug.log
 .directory
 .DS_Store
 package-lock.json
+lib
 
 *-lock.*
 *.lock*
