@@ -54,7 +54,7 @@ export const generateInput = ({ selected, type, iconSelectActive, iconSelectInac
 	if (type == 'select') {
 		if (selected) {
 			if (iconSelectActive === true || iconSelectActive === undefined || iconSelectActive === null) {
-				input = <CircleIconChecked handleClick={handleClick} />;
+				input = <CircleIconChecked onClick={handleClick} />;
 			} else if (iconSelectActive === false || iconSelectActive === 'off') {
 				input = '';
 			} else {
@@ -62,7 +62,7 @@ export const generateInput = ({ selected, type, iconSelectActive, iconSelectInac
 			}
 		} else {
 			if (iconSelectInactive === true || iconSelectActive === undefined || iconSelectActive === null) {
-				input = <CircleIcon handleClick={handleClick} />;
+				input = <CircleIcon onClick={handleClick} />;
 			} else if (iconSelectInactive === false || iconSelectInactive === 'off') {
 				input = '';
 			} else {
@@ -71,9 +71,14 @@ export const generateInput = ({ selected, type, iconSelectActive, iconSelectInac
 		}
 	} else {
 		// multiselect
+		const onClick = (event) => {
+			event.stopPropagation();
+			handleClick && handleClick(event);
+		};
+
 		if (selected) {
 			if (iconSelectActive === true || iconSelectActive === undefined || iconSelectActive === null) {
-				input = <SquareIconChecked handleClick={handleClick} />;
+				input = <SquareIconChecked onClick={onClick} />;
 			} else if (iconSelectActive === false || iconSelectActive === 'off') {
 				input = '';
 			} else {
@@ -81,7 +86,7 @@ export const generateInput = ({ selected, type, iconSelectActive, iconSelectInac
 			}
 		} else {
 			if (iconSelectInactive === true || iconSelectActive === undefined || iconSelectActive === null) {
-				input = <SquareIcon handleClick={handleClick} />;
+				input = <SquareIcon onClick={onClick} />;
 			} else if (iconSelectInactive === false || iconSelectInactive === 'off') {
 				input = '';
 			} else {

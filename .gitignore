@@ -2,10 +2,10 @@
 .idea
 node_modules
 npm-debug.log
-lib
 .directory
 .DS_Store
 package-lock.json
+lib
 
 *-lock.*
 *.lock*
